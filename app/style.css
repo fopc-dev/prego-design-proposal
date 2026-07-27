@@ -1341,3 +1341,17 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 .gt-lg i{display:block;width:44px;height:44px}
 .gt-lg i svg{width:100%;height:100%}
 .gt-lg b{font-family:var(--font-num);font-size:11px;color:#FFE9A8}
+
+/* ---- フリースタンプ提案トレイ ---- */
+.stamp-tray{background:var(--paper);border-top:1px solid var(--line);padding:8px 14px 6px}
+.stamp-tray .st-head{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--ink-soft);font-weight:700;letter-spacing:.04em}
+.stamp-tray .st-x{width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);border-radius:50%}
+.stamp-tray .st-x:active{background:var(--turf-soft)}
+.stamp-tray .st-row{display:flex;gap:8px;margin-top:2px}
+.stamp-tray .stamp-pick{flex:1;aspect-ratio:auto;height:86px;padding:4px}
+/* ---- ボーナスパター ---- */
+.bn-putt{background:linear-gradient(120deg,var(--brass-soft),#fff);border:1px solid var(--brass-bright);border-radius:14px;padding:12px 14px;margin-top:12px;text-align:center}
+.bn-putt b{font-size:12.5px}
+.bn-prize{display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:11px;color:var(--ink-soft)}
+.bn-prize b{font-family:var(--font-num);font-size:14px;color:var(--ink)}
+.bn-prize .win b{color:var(--brass-ink);font-size:16px}
