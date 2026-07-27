@@ -3322,21 +3322,19 @@ V.gputt = () => `
       <div class="gp-dir" id="gp-dir"><svg width="46" height="64" viewBox="0 0 46 64" fill="none"><path d="M23 60V16" stroke="#FFE9A8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 8"/><path d="M23 4l9 14H14z" fill="#FFE9A8"/></svg></div>
       <div class="gp-ball" id="gp-ball"></div>
       <div class="gp-result" id="gp-result"></div>
-      ${gp.bonusMode && !gp.bonusStarted ? `
-      <div class="gp-start" id="gp-bonus-ov">
-        <span class="chip brass" style="font-size:9.5px">ログインボーナス</span>
-        <b>連続ログイン ${bonusStreak()}日目${bonusMult()>1?'　獲得×5中！':''}</b>
-        <div class="bn-prize" style="color:rgba(255,255,255,.75)"><span>外しても <b style="color:#fff">${(50*bonusMult()).toLocaleString()}G</b></span><span class="win">カップインで <b style="color:#FFE9A8">${(200*bonusMult()).toLocaleString()}G</b></span></div>
-        <button class="btn brass" style="margin-top:12px;min-width:210px" onclick="bonusBegin()">パターに挑戦する</button>
-        <span style="font-size:10px;color:rgba(255,255,255,.6)">連続5日以上で獲得が5倍になります</span>
-      </div>`:''}
     </div>
     <div class="gp-meterrow">
       <div class="gp-meter"><div class="gp-zone"></div><div class="gp-fill" id="gp-fill"></div></div>
       <button class="btn g-btn" id="gp-btn" style="flex:1" onclick="gpTap()">タップで方向を決める</button>
     </div>
     <p class="g-note">方向を止めて、金のゾーンでストローク。無料5打/日・追加は100G</p>
-  </div>${demoPill()}`;
+  </div>${demoPill()}${gp.bonusMode && !gp.bonusStarted ? `
+  <div class="gp-start" id="gp-bonus-ov">
+    <span class="chip brass" style="font-size:10px">ログインボーナス</span>
+    <b>連続ログイン ${bonusStreak()}日目${bonusMult()>1?'　獲得×5中！':''}</b>
+    <button class="btn brass" style="margin-top:14px;width:min(280px,78%)" onclick="bonusBegin()">パターに挑戦する</button>
+    <span style="font-size:10px;color:rgba(255,255,255,.6)">連続5日以上で獲得が5倍になります</span>
+  </div>`:''}`;
 function gpInit(){ gp.state='ready'; if(gp.bonusMode && !gp.bonusStarted){ cancelAnimationFrame(gp.raf); return; } gpAim(); }
 function gpAim(){
   const b = document.getElementById('gp-ball'); if(!b) return;
