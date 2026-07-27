@@ -1217,35 +1217,20 @@ function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth(
 function maybeLoginBonus(){
   if(!isD() || !S.role) return;
   if(S[bLastKey()] === todayKey()) return;
-  openBonusSheet();
+  bonusPuttStart();
 }
 function bonusStreak(){ return (S[bDayKey()]||0) + 1; }  // 今日で連続何日目か
 function bonusMult(){ return bonusStreak() >= 5 ? 5 : 1; }
-function openBonusSheet(){
-  const day = bonusStreak();
-  const mult = bonusMult();
-  const cells = [1,2,3,4,5].map(n=>`
-    <div class="bn-cell ${n<day?'done':''} ${n===Math.min(day,5)&&day<=5?'now':''} ${n===5?'big':''}">
-      <span class="d">${n}日${n===5?'〜':''}</span>
-      ${n<day?`<span class="ck">${I.check.replace('width="40" height="40"','width="13" height="13"')}</span>`:`<span class="ic">${I.coin.replace('width="20" height="20"','width="15" height="15"')}</span>`}
-      <span class="a">${n===5?'×5':'×1'}</span>
-    </div>`).join('');
-  sheet(`<h3>ログインボーナス</h3>
-  <p class="muted">連続ログイン <b style="font-family:var(--font-num)">${day}</b> 日目${mult===5?'　<span class="chip brass" style="font-size:9px">獲得×5中！</span>':''}</p>
-  <div class="bn-strip" style="grid-template-columns:repeat(3,1fr)">${cells}</div>
-  <div class="bn-putt">
-    <b>今日のボーナスは「1打パター」で獲得</b>
-    <div class="bn-prize"><span>外しても <b>${(50*mult).toLocaleString()}G</b></span><span class="win">カップインで <b>${(200*mult).toLocaleString()}G</b></span></div>
-  </div>
-  <button class="btn brass" style="margin-top:12px" onclick="bonusPuttStart()">パターに挑戦する</button>
-  <p class="muted" style="font-size:10.5px;margin-top:10px;text-align:center">貯めたゴールドは<u style="cursor:pointer;font-weight:700" onclick="closeSheet();go('#/gold')">ゴールド交換所</u>で特典と交換できます</p>
-  <p class="muted" style="font-size:10px;margin-top:6px;text-align:center">連続5日以上で獲得が5倍。1日空くと1日目に戻ります　<u style="cursor:pointer" onclick="bonusDemoNext()">（デモ）翌日のログインを再現</u></p>`);
-}
 function bonusPuttStart(){
   closeSheet();
-  gp.bonusMode = true;
-  go('#/gputt'); render();
-  setTimeout(()=>toast('ログインボーナス：1打勝負！カップインで'+(200*bonusMult())+'G'), 400);
+  gp.bonusMode = true; gp.bonusStarted = false;
+  if(location.hash!=='#/gputt'){ go('#/gputt'); } else { render(); }
+}
+function bonusBegin(){
+  gp.bonusStarted = true;
+  const ov = document.getElementById('gp-bonus-ov');
+  if(ov) ov.remove();
+  gpAim();
 }
 function bonusFinish(success){
   if(!gp.bonusMode) return;
@@ -1255,19 +1240,19 @@ function bonusFinish(success){
   gAdd(amt);
   S[bDayKey()] = (S[bDayKey()]||0) + 1;
   S[bLastKey()] = todayKey();
-  gp.bonusMode = false;
+  gp.bonusMode = false; gp.bonusStarted = false;
   save();
   if(success) celebrate();
-  sheet(`<h3>${success?'カップイン！':'惜しい！'}</h3>
-  <div class="sum-box" style="margin-top:10px">
-    <div class="sum-row"><span>ボーナス</span><b style="font-family:var(--font-num)">${success?200:50} G${mult>1?` × ${mult}`:''}</b></div>
-    <div class="sum-row"><span>獲得ゴールド</span><b style="font-family:var(--font-num);font-size:17px;color:var(--brass-ink)">+${amt.toLocaleString()} G</b></div>
-    <div class="sum-row"><span>連続ログイン</span><b style="font-family:var(--font-num)">${day}日目${mult>1?'（×5継続中）':''}</b></div>
+  sheet(`<h3>ログインボーナス${day}日目達成！</h3>
+  <div style="text-align:center;margin-top:10px">
+    <div class="muted" style="font-size:11px">${success?'カップイン！':'惜しい！'}${mult>1?`　${success?200:50}G × 5`:''}</div>
+    <div style="font-family:var(--font-num);font-weight:300;font-size:42px;color:var(--brass-ink)">+${amt.toLocaleString()}<small style="font-size:15px;font-weight:600">　G</small></div>
+    ${mult>1?`<span class="chip brass" style="font-size:9px">連続5日以上 獲得×5中！</span>`:''}
   </div>
-  <button class="btn" style="margin-top:14px" onclick="closeSheet();go('#/home');render()">受け取ってホームへ</button>
-  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">このままパターで遊ぶ</button>`);
+  <button class="btn" style="margin-top:14px" onclick="closeSheet();go('#/home');render()">受け取る</button>
+  <p class="muted" style="font-size:10px;margin-top:10px;text-align:center"><u style="cursor:pointer" onclick="bonusDemoNext()">（デモ）翌日のログインを再現</u></p>`);
 }
-function bonusDemoNext(){ S[bLastKey()] = null; save(); openBonusSheet(); }
+function bonusDemoNext(){ S[bLastKey()] = null; save(); closeSheet(); bonusPuttStart(); }
 const SPARK_DEF = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="spark" viewBox="-10 -10 20 20"><path d="M0 -9C1.3 -2.5 2.5 -1.3 9 0C2.5 1.3 1.3 2.5 0 9C-1.3 2.5 -2.5 1.3 -9 0C-2.5 -1.3 -1.3 -2.5 0 -9Z"/></symbol></defs></svg>';
 function stampSvg(id){ const s = STAMPS.find(x=>x.id===id); return s ? s.svg : ''; }
 const FREE_STAMPS = ['round','range','best'];
@@ -1760,7 +1745,7 @@ V.chat = id => {
     <div class="chat">${(msgs + matchCard) || `<div class="empty" style="padding-top:60px"><div class="big" style="color:var(--line)">${I.flag.replace('<svg ','<svg width="40" height="40" ')}</div>${esc(u.name)}さんに挨拶してみましょう</div>`}</div>
     ${isD() && S.role==='m' && !S.subActive && !S.stampTrayOff ? `
     <div class="stamp-tray">
-      <div class="st-head"><span>未加入でも送れるお誘いスタンプ</span><button class="st-x" onclick="S.stampTrayOff=true;save();render()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
+      <div class="st-head"><span>気軽にスタンプを送ってみよう</span><button class="st-x" onclick="S.stampTrayOff=true;save();render()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
       <div class="st-row">${FREE_STAMPS.map(sid=>`<button class="stamp-pick" onclick="sendStamp('${id}','${sid}')"><span class="stamp-svg">${stampSvg(sid)}</span></button>`).join('')}</div>
     </div>`:''}
     <div class="chatbar">
@@ -3337,6 +3322,14 @@ V.gputt = () => `
       <div class="gp-dir" id="gp-dir"><svg width="46" height="64" viewBox="0 0 46 64" fill="none"><path d="M23 60V16" stroke="#FFE9A8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 8"/><path d="M23 4l9 14H14z" fill="#FFE9A8"/></svg></div>
       <div class="gp-ball" id="gp-ball"></div>
       <div class="gp-result" id="gp-result"></div>
+      ${gp.bonusMode && !gp.bonusStarted ? `
+      <div class="gp-start" id="gp-bonus-ov">
+        <span class="chip brass" style="font-size:9.5px">ログインボーナス</span>
+        <b>連続ログイン ${bonusStreak()}日目${bonusMult()>1?'　獲得×5中！':''}</b>
+        <div class="bn-prize" style="color:rgba(255,255,255,.75)"><span>外しても <b style="color:#fff">${(50*bonusMult()).toLocaleString()}G</b></span><span class="win">カップインで <b style="color:#FFE9A8">${(200*bonusMult()).toLocaleString()}G</b></span></div>
+        <button class="btn brass" style="margin-top:12px;min-width:210px" onclick="bonusBegin()">パターに挑戦する</button>
+        <span style="font-size:10px;color:rgba(255,255,255,.6)">連続5日以上で獲得が5倍になります</span>
+      </div>`:''}
     </div>
     <div class="gp-meterrow">
       <div class="gp-meter"><div class="gp-zone"></div><div class="gp-fill" id="gp-fill"></div></div>
@@ -3344,7 +3337,7 @@ V.gputt = () => `
     </div>
     <p class="g-note">方向を止めて、金のゾーンでストローク。無料5打/日・追加は100G</p>
   </div>${demoPill()}`;
-function gpInit(){ gp.state='ready'; gpAim(); }
+function gpInit(){ gp.state='ready'; if(gp.bonusMode && !gp.bonusStarted){ cancelAnimationFrame(gp.raf); return; } gpAim(); }
 function gpAim(){
   const b = document.getElementById('gp-ball'); if(!b) return;
   b.style.transition='none'; b.style.transform='none'; b.style.opacity='1';

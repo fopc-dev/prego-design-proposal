@@ -1348,10 +1348,13 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 .stamp-tray .st-x{width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);border-radius:50%}
 .stamp-tray .st-x:active{background:var(--turf-soft)}
 .stamp-tray .st-row{display:flex;gap:8px;margin-top:2px}
-.stamp-tray .stamp-pick{flex:1;aspect-ratio:auto;height:86px;padding:4px}
+.stamp-tray .stamp-pick{flex:1;aspect-ratio:auto;height:128px;padding:5px}
 /* ---- ボーナスパター ---- */
 .bn-putt{background:linear-gradient(120deg,var(--brass-soft),#fff);border:1px solid var(--brass-bright);border-radius:14px;padding:12px 14px;margin-top:12px;text-align:center}
 .bn-putt b{font-size:12.5px}
 .bn-prize{display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:11px;color:var(--ink-soft)}
 .bn-prize b{font-family:var(--font-num);font-size:14px;color:var(--ink)}
 .bn-prize .win b{color:var(--brass-ink);font-size:16px}
+
+.gp-start{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(6,32,20,.6);backdrop-filter:blur(4px);color:#fff;text-align:center}
+.gp-start b{font-size:15px;letter-spacing:.04em}
