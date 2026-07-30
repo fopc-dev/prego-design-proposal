@@ -3989,6 +3989,15 @@ function gtRefill(){
 
 /* ---------- router ---------- */
 let _lastRoute = null;
+function syncOverlays(){
+  const st = document.getElementById('stage'); if(!st) return;
+  const r = st.getBoundingClientRect();
+  const p = document.querySelector('.lv1-panel');
+  if(p){ p.style.left = (r.left + r.width/2 - p.offsetWidth/2) + 'px'; }
+  const o = document.getElementById('gp-bonus-ov');
+  if(o){ o.style.left = r.left + 'px'; o.style.width = r.width + 'px'; o.style.right = 'auto'; }
+}
+window.addEventListener('resize', syncOverlays);
 const FAB_EXCLUDE = ['', 'login', 'signup', 'forgot', 'home', 'reco', 'chat', 'feed', 'roundlog'];
 function syncBackFab(route){
   let fab = document.getElementById('back-fab');
@@ -4028,6 +4037,7 @@ function render(){
   };
   $app.innerHTML = (map[route] || V.login)();
   syncBackFab(route);
+  syncOverlays();
   window.scrollTo(0,0);
   window.scrollTo(0, _sy);
   if(route==='reco') setTimeout(bindReco, 0);
