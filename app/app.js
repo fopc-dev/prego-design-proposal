@@ -18,9 +18,9 @@ const WOMEN = [
   { id:'w1', st:'o', mob:'f2', wish:'need', pay:'相手に出してもらいたい', cert:true, sim:{ok:true,st:'o',fee:8000}, rng:{ok:true,st:'n'}, rnd:{ok:true,st:'o'}, name:'MIKA',   age:29, img:'img/w1.jpg', best:92,  ave:104, tier:'GOLD',   rounds:38, rating:4.9, rc:41, hist:'5年',   area:['千葉','東京','埼玉'], dates:['7/8','7/14','7/17','7/21'], meet:'現地集合', drink:'少し飲む', style:'楽しくエンジョイ・マナー重視', reply:true,  bio:'休日はほぼゴルフ場にいます。ベスト更新が今年の目標。ラウンド後のビールまでがゴルフです🍺' },
   { id:'w2', st:'o', mob:'f3', wish:'nice', pay:'話し合って決めたい', cert:true, sim:{ok:true,st:'n'}, rng:{ok:true,st:'o',fee:5000}, rnd:{ok:true,st:'n'}, name:'SAKI',   age:28, img:'img/w2.jpg', best:99,  ave:110, tier:'SILVER', rounds:21, rating:4.8, rc:18, hist:'3〜5年', area:['千葉','茨城'], dates:['7/14','7/19','7/26','8/2','8/9'], meet:'現地集合OK', drink:'飲む', style:'わいわい・コンペ好き', reply:true,  bio:'最近100切りしました！月2でラウンドしています。よろしくお願いします。' },
   { id:'w3', st:'n', mob:'f1', wish:'no', pay:'自分の分は払います', cert:false, sim:{ok:false}, rng:{ok:true,st:'n'}, rnd:{ok:true,st:'n'}, name:'Emi',    age:31, img:'img/w3.jpg', best:96,  ave:108, tier:'SILVER', rounds:17, rating:4.7, rc:12, hist:'3〜5年', area:['東京','神奈川'], dates:['7/9','7/17','7/30'], meet:'現地集合', drink:'飲まない', style:'しっとり・丁寧なゴルフ', reply:false, bio:'フォームを大事にしています。レッスン週1。ご一緒する方のプレーの邪魔はしません◎' },
-  { id:'w4', st:'o', mob:'f2', wish:'need', pay:'相手に出してもらいたい', cert:false, sim:{ok:false}, rng:{ok:true,st:'o',fee:2000}, rnd:{ok:false,st:'o'}, name:'Rina',   age:26, img:'img/w4.jpg', best:118, ave:126, tier:'BRONZE', rounds:6,  rating:4.6, rc:5,  hist:'1〜3年', area:['埼玉','群馬'], dates:['7/12','7/21'], meet:'現地集合OK', drink:'少し飲む', style:'初心者歓迎でお願いします', reply:true,  bio:'ゴルフ歴2年目です。まだまだ下手ですが、一生懸命がんばります！' },
+  { id:'w4', st:'o', mob:'f2', wish:'need', pay:'相手に出してもらいたい', cert:false, sim:{ok:false}, rng:{ok:true,st:'n'}, rnd:{ok:false,st:'o'}, name:'Rina',   age:26, img:'img/w4.jpg', best:118, ave:126, tier:'BRONZE', rounds:6,  rating:4.6, rc:5,  hist:'1〜3年', area:['埼玉','群馬'], dates:['7/12','7/21'], meet:'現地集合OK', drink:'少し飲む', style:'初心者歓迎でお願いします', reply:true,  bio:'ゴルフ歴2年目です。まだまだ下手ですが、一生懸命がんばります！' },
   { id:'w5', st:'n', mob:'f3', wish:'nice', pay:'相手に出してもらいたい', cert:true, sim:{ok:true,st:'n'}, rng:{ok:true,st:'n'}, rnd:{ok:true,st:'n'}, name:'manami', age:31, img:'img/w5.jpg', best:104, ave:115, tier:'SILVER', rounds:14, rating:4.8, rc:11, hist:'3〜5年', area:['千葉','埼玉','東京'], dates:['7/14','7/17','7/30'], meet:'現地集合', drink:'飲む', style:'コンペ・わいわい・楽しくゴルフ', reply:true,  bio:'平日ゴルファーです。明るく穏やかな性格。ニコニコよく笑います。' },
-  { id:'w6', st:'o', mob:'f1', wish:'no', pay:'話し合って決めたい', cert:true, sim:{ok:true,st:'o',fee:11000}, rng:{ok:true,st:'o',fee:5000}, rnd:{ok:true,st:'o'}, name:'yuka',   age:33, img:'img/w6.jpg', best:91,  ave:100, tier:'GOLD',   rounds:44, rating:5.0, rc:37, hist:'10年以上', area:['東京','千葉','神奈川'], dates:['7/10','7/19','7/27'], meet:'現地集合', drink:'少し飲む', style:'スコア重視・淡々と回りたい', reply:true,  bio:'シングル目指して練習中。ストイックに回りたい方、ぜひ。' },
+  { id:'w6', st:'o', mob:'f1', wish:'no', pay:'話し合って決めたい', cert:true, sim:{ok:true,st:'o',fee:10000}, rng:{ok:true,st:'o',fee:5000}, rnd:{ok:true,st:'o'}, name:'yuka',   age:33, img:'img/w6.jpg', best:91,  ave:100, tier:'GOLD',   rounds:44, rating:5.0, rc:37, hist:'10年以上', area:['東京','千葉','神奈川'], dates:['7/10','7/19','7/27'], meet:'現地集合', drink:'少し飲む', style:'スコア重視・淡々と回りたい', reply:true,  bio:'シングル目指して練習中。ストイックに回りたい方、ぜひ。' },
   { id:'w7', st:'o', mob:'f2', wish:'nice', pay:'相手に出してもらいたい', cert:false, sim:{ok:false}, rng:{ok:true,st:'n'}, rnd:{ok:true,st:'o'}, name:'Coco',   age:27, img:'img/w7.jpg', best:112, ave:121, tier:'BRONZE', rounds:9,  rating:4.5, rc:7,  hist:'1〜3年', area:['神奈川','静岡'], dates:['7/13','7/20'], meet:'現地集合OK', drink:'飲む', style:'エンジョイ・写真もたくさん撮りたい', reply:false, bio:'ゴルフウェア集めが趣味です。楽しく回れたら最高です🌸' },
   { id:'w8', st:'n', mob:'f3', wish:'no', pay:'自分の分は払います', cert:false, sim:{ok:false}, rng:{ok:true,st:'n'}, rnd:{ok:true,st:'n'}, name:'Karin',  age:24, img:'img/w8.jpg', best:124, ave:132, tier:'WHITE',  rounds:2,  rating:4.4, rc:2,  hist:'1年未満', area:['東京','埼玉'], dates:['7/15','7/22'], meet:'現地集合OK', drink:'少し飲む', style:'デビューしたてです', reply:true,  bio:'先月コースデビューしました！優しく教えてくれる方だと嬉しいです。' },
   { id:'w9', st:'o', mob:'f2', wish:'need', pay:'相手に出してもらいたい', cert:true, sim:{ok:true,st:'o',fee:8000}, rng:{ok:true,st:'n'}, rnd:{ok:true,st:'o'}, name:'あんな', age:34, img:'img/w9.jpg', best:97,  ave:107, tier:'SILVER', rounds:19, rating:4.7, rc:15, hist:'5年',   area:['茨城','千葉'], dates:['7/16','7/23','7/30'], meet:'現地集合', drink:'飲む', style:'早朝スルー好き', reply:true,  bio:'朝イチスタート好きです。午後は温泉に寄って帰るのが定番コース。' },
@@ -235,6 +235,7 @@ function demoPill(){
     <button class="demo-pill" onclick="switchRole()">${r}<span class="sw">⇄ 切替</span></button>
     ${S.role==='f'?`<button class="demo-pill" onclick="switchFemale()"><span class="sw">⇄</span> ${other}</button>`:''}
     ${isL()?`<button class="demo-pill" onclick="lvCycle()">LV <span class="tletter">${mlv()}</span></button>`:''}
+    ${S.role==='f'&&isD()?`<button class="demo-pill" onclick="certToggle()">${me().cert!==false?'認定':'一般'}</button>`:''}
     <button class="demo-pill theme" onclick="cycleTheme()">配色 <span class="tletter">${S.theme.toUpperCase()}</span></button>
     <button class="demo-pill" style="padding:10px 14px" onclick="resetDemo()">↺</button>
   </div>`;
@@ -1505,9 +1506,19 @@ function lvUp3(){
   setTimeout(()=>toast('本人確認が完了しました（LV3）！ +1,000ゴールド'), 300);
   render();
 }
+function certToggle(){
+  const fid = S.fid || 'w1';
+  const w = WOMEN.find(x=>x.id===fid); if(!w) return;
+  S.fcert = S.fcert || {};
+  S.fcert[fid] = !(w.cert !== false);
+  w.cert = S.fcert[fid];
+  ensureFset(); save(); render();
+  toast(w.cert ? '認定ゴルファーに切替（デモ）' : '一般ゴルファーに切替（デモ）');
+}
 function lvCycle(){
   const cur = mlv();
-  const nx = cur >= 4 ? 1 : cur + 1;
+  const top = S.role==='f' ? 3 : 4;
+  const nx = cur >= top ? 1 : cur + 1;
   if(nx === 4){ S.mlv = 3; S.verified = true; S.subActive = true; }
   else { S.subActive = false; S.mlv = nx; S.verified = nx >= 3; }
   S.reco = null;
@@ -2541,7 +2552,24 @@ V.mypage = () => {
       </div>
       <p class="sc-note">数字は合計・<b>＋◯</b> は今週の新着</p>
     </div>`;})() : ''}
-    ${isF && isD() && (!isL() || mlv()>=3) ? `
+    ${isF && isD() ? (()=>{ ensureFset(); const r = S.fset.rnd; const cert = me().cert !== false; return `
+    <div class="card" style="margin:16px 18px 0;padding:14px 16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+        <b style="font-size:13px">ラウンドのお誘い</b>
+        <span class="chip ${r.st==='o'?'brass':''}" style="font-size:9px">${r.st==='o'?'おもてなし':'仲間探し'}</span>
+        <span class="chip line" style="font-size:9px;margin-left:auto">${cert?'認定':'一般'}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        ${[['n','仲間探し','謝礼なし・割り勘前提'],['o','おもてなし','謝礼つきオファーで受ける']].map(([k,t,s])=>`
+        <button class="venue-row ${r.st===k?'on':''}" style="flex:1" onclick="ensureFset();S.fset.rnd.st='${k}';save();render()">
+          <span class="vn">${t}</span><span class="vt">${s}</span>
+        </button>`).join('')}
+      </div>
+      ${r.st==='o'?`<p class="muted" style="font-size:10.5px;margin-top:9px">ラウンド成立ごとの受取は <b>¥${cert?'17,600':'4,400'}</b>（${cert?'認定':'一般'}・固定）</p>`:''}
+      <p class="muted" style="font-size:10px;margin-top:8px">修正は「お誘い設定」でいつでも変えられます</p>
+      <button class="btn ghost sm" style="margin-top:8px" onclick="go('#/invite-set')">お誘い設定を開く（インドア・打ちっぱなし）</button>
+    </div>`;})() : ''}
+    ${isF && isD() && (!isL() || mlv()>=3) && (me().cert!==false) ? `
     <div class="card" style="margin:16px 18px 0;padding:14px 16px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
         <b style="font-size:13px">認定ゴルファー ステータス</b>
@@ -3349,10 +3377,13 @@ function ensureFset(){
     save();
   }
   S.fset = S.fsetF[fid];
-  const cap = (me().cert !== false) ? 11000 : 2000;
+  if(S.fcert && (fid in S.fcert) && w) w.cert = S.fcert[fid];
+  const cert = w ? w.cert !== false : true;
+  const cap = 10000;
   ['sim','rng'].forEach(k=>{
-    if(!S.fset[k].fee) S.fset[k].fee = Math.min(5000, cap);
+    if(!S.fset[k].fee) S.fset[k].fee = 5000;
     if(S.fset[k].fee > cap) S.fset[k].fee = cap;
+    if(!cert && S.fset[k].st === 'o') S.fset[k].st = 'n';
   });
   if(w){
     w.rnd = { ok:S.fset.rnd.on, st:S.fset.rnd.st };
@@ -3376,8 +3407,7 @@ V.inviteSet = () => {
   const f = S.fset;
   const cert = me().cert !== false;
   const rp = cert ? 22000 : 5500;
-  const cap = cert ? 11000 : 2000;
-  const feeOpts = []; for(let v=1000; v<=cap; v+=1000) feeOpts.push(v);
+  const feeOpts = []; for(let v=1000; v<=10000; v+=1000) feeOpts.push(v);
   const card = (key, title, sub) => {
     const m = f[key];
     return `
@@ -3391,20 +3421,22 @@ V.inviteSet = () => {
       </div>
       ${m.on?`
       <div style="display:flex;gap:8px;margin-top:11px">
-        ${[['n','仲間探し','謝礼なし・割り勘前提'],['o','おもてなし','謝礼つきオファーで受ける']].map(([k,t,s])=>`
-        <button class="venue-row ${m.st===k?'on':''}" style="flex:1" onclick="S.fset.${key}.st='${k}';save();render()">
-          <span class="vn">${t}</span><span class="vt">${s}</span>
-        </button>`).join('')}
+        ${[['n','仲間探し','謝礼なし・割り勘前提'],['o','おもてなし','謝礼つきオファーで受ける']].map(([k,t,s])=>{
+          const lockO = k==='o' && key!=='rnd' && !cert;
+          return `
+        <button class="venue-row ${m.st===k?'on':''}" style="flex:1;${lockO?'opacity:.45':''}" onclick="${lockO?`toast('インドア・打ちっぱなしの謝礼設定は、認定ゴルファーになるとご利用いただけます')`:`S.fset.${key}.st='${k}';save();render()`}">
+          <span class="vn">${t}${lockO?' '+I.shield.replace('width="14" height="14"','width="11" height="11"'):''}</span><span class="vt">${lockO?'認定ゴルファー限定':s}</span>
+        </button>`;}).join('')}
       </div>
       ${m.st==='o' ? (key==='rnd' ? `
-      <p class="muted" style="font-size:10.5px;margin-top:9px">ラウンド費用は<b>${cert?'認定ゴルファー ¥22,000':'一般ゴルファー ¥5,500'}</b>（固定）。あなたの受取は <b>¥${Math.round(rp*0.8).toLocaleString()}</b>（80%）です</p>` : `
+      <p class="muted" style="font-size:10.5px;margin-top:9px">あなたの受取は <b>¥${Math.round(rp*0.8).toLocaleString()}</b>（固定）／ラウンド費用 ${cert?'認定ゴルファー ¥22,000':'一般ゴルファー ¥5,500'}</p>` : `
       <div style="display:flex;align-items:center;gap:10px;margin-top:11px">
         <span style="font-size:11.5px;color:var(--ink-soft);flex:none">費用（税込）</span>
         <select class="input" style="flex:1;padding:9px 12px" onchange="S.fset.${key}.fee=Number(this.value);save();render()">
           ${feeOpts.map(v=>`<option value="${v}" ${m.fee===v?'selected':''}>¥${v.toLocaleString()}</option>`).join('')}
         </select>
       </div>
-      <p class="muted" style="font-size:10px;margin-top:7px">ラウンド費用（${cert?'認定 ¥22,000':'一般 ¥5,500'}）の50%以下・1,000円単位で設定できます。あなたの受取は <b>¥${Math.round(m.fee*0.8).toLocaleString()}</b>（80%）</p>`) : `
+      <p class="muted" style="font-size:10px;margin-top:7px">¥1,000〜¥10,000・1,000円単位で設定できます（認定ゴルファー限定）。あなたの受取は <b>¥${Math.round(m.fee*0.8).toLocaleString()}</b>（80%）</p>`) : `
       <p class="muted" style="font-size:10px;margin-top:8px">謝礼なし。プレー代宣言つきの誘いを受け取ります</p>`}
       `:`<p class="muted" style="font-size:10px;margin-top:8px">OFFの間、お相手の画面でこの種目は「受付停止中」になります</p>`}
     </div>`;
