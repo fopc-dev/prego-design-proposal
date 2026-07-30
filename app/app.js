@@ -477,7 +477,7 @@ V.signup = () => {
     <div class="label">性別</div>
     <div class="sex-row">
       <div style="display:flex;gap:10px;flex:none">${opt('sex','男性')}${opt('sex','女性')}</div>
-      <div class="sex-art ${su.opts.sex?'show':''}">${su.opts.sex?SU_ART[su.opts.sex]:''}</div>
+      <div class="sex-art ${su.opts.sex?'show':''}">${su.opts.sex?`<i class="sil" style="-webkit-mask-image:url(img/${su.opts.sex==='女性'?'su_f':'su_m'}.png);mask-image:url(img/${su.opts.sex==='女性'?'su_f':'su_m'}.png)"></i>`:''}</div>
     </div>
     <div class="label">メールアドレス</div>
     <input class="input" type="email" placeholder="example@email.com" value="demo@prego.golf">
