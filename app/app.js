@@ -1425,7 +1425,7 @@ function lockSheet(need){
   const steps = [];
   if(cur < 2) steps.push(['1','写真1枚＋ニックネーム＋ゴルフ3点（約2分）']);
   if(need >= 3 && cur < 3) steps.push([steps.length+1+'','本人確認＝年齢確認（約1分・無料）']);
-  const cta = cur < 2 ? ['写真を登録する','goPhotoReg()'] : ['本人確認をする（デモ）','lvUp3()'];
+  const cta = cur < 2 ? ['写真を登録する','goPhotoReg()'] : ['本人確認をする','goVerifyReg()'];
   sheet(`<h3>${need>=3?'この機能は本人確認のあと使えます':'写真を登録すると使えます'}</h3>
   ${need>=3?`<p class="muted" style="font-size:11px">メッセージ・スタンプ・お誘いなどの連絡機能は、法令により年齢確認済みの方のみご利用いただけます</p>`:''}
   <div class="sum-box" style="margin-top:10px">
@@ -1469,6 +1469,53 @@ function lvRegDone(){
   const back = lvRegFrom; lvRegFrom = null;
   setTimeout(()=>toast('LV2 メンバーになりました！ +300ゴールド・おすすめが1日10人に'), 300);
   if(back && back !== '#/photo-reg') location.hash = back; else go('#/mypage');
+  render();
+}
+let vr = { doc:null, shot:false, pay:null, date:null };
+let vrFrom = null;
+function goVerifyReg(){
+  vrFrom = location.hash;
+  closeSheet();
+  vr = { doc:null, shot:false, pay:null, date:null };
+  go('#/verify-reg');
+}
+V.verifyReg = () => {
+  const payOpts = S.role==='f'
+    ? ['プレー代はご馳走いただけると嬉しいです','割り勘でお願いします','相談して決めたい']
+    : ['プレー代はこちらで持ちます','割り勘でお願いします','相談して決めたい'];
+  const ready = vr.doc && vr.shot && vr.pay && vr.date;
+  return `
+  ${appbar({title:'本人確認（年齢確認）', back:true, noBell:true})}
+  <div class="page nofoot wrap">
+    <div class="notice" style="margin-top:12px">
+      <span class="ic">${I.shield}</span>
+      <span>法令に基づく年齢確認です。書類は確認後すみやかに破棄され、<b>お相手に公開されることはありません</b></span>
+    </div>
+    <div class="label">本人確認書類を選択</div>
+    <div class="osel">${['運転免許証','マイナンバーカード','パスポート'].map(d=>`<button class="opt ${vr.doc===d?'on':''}" onclick="vr.doc='${d}';render()">${d}</button>`).join('')}</div>
+    <div class="label">書類の撮影</div>
+    <button class="photo-pick" style="min-height:120px" onclick="vr.shot=true;render()">
+      ${vr.shot?`
+      <span class="ckb on" style="width:34px;height:34px">${I.check.replace('width="40" height="40"','width="18" height="18"')}</span>
+      <span style="font-size:12px;font-weight:700;margin-top:6px">読み取りOK（デモ）</span>
+      <span style="font-size:10px;color:var(--ink-soft)">生年月日と氏名を確認しました</span>`
+      :`${I.camera}<span>タップして撮影</span><span style="font-size:10px">四隅が写るように撮影してください</span>`}
+    </button>
+    <div class="label">プレー代の宣言（お相手に表示されます）</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${payOpts.map(p=>`<button class="opt ${vr.pay===p?'on':''}" style="border-radius:12px;text-align:left" onclick="vr.pay='${p}';render()">${p}</button>`).join('')}
+    </div>
+    <div class="label">プレー希望日（まず1日だけ）</div>
+    <div class="osel">${['7/14','7/17','7/21','7/26'].map(d=>`<button class="opt ${vr.date===d?'on':''}" onclick="vr.date='${d}';render()">${d}（${TEE_DAYS.find(x=>x.d===d)?.w||'-'}）</button>`).join('')}</div>
+    <button class="btn brass" style="margin-top:20px" ${ready?'':'disabled'} onclick="lvVerifyDone()">提出して認証を完了する（+1,000ゴールド）</button>
+    <p class="muted" style="font-size:10px;text-align:center;margin-top:8px">審査は通常数分〜24時間以内（デモでは即時認証されます）</p>
+  </div>${demoPill()}`;
+};
+function lvVerifyDone(){
+  S.mlv = 3; S.verified = true; save(); celebrate(); gAdd(1000);
+  const back = vrFrom; vrFrom = null;
+  setTimeout(()=>toast('本人確認が完了しました（LV3）！ +1,000ゴールド'), 300);
+  if(back && back !== '#/verify-reg') location.hash = back; else go('#/mypage');
   render();
 }
 function lvUp2(){
@@ -2555,12 +2602,12 @@ V.mypage = () => {
     </div>`}
     ${isL()?`
     <div class="card lv-card">
-      <span class="lv-badge">LV${mlv()}</span>
+      <span class="lv-badge ${mlv()===4?'max':''}">LV${mlv()}</span>
       <div style="flex:1;min-width:0">
         <b style="font-size:13px">${LV_NAMES[mlv()]}</b>
         <div class="muted" style="font-size:10px;line-height:1.5">${mlv()===1?'写真を登録すると「あり」への反応が届きます':mlv()===2?'本人確認でメッセージ・お誘いが使えます':mlv()===3?'サブスクでメッセージ使い放題':'すべての機能が利用できます'}</div>
       </div>
-      ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'goPhotoReg()':mlv()===2?'lvUp3()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
+      ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'goPhotoReg()':mlv()===2?'goVerifyReg()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
     </div>`:''}
     <div class="menu">${menu}</div>
   </div>
@@ -4000,7 +4047,7 @@ function render(){
     'notif-settings': V.notifSettings, 'blocked': V.blocked, 'card': V.card,
     'password': V.password, 'verify': V.verify,
     'articles': V.articles, 'article': ()=>V.article(arg),
-    'me': V.me, 'gold': V.gold, 'photo-reg': V.photoReg, 'games': V.games, 'gputt': V.gputt, 'gdrive': V.gdrive, 'gwind': V.gwind, 'gtarget': V.gtarget, 'edit-profile': V.editProfile, 'invite-set': V.inviteSet, 'host-compe': V.hostCompe, 'reco': V.reco, 'likes': V.likes, 'footprints': V.footprints,
+    'me': V.me, 'gold': V.gold, 'photo-reg': V.photoReg, 'verify-reg': V.verifyReg, 'games': V.games, 'gputt': V.gputt, 'gdrive': V.gdrive, 'gwind': V.gwind, 'gtarget': V.gtarget, 'edit-profile': V.editProfile, 'invite-set': V.inviteSet, 'host-compe': V.hostCompe, 'reco': V.reco, 'likes': V.likes, 'footprints': V.footprints,
   };
   $app.innerHTML = (map[route] || V.login)();
   syncBackFab(route);
