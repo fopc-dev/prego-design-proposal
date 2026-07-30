@@ -422,6 +422,30 @@ function pickRole(r, fid){
 
 /* ---- signup (demo wizard / 実アプリ準拠) ---- */
 let su = { step:1, opts:{}, photo:false, areas:[], zip:'1510051' };
+let wh = null;
+function openWheel(title, cols, cb){
+  wh = { cols: cols.map(c=>({...c})), cb };
+  sheet(`<h3>${title}</h3>
+  <div class="wheel-row">
+    <div class="wh-bar"></div>
+    ${wh.cols.map((c,ci)=>`
+    <div class="wheel" id="wh-${ci}" onscroll="whScroll(${ci})">
+      <div class="wh-pad"></div>
+      ${c.options.map(o=>`<div class="wh-it">${o}</div>`).join('')}
+      <div class="wh-pad"></div>
+    </div>`).join('')}
+  </div>
+  <button class="btn" style="margin-top:14px" onclick="whDone()">決定</button>`);
+  setTimeout(()=>{ wh.cols.forEach((c,ci)=>{ const el=document.getElementById('wh-'+ci); if(!el) return; const idx=Math.max(0, c.options.indexOf(c.value)); el.scrollTop = idx*40; }); }, 40);
+}
+function whScroll(ci){
+  const el = document.getElementById('wh-'+ci); if(!el||!wh) return;
+  const c = wh.cols[ci];
+  const idx = Math.max(0, Math.min(c.options.length-1, Math.round(el.scrollTop/40)));
+  c.value = c.options[idx];
+}
+function whDone(){ const cb = wh && wh.cb, v = wh ? wh.cols.map(c=>c.value) : null; closeSheet(); wh = null; if(cb) cb(v); }
+function rangeN(a,b){ const r=[]; for(let i=a;i<=b;i++) r.push(i); return r; }
 const SU_ART = {
   '男性': `<svg width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="var(--fairway)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 22q0-11 12-11t12 11"/><path d="M44 22l9 2"/><path d="M20 22h24"/><path d="M21 24a11 11 0 0 0 22 0"/><path d="M13 55q6-11 19-11t19 11"/></svg>`,
   '女性': `<svg width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="var(--fairway)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 42q-4-24 12-27q16 3 12 27"/><path d="M22 24a10 10 0 0 0 20 0"/><path d="M20 42q-2 3-5 4M44 42q2 3 5 4"/><path d="M14 55q6-10 18-10t18 10"/></svg>`,
@@ -451,7 +475,7 @@ V.signup = () => {
   if(s===1) body = `
     <div class="label">性別</div>
     <div class="sex-row">
-      <div class="opt-grid" style="flex:1;margin:0">${opt('sex','男性')}${opt('sex','女性')}</div>
+      <div style="display:flex;gap:10px;flex:none">${opt('sex','男性')}${opt('sex','女性')}</div>
       <div class="sex-art ${su.opts.sex?'show':''}">${su.opts.sex?SU_ART[su.opts.sex]:''}</div>
     </div>
     <div class="label">メールアドレス</div>
@@ -485,11 +509,7 @@ V.signup = () => {
     <p class="muted" style="font-size:10.5px;margin-top:6px">郵便番号を入力すると、近辺のプレーエリア候補が表示されます</p>`}`;
     const birthBlock = `
     <div class="label">生年月日（非公開・後から変更できません）</div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input class="input" style="flex:2" type="number" value="1985"><span>年</span>
-      <input class="input" style="flex:1" type="number" value="12"><span>月</span>
-      <input class="input" style="flex:1" type="number" value="10"><span>日</span>
-    </div>`;
+    <button class="input wh-open" onclick="openBirthWheel()">${su.birth||'1985年12月10日'}<span class="wh-caret">${I.back.replace('width="20" height="20"','width="14" height="14"').replace('M15 4.5L7.5 12l7.5 7.5','M7 9.5l5 5 5-5')}</span></button>`;
     if(isL()){
       body = `
     ${birthBlock}
@@ -510,8 +530,8 @@ V.signup = () => {
     <div class="label">自己紹介（200文字まで）</div>
     <textarea class="input" rows="3" placeholder="よろしくお願いします！">よろしく</textarea>
     <div style="display:flex;gap:10px;margin-top:4px">
-      <div style="flex:1"><div class="label">ベストスコア</div><input class="input" type="number" value="100"></div>
-      <div style="flex:1"><div class="label">アベレージ</div><input class="input" type="number" value="95"></div>
+      <div style="flex:1"><div class="label">ベストスコア</div><button class="input wh-open" onclick="pr.best=pr.best||100;openScoreWheel('best')"><b style="font-family:var(--font-num)">${pr.best||100}</b></button></div>
+      <div style="flex:1"><div class="label">アベレージ</div><button class="input wh-open" onclick="pr.ave=pr.ave||110;openScoreWheel('ave')"><b style="font-family:var(--font-num)">${pr.ave||110}</b></button></div>
     </div>
     ${birthBlock}
     <div class="label">プレー代の負担について *</div>
@@ -535,6 +555,20 @@ V.signup = () => {
   </div>`;
 };
 function suOpt(g,v){ su.opts[g]=v; render(); }
+function openBirthWheel(){
+  const m = (su.birth||'1985年12月10日').match(/(\d+)年(\d+)月(\d+)日/);
+  openWheel('生年月日', [
+    {options: rangeN(1950,2008).map(y=>y+'年'), value: m[1]+'年'},
+    {options: rangeN(1,12).map(x=>x+'月'), value: Number(m[2])+'月'},
+    {options: rangeN(1,31).map(x=>x+'日'), value: Number(m[3])+'日'},
+  ], v => { su.birth = v.join(''); render(); });
+}
+function openScoreWheel(key){
+  const cur = Number(pr[key]);
+  openWheel(key==='best'?'ベストスコア':'アベレージ', [
+    {options: rangeN(65,160), value: cur},
+  ], v => { pr[key] = v[0]; render(); });
+}
 function suNext(){
   if(su.step<3){ su.step++; render(); window.scrollTo(0,0); }
   else {
@@ -1414,9 +1448,9 @@ V.photoReg = () => `
     <div class="label">ゴルフ情報</div>
     <div style="display:flex;gap:10px">
       <div style="flex:1"><div class="muted" style="font-size:10.5px;margin-bottom:4px">ベスト</div>
-        <select class="input" onchange="pr.best=this.value">${[80,90,100,110,120,130].map(v=>`<option ${pr.best==v?'selected':''}>${v}</option>`).join('')}</select></div>
+        <button class="input wh-open" onclick="openScoreWheel('best')"><b style="font-family:var(--font-num)">${pr.best}</b><span class="wh-caret">${I.back.replace('width="20" height="20"','width="14" height="14"').replace('M15 4.5L7.5 12l7.5 7.5','M7 9.5l5 5 5-5')}</span></button></div>
       <div style="flex:1"><div class="muted" style="font-size:10.5px;margin-bottom:4px">アベレージ</div>
-        <select class="input" onchange="pr.ave=this.value">${[90,100,110,120,130,140].map(v=>`<option ${pr.ave==v?'selected':''}>${v}</option>`).join('')}</select></div>
+        <button class="input wh-open" onclick="openScoreWheel('ave')"><b style="font-family:var(--font-num)">${pr.ave}</b><span class="wh-caret">${I.back.replace('width="20" height="20"','width="14" height="14"').replace('M15 4.5L7.5 12l7.5 7.5','M7 9.5l5 5 5-5')}</span></button></div>
     </div>
     <div class="muted" style="font-size:10.5px;margin:10px 0 4px">ゴルフ歴</div>
     <div class="osel">${['1年未満','1〜3年','3〜5年','5〜10年','10年以上'].map(h=>`<button class="opt ${pr.hist===h?'on':''}" onclick="pr.hist='${h}';render()">${h}</button>`).join('')}</div>
@@ -1757,6 +1791,7 @@ function markRead(id){
   if(dirty) save();
 }
 function openChat(id){
+  if(isL() && mlv()<3){ lockSheet(3); return; }
   if(!S.chats.find(c=>c.id===id)){ S.chats.unshift({id, msgs:[]}); save(); }
   go('#/chat/'+id);
 }
@@ -3926,7 +3961,7 @@ let _lastRoute = null;
 const FAB_EXCLUDE = ['', 'login', 'signup', 'forgot', 'home', 'reco', 'chat', 'feed', 'roundlog'];
 function syncBackFab(route){
   let fab = document.getElementById('back-fab');
-  const want = !FAB_EXCLUDE.includes(route) && !!$app.querySelector('.appbar .back');
+  const want = (!FAB_EXCLUDE.includes(route) && !!$app.querySelector('.appbar .back')) || route==='messages';
   if(!want){ if(fab) fab.remove(); return; }
   if(!fab){
     fab = document.createElement('button');
