@@ -2519,24 +2519,29 @@ V.mypage = () => {
           <span class="sc-n">${n}${plus?`<sup>+${plus}</sup>`:''}</span>
           <span class="sc-l">${label}</span>
         </button>`;
+      const D = (isL() && mlv()<3)
+        ? {rating:'—', rc:0, rounds:0, rp:0, foot:(mlv()===2?4:0), fp:(mlv()===2?2:0), mut:0}
+        : (isL() && mlv()===3)
+        ? {rating:'5.0', rc:1, rounds:1, rp:1, foot:6, fp:2, mut:1}
+        : {rating:m.rating.toFixed(1), rc:m.rc, rounds:m.rounds, rp:2, foot:foot, fp:3, mut:mutual.length};
       return `
     <div class="stats-card">
       <button class="sc-rating" onclick="toast('レビュー一覧（デモでは省略）')">
         <span class="sc-star">${I.star.replace('width="14" height="14"','width="19" height="19"')}</span>
-        <span class="sc-rv">${m.rating.toFixed(1)}</span>
-        <span class="sc-rc">レビュー ${m.rc}件</span>
+        <span class="sc-rv">${D.rating}</span>
+        <span class="sc-rc">レビュー ${D.rc}件</span>
         <span class="arw" style="margin-left:auto;color:var(--ink-soft)">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7').replace('width="20" height="20"','width="14" height="14"')}</span>
       </button>
       <div class="sc-hr"></div>
       <div class="sc-grid">
-        ${cell(ic(I.flag), m.rounds, 2, 'ラウンド', `go('#/roundlog')`)}
-        ${cell(ic(I.foot), foot, 3, '足あと', `go('#/footprints')`)}
+        ${cell(ic(I.flag), D.rounds, D.rp, 'ラウンド', `go('#/roundlog')`)}
+        ${cell(ic(I.foot), D.foot, D.fp, '足あと', `go('#/footprints')`)}
         ${cell(ic(I.heart), likedMe.length, 1, 'いいね', `go('#/likes')`)}
-        ${cell(mutualIc, mutual.length, 0, '相互いいね', `go('#/likes')`)}
+        ${cell(mutualIc, D.mut, 0, '相互いいね', `go('#/likes')`)}
       </div>
       <p class="sc-note">数字は合計・<b>＋◯</b> は今週の新着</p>
     </div>`;})() : ''}
-    ${isF && isD() ? `
+    ${isF && isD() && (!isL() || mlv()>=3) ? `
     <div class="card" style="margin:16px 18px 0;padding:14px 16px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
         <b style="font-size:13px">認定ゴルファー ステータス</b>
@@ -2553,7 +2558,7 @@ V.mypage = () => {
         </div>`).join('')}
       <button class="btn ghost sm" style="margin-top:8px" onclick="go('#/edit-profile')">プロフィールを充実させる（写真あと1枚）</button>
     </div>`:''}
-    ${isF && isD() ? `
+    ${isF && isD() && (!isL() || mlv()>=3) ? `
     <button class="card" style="margin:12px 18px 0;padding:14px 16px;width:calc(100% - 36px);text-align:left;display:flex;gap:12px;align-items:center;border:1.5px solid var(--brass)" onclick="go('#/host-compe')">
       <span style="flex:none;width:40px;height:40px;border-radius:12px;background:var(--brass-soft);color:var(--brass-ink);display:flex;align-items:center;justify-content:center">${I.trophy}</span>
       <span style="flex:1">
@@ -2562,7 +2567,14 @@ V.mypage = () => {
       </span>
       <span class="chip brass" style="font-size:9px">NEW</span>
     </button>`:''}
-    ${isF?`
+    ${isL() && mlv()<3 ? `
+    <div class="next-tier">
+      <span class="ic">${I.trophy}</span>
+      <div class="t" style="flex:1">
+        はじめてのランク <b>GREEN</b> まで：${mlv()===1?'写真登録 → 本人確認 → 初マッチ':'本人確認 → 初マッチ'} で進みます
+        <div class="bar"><i style="width:${mlv()===1?'10%':'40%'}"></i></div>
+      </div>
+    </div>` : isF?`
     <div class="next-tier">
       <span class="ic">${I.trophy}</span>
       <div class="t" style="flex:1">

@@ -1371,7 +1371,7 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 /* ===== 会員レベル（テーマ2） ===== */
 .lv-badge{flex:none;display:inline-flex;align-items:center;border-radius:99px;padding:5px 13px;background:var(--fairway);color:#fff;font-family:var(--font-num);font-weight:600;font-size:11.5px;letter-spacing:.08em}
 .lv-badge.max{background:linear-gradient(120deg,#D9B96A,#B08A3C)}
-.lv-card{padding:14px 16px;display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.lv-card{padding:14px 16px;display:flex;gap:12px;align-items:center;margin:12px 18px 0}
 .chatbar.lockbar{display:flex;align-items:center;gap:10px;background:var(--brass-soft)}
 .lv1lock .prof-hero ~ *:not(.prof-cta){filter:blur(7px);pointer-events:none;user-select:none}
 .lv1-panel{position:fixed;left:0;width:min(86vw,340px);top:46%;z-index:60;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:var(--paper);border:1px solid var(--brass-bright);border-radius:20px;padding:20px 18px;box-shadow:var(--sh-float);animation:cardIn .4s var(--ease) both}
