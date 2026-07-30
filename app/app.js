@@ -181,6 +181,7 @@ const I = {
   car:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15l1.5-5A2 2 0 0 1 7.4 8.5h9.2a2 2 0 0 1 1.9 1.5L20 15"/><rect x="3" y="15" width="18" height="4.5" rx="1.5"/><circle cx="7.2" cy="19.5" r="1.3"/><circle cx="16.8" cy="19.5" r="1.3"/></svg>',
   train:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l1.5-3M15 21l-1.5-3"/><circle cx="9" cy="14" r=".6" fill="currentColor"/><circle cx="15" cy="14" r=".6" fill="currentColor"/></svg>',
   sliders:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h2.8M11.2 7h8.8M4 12h8.8M17.2 12h2.8M4 17h4.8M13.2 17h6.8"/><circle cx="9" cy="7" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="11" cy="17" r="2.2"/></svg>',
+  gold:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5l1.8-5h5.4l1.8 5z"/><path d="M12.5 19.5l1.8-5h5.4l1.8 5z"/><path d="M7.3 13l1.8-5h5.8l1.8 5z"/></svg>',
   shield:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 2.8v5.4c0 4.6-3 8-7 9.8-4-1.8-7-5.2-7-9.8V5.8z"/><path d="M9 12l2 2 4-4.2"/></svg>',
 };
 
@@ -2452,7 +2453,7 @@ V.mypage = () => {
   const menu = [
     ['プロフィール', I.user, ()=>`go('#/me')`],
     [isF?'コイン':'ポイント', I.coin, ()=>`go('#/points')`],
-    ['ゴールド', I.trophy.replace('width="22" height="22"','width="20" height="20"'), ()=>`go('#/gold')`],
+    ['ゴールド', I.gold, ()=>`go('#/gold')`],
     ...(isD() ? [['ゲーム', '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>', ()=>`go('#/games')`]] : []),
     ['オファー', I.invite, ()=>`go('#/offers')`, offerBadgeCount()||''],
     ['設定', I.gear, ()=>`go('#/settings')`],
@@ -3521,7 +3522,7 @@ V.hostCompe = () => {
 
 /* ---- ミニゲーム（テーマ1・サンプル） ---- */
 function goldHud(){
-  return `<div class="g-hud"><span>${I.trophy.replace('width="22" height="22"','width="14" height="14"')} <b style="font-family:var(--font-num)">${gGold().toLocaleString()}</b> G</span></div>`;
+  return `<div class="g-hud"><span>${I.gold.replace('width="20" height="20"','width="14" height="14"')} <b style="font-family:var(--font-num)">${gGold().toLocaleString()}</b> G</span></div>`;
 }
 V.games = () => `
   ${appbar({title:'ゴルフゲーム', back:true})}
@@ -3549,7 +3550,7 @@ let gp = {pow:0, ang:0, dir:1, adir:1, raf:null, state:'ready', combo:0, left:5,
 V.gputt = () => `
   ${appbar({title:'ワングリップパター', back:true, noBell:true})}
   <div class="page nofoot g-page">
-    <div class="g-stats"><span>コンボ <b id="gp-combo">×${gp.combo||'-'}</b></span><span>残り <b id="gp-left">${gp.left}</b> 打</span><span>獲得 <b id="gp-sum">${gp.sum}</b> G</span><span class="gs-gold">${I.trophy.replace('width="22" height="22"','width="13" height="13"')} <b>${gGold().toLocaleString()}</b></span></div>
+    <div class="g-stats"><span>コンボ <b id="gp-combo">×${gp.combo||'-'}</b></span><span>残り <b id="gp-left">${gp.left}</b> 打</span><span>獲得 <b id="gp-sum">${gp.sum}</b> G</span><span class="gs-gold">${I.gold.replace('width="20" height="20"','width="13" height="13"')} <b>${gGold().toLocaleString()}</b></span></div>
     <div class="gp-field prem" id="gp-field" onclick="gpTap()">
       <div class="gp-cup"><span class="gp-hole"></span><span class="gp-flag"><svg width="34" height="56" viewBox="0 0 34 56" fill="none"><path d="M6 4v48" stroke="#F4F7F4" stroke-width="3" stroke-linecap="round"/><path class="gp-flagcloth" d="M8 6l22 6-22 9z" fill="#E23B3B"/></svg></span></div>
       <div class="gp-orbit" id="gp-orbit"><span class="gp-oball"></span></div>
@@ -3691,7 +3692,7 @@ const GD_GOLFER = `<svg id="gd-golfer" width="110" height="130" viewBox="0 0 110
 V.gdrive = () => `
   ${appbar({title:'ドラコンメーター', back:true, noBell:true})}
   <div class="page nofoot g-page">
-    <div class="g-stats"><span>ベスト <b id="gd-best">${gd.best||'-'}</b> y</span><span>残り <b id="gd-left">${gd.left}</b> 打</span><span class="gs-gold">${I.trophy.replace('width="22" height="22"','width="13" height="13"')} <b>${gGold().toLocaleString()}</b></span></div>
+    <div class="g-stats"><span>ベスト <b id="gd-best">${gd.best||'-'}</b> y</span><span>残り <b id="gd-left">${gd.left}</b> 打</span><span class="gs-gold">${I.gold.replace('width="20" height="20"','width="13" height="13"')} <b>${gGold().toLocaleString()}</b></span></div>
     <div class="gd-scene" id="gd-scene">
       <div class="gd-sun"></div>
       <div class="gd-fair"></div>
@@ -3868,7 +3869,7 @@ function stampArt(id){
 V.gtarget = () => `
   ${appbar({title:'スタンプ的あて', back:true, noBell:true})}
   <div class="page nofoot g-page">
-    <div class="g-stats"><span>スコア <b id="gt-score">${gt.score}</b></span><span>残り <b id="gt-time">${gt.time}</b> 秒</span><span>今日 <b id="gt-left">${gt.left}</b> 回</span><span class="gs-gold">${I.trophy.replace('width="22" height="22"','width="13" height="13"')} <b>${gGold().toLocaleString()}</b></span></div>
+    <div class="g-stats"><span>スコア <b id="gt-score">${gt.score}</b></span><span>残り <b id="gt-time">${gt.time}</b> 秒</span><span>今日 <b id="gt-left">${gt.left}</b> 回</span><span class="gs-gold">${I.gold.replace('width="20" height="20"','width="13" height="13"')} <b>${gGold().toLocaleString()}</b></span></div>
     <div class="gt-scene" id="gt-scene">
       <div class="gt-lane l1"></div><div class="gt-lane l2"></div><div class="gt-lane l3"></div>
       <div class="gt-start" id="gt-start">
