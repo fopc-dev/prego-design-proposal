@@ -852,7 +852,7 @@ V.miss = () => {
           </div>
         </div>
         <div class="bridge"><span class="lb">中間地点の提案</span><b>市原京急カントリークラブ</b>（あなた48分・${esc(a.name)}さん51分）・五井駅からクラブバスあり</div>
-        <button class="btn sm" style="margin-top:11px" onclick="toast('中間地点の提案を送りました（デモ）')">この案を送ってみる</button>
+        <button class="btn sm" style="margin-top:11px" onclick="if(!lvNeed())toast('中間地点の提案を送りました（デモ）')">この案を送ってみる</button>
       </div>
       <div class="card" style="padding:14px 16px">
         <div style="display:flex;gap:12px;align-items:center" onclick="go('#/profile/${b.id}')">
@@ -863,7 +863,7 @@ V.miss = () => {
           </div>
         </div>
         <div class="bridge"><span class="lb">日程リクエスト</span>${esc(b.name)}さんは <b>7/21（火）</b> が空いています。合わせられますか？</div>
-        <button class="btn sm" style="margin-top:11px" onclick="toast('7/21で日程リクエストを送りました（デモ）')">7/21で打診する</button>
+        <button class="btn sm" style="margin-top:11px" onclick="if(!lvNeed())toast('7/21で日程リクエストを送りました（デモ）')">7/21で打診する</button>
       </div>
       <a class="compe" href="#/compe/c1">
         <div class="lb">それでも合わない週は</div>
@@ -1413,6 +1413,12 @@ function sendStamp(id, sid){
     c2.msgs.push({who:'them', t:'（デモ自動返信）スタンプありがとうございます！ぜひ行きましょう', tm:'いま'});
     save(); if(location.hash==='#/chat/'+id) render();
   }, 900);
+}
+function lvNeed(){
+  if(!isL()) return false;
+  if(mlv() < 2){ lockSheet(2); return true; }
+  if(mlv() < 3){ lockSheet(3); return true; }
+  return false;
 }
 function lockSheet(need){
   const cur = mlv();
