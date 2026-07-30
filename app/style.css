@@ -1381,7 +1381,7 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 .sex-row{display:flex;align-items:center;justify-content:flex-start;gap:24px}
 .sex-art{flex:none;width:96px;height:96px;border-radius:50%;background:var(--turf-soft);display:flex;align-items:center;justify-content:center;opacity:.35;transition:opacity .2s var(--ease)}
 .sex-art.show{opacity:1}
-.sex-art .sil{display:block;width:74px;height:74px;background:var(--fairway);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+.sex-art .sil{display:block;width:74px;height:74px;margin-left:7px;background:var(--fairway);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 .sex-art.show .sil{animation:pop .35s cubic-bezier(.2,.8,.3,1)}
 .lv-blurrow img{filter:blur(8px)}
 .lv-blurrow .nm{filter:blur(5px)}

@@ -511,8 +511,7 @@ V.signup = () => {
     const birthBlock = `
     <div class="label">生年月日（非公開・後から変更できません）</div>
     <button class="input wh-open" onclick="openBirthWheel()">${su.birth||'1985年12月10日'}<span class="wh-caret">${I.back.replace('width="20" height="20"','width="14" height="14"').replace('M15 4.5L7.5 12l7.5 7.5','M7 9.5l5 5 5-5')}</span></button>`;
-    if(isL()){
-      body = `
+    body = `
     ${birthBlock}
     ${areaBlock}
     <div class="notice" style="margin-top:16px">
@@ -520,28 +519,6 @@ V.signup = () => {
       <span>登録はこれだけ。写真・ニックネーム・スコアなどは<b>あとからいつでも</b>登録できます（登録するほど出会いやすくなります）</span>
     </div>
     <p class="muted" style="margin-top:10px;font-size:11px">生年月日は非公開です（年齢・都道府県・市区郡は公開）。</p>`;
-    } else {
-      body = `
-    <div class="label">プロフィール写真</div>
-    <button class="photo-pick" onclick="photoTips()">
-      ${su.photo?`<img src="${su.opts.sex==='女性'?'img/w5.jpg':'img/m2.jpg'}">`:`${I.camera}<span>タップして写真を選択</span><span style="font-size:10px">選ばれる写真のポイントを見る</span>`}
-    </button>
-    <div class="label">ニックネーム</div>
-    <input class="input" placeholder="ニックネームを入力" value="${su.opts.sex==='女性'?'もも':'タケ'}">
-    <div class="label">自己紹介（200文字まで）</div>
-    <textarea class="input" rows="3" placeholder="よろしくお願いします！">よろしく</textarea>
-    <div style="display:flex;gap:10px;margin-top:4px">
-      <div style="flex:1"><div class="label">ベストスコア</div><button class="input wh-open" onclick="pr.best=pr.best||100;openScoreWheel('best')"><b style="font-family:var(--font-num)">${pr.best||100}</b></button></div>
-      <div style="flex:1"><div class="label">アベレージ</div><button class="input wh-open" onclick="pr.ave=pr.ave||110;openScoreWheel('ave')"><b style="font-family:var(--font-num)">${pr.ave||110}</b></button></div>
-    </div>
-    ${birthBlock}
-    <div class="label">プレー代の負担について *</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${['お相手の分も払います','お互い自分の分を払う','お相手に出してもらいたい','話し合って決めたい'].map(v=>`<button class="opt ${su.opts.pay===v?'on':''}" style="border-radius:12px" onclick="suOpt('pay','${v}')">${v}</button>`).join('')}
-    </div>
-    ${areaBlock}
-    <p class="muted" style="margin-top:14px;font-size:11px">プロフィール情報は条件にマッチしたお相手を検索する際に反映されます。生年月日は非公開です（年齢・都道府県・市区郡は公開）。</p>`;
-    }
   }
   return `
   ${appbar({title:'新規登録', back:true, noBell:true})}
