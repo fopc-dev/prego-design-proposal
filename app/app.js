@@ -421,7 +421,25 @@ function pickRole(r, fid){
 }
 
 /* ---- signup (demo wizard / 実アプリ準拠) ---- */
-let su = { step:1, opts:{}, photo:false, areas:[] };
+let su = { step:1, opts:{}, photo:false, areas:[], zip:'1510051' };
+function zipPref(z){
+  const n = parseInt(String(z||'').slice(0,2)); if(isNaN(n)) return null;
+  const T=[[0,0,'北海道'],[1,1,'秋田県'],[2,2,'岩手県'],[3,3,'青森県'],[4,9,'北海道'],[10,20,'東京都'],[21,25,'神奈川県'],[26,29,'千葉県'],[30,31,'茨城県'],[32,32,'栃木県'],[33,36,'埼玉県'],[37,37,'群馬県'],[38,39,'長野県'],[40,40,'山梨県'],[41,43,'静岡県'],[44,49,'愛知県'],[50,51,'岐阜県'],[52,52,'滋賀県'],[53,58,'大阪府'],[59,59,'和歌山県'],[60,62,'京都府'],[63,63,'奈良県'],[64,64,'和歌山県'],[65,67,'兵庫県'],[68,68,'鳥取県'],[69,69,'島根県'],[70,71,'岡山県'],[72,73,'広島県'],[74,75,'山口県'],[76,76,'香川県'],[77,77,'徳島県'],[78,78,'高知県'],[79,79,'愛媛県'],[80,83,'福岡県'],[84,84,'佐賀県'],[85,85,'長崎県'],[86,86,'熊本県'],[87,87,'大分県'],[88,88,'宮崎県'],[89,89,'鹿児島県'],[90,90,'沖縄県'],[91,91,'福井県'],[92,92,'石川県'],[93,93,'富山県'],[94,95,'新潟県'],[96,96,'福島県'],[97,98,'宮城県'],[99,99,'山形県']];
+  const hit = T.find(([a,b])=>n>=a&&n<=b);
+  return hit ? hit[2] : null;
+}
+function nearbyPrefs(p){
+  const G=[['北海道'],['青森県','岩手県','秋田県','宮城県','山形県','福島県'],['東京都','神奈川県','埼玉県','千葉県','茨城県','栃木県','群馬県'],['山梨県','長野県','新潟県'],['愛知県','静岡県','岐阜県','三重県'],['富山県','石川県','福井県'],['大阪府','兵庫県','京都府','滋賀県','奈良県','和歌山県'],['岡山県','広島県','鳥取県','島根県','山口県'],['香川県','徳島県','愛媛県','高知県'],['福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県'],['沖縄県']];
+  const g = G.find(x=>x.includes(p));
+  if(!g) return p?[p]:[];
+  return [p, ...g.filter(x=>x!==p)].slice(0,6);
+}
+function suArea(v){
+  const i = su.areas.indexOf(v);
+  i>=0 ? su.areas.splice(i,1) : su.areas.push(v);
+  render();
+}
+function suZip(v){ su.zip = v; su.areas = []; render(); }
 V.signup = () => {
   const s = su.step;
   const opt = (g,v)=>`<button class="opt ${su.opts[g]===v?'on':''}" onclick="suOpt('${g}','${v}')">${v}</button>`;
@@ -445,7 +463,37 @@ V.signup = () => {
       ${[0,1,2,3].map(i=>`<input maxlength="1" inputmode="numeric" value="${'1234'[i]}">`).join('')}
     </div>
     <p class="muted" style="text-align:center;font-size:11px">コードが届かない場合は <a style="color:var(--turf);font-weight:700" onclick="toast('認証コードを再送しました（デモ）')">再送する</a></p>`;
-  if(s===3) body = `
+  if(s===3){
+    const pref = zipPref(su.zip);
+    const chips = pref ? nearbyPrefs(pref) : [];
+    if(pref && !su.areas.length) su.areas = [pref];
+    const areaBlock = `
+    <div class="label">郵便番号（市区町村レベルで管理されます）</div>
+    <input class="input" placeholder="1234567" value="${esc(su.zip)}" inputmode="numeric" style="max-width:180px" onchange="suZip(this.value)">
+    ${pref ? `
+    <div class="label">プレーエリア *（お住まい近辺から・複数選択できます）</div>
+    <p class="muted" style="font-size:10.5px;margin:0 0 8px">〒${esc(su.zip)} ＝ <b>${pref}</b> の近辺エリアを表示しています</p>
+    <div class="osel">${chips.map(p=>`<button class="opt ${su.areas.includes(p)?'on':''}" onclick="suArea('${p}')">${p}</button>`).join('')}</div>
+    <button class="btn ghost sm" style="margin-top:8px" onclick="areaSheet()">その他のエリアを選ぶ</button>` : `
+    <p class="muted" style="font-size:10.5px;margin-top:6px">郵便番号を入力すると、近辺のプレーエリア候補が表示されます</p>`}`;
+    const birthBlock = `
+    <div class="label">生年月日（非公開・後から変更できません）</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input class="input" style="flex:2" type="number" value="1985"><span>年</span>
+      <input class="input" style="flex:1" type="number" value="12"><span>月</span>
+      <input class="input" style="flex:1" type="number" value="10"><span>日</span>
+    </div>`;
+    if(isL()){
+      body = `
+    ${birthBlock}
+    ${areaBlock}
+    <div class="notice" style="margin-top:16px">
+      <span class="ic">${I.shield}</span>
+      <span>登録はこれだけ。写真・ニックネーム・スコアなどは<b>あとからいつでも</b>登録できます（登録するほど出会いやすくなります）</span>
+    </div>
+    <p class="muted" style="margin-top:10px;font-size:11px">生年月日は非公開です（年齢・都道府県・市区郡は公開）。</p>`;
+    } else {
+      body = `
     <div class="label">プロフィール写真</div>
     <button class="photo-pick" onclick="photoTips()">
       ${su.photo?`<img src="${su.opts.sex==='女性'?'img/w5.jpg':'img/m2.jpg'}">`:`${I.camera}<span>タップして写真を選択</span><span style="font-size:10px">選ばれる写真のポイントを見る</span>`}
@@ -458,28 +506,20 @@ V.signup = () => {
       <div style="flex:1"><div class="label">ベストスコア</div><input class="input" type="number" value="100"></div>
       <div style="flex:1"><div class="label">アベレージ</div><input class="input" type="number" value="95"></div>
     </div>
-    <div class="label">生年月日（非公開・後から変更できません）</div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input class="input" style="flex:2" type="number" value="1985"><span>年</span>
-      <input class="input" style="flex:1" type="number" value="12"><span>月</span>
-      <input class="input" style="flex:1" type="number" value="10"><span>日</span>
-    </div>
+    ${birthBlock}
     <div class="label">プレー代の負担について *</div>
     <div style="display:flex;flex-direction:column;gap:8px">
       ${['お相手の分も払います','お互い自分の分を払う','お相手に出してもらいたい','話し合って決めたい'].map(v=>`<button class="opt ${su.opts.pay===v?'on':''}" style="border-radius:12px" onclick="suOpt('pay','${v}')">${v}</button>`).join('')}
     </div>
-    <div class="label">プレーエリア *</div>
-    <button class="input" style="text-align:left;color:${su.areas.length?'var(--ink)':'var(--ink-soft)'}" onclick="areaSheet()">
-      ${su.areas.length?su.areas.join('・'):'プレーエリアを選択してください'}
-    </button>
-    <div class="label">郵便番号（市区町村レベルで管理されます）</div>
-    <input class="input" placeholder="1234567" value="1510051" style="max-width:180px">
+    ${areaBlock}
     <p class="muted" style="margin-top:14px;font-size:11px">プロフィール情報は条件にマッチしたお相手を検索する際に反映されます。生年月日は非公開です（年齢・都道府県・市区郡は公開）。</p>`;
+    }
+  }
   return `
   ${appbar({title:'新規登録', back:true, noBell:true})}
   <div class="page nofoot wrap">
     <div class="steps">${[1,2,3].map(i=>`<i class="${i<=s?'on':''}"></i>`).join('')}</div>
-    <p class="muted">STEP ${s} / 3 ${['アカウント作成','SMS認証','プロフィール登録'][s-1]}</p>
+    <p class="muted">STEP ${s} / 3 ${['アカウント作成','SMS認証（なりすまし防止）',isL()?'基本情報（約30秒）':'プロフィール登録'][s-1]}</p>
     ${body}
     <div style="margin-top:26px;display:flex;gap:10px">
       ${s>1?`<button class="btn ghost" style="flex:1" onclick="su.step--;render()">戻る</button>`:''}
