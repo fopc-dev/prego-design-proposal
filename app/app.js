@@ -3760,7 +3760,7 @@ function gtRefill(){
 
 /* ---------- router ---------- */
 let _lastRoute = null;
-const FAB_EXCLUDE = ['', 'login', 'signup', 'forgot', 'home', 'reco'];
+const FAB_EXCLUDE = ['', 'login', 'signup', 'forgot', 'home', 'reco', 'chat', 'feed', 'roundlog'];
 function syncBackFab(route){
   let fab = document.getElementById('back-fab');
   const want = !FAB_EXCLUDE.includes(route) && !!$app.querySelector('.appbar .back');
