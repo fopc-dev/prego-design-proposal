@@ -1219,6 +1219,42 @@ function maybeLoginBonus(){
   if(S[bLastKey()] === todayKey()) return;
   bonusPuttStart();
 }
+const GOLD_ITEMS = [
+  {g:500,  t:'プロフィール優先表示 24時間', s:'検索・おすすめで上位に表示されます'},
+  {g:1000, t:'限定フレーム「ゴールドリング」', s:'プロフィール写真に金の縁どり'},
+  {g:1500, t:'おすすめ枠に1日掲載', s:'ホーム上部のおすすめに登場します'},
+  {g:3000, t:'提携ゴルフ場 割引券 ¥1,000', s:'予約時にそのまま使えます'},
+  {g:5000, t:'提携ショップ ギア割引券 ¥2,000', s:'ウェア・ボールなどに使えます'},
+];
+V.gold = () => `
+  ${appbar({title:'ゴールド交換所', back:true})}
+  <div class="page wrap" style="padding-bottom:calc(var(--tab-h) + 40px)">
+    <div class="card" style="padding:18px 16px;margin-top:12px;text-align:center;background:linear-gradient(120deg,var(--brass-soft),#fff)">
+      <div class="muted" style="font-size:10.5px;letter-spacing:.12em">保有ゴールド</div>
+      <div style="font-family:var(--font-num);font-weight:300;font-size:40px;color:var(--brass-ink)">${gGold().toLocaleString()}<small style="font-size:14px;font-weight:600">　G</small></div>
+      <div class="muted" style="font-size:10.5px">ログインボーナスやゲームで貯まります</div>
+    </div>
+    <div class="sec-h" style="padding:14px 2px 8px"><span class="t">交換できる特典</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${GOLD_ITEMS.map((it,i)=>`
+      <div class="card" style="padding:13px 15px;display:flex;gap:12px;align-items:center">
+        <div style="flex:1">
+          <b style="font-size:12.5px">${it.t}</b>
+          <div class="muted" style="font-size:10.5px">${it.s}</div>
+        </div>
+        <button class="btn sm ${gGold()>=it.g?'':'ghost'}" style="flex:none" ${gGold()>=it.g?`onclick="exchangeGold(${i})"`:'disabled'}>${it.g.toLocaleString()} G</button>
+      </div>`).join('')}
+    </div>
+    <p class="muted" style="font-size:10px;margin-top:12px">交換した特典は即時反映されます（デモ）。ゴールドの有効期限は最終ログインから180日です</p>
+  </div>
+  ${tabbar('my')}${demoPill()}`;
+function exchangeGold(i){
+  const it = GOLD_ITEMS[i];
+  if(gGold() < it.g) return;
+  gAdd(-it.g); save(); celebrate();
+  setTimeout(()=>toast(`「${it.t}」と交換しました`), 300);
+  render();
+}
 function bonusStreak(){ return (S[bDayKey()]||0) + 1; }  // 今日で連続何日目か
 function bonusMult(){ return bonusStreak() >= 5 ? 5 : 1; }
 function bonusPuttStart(){
@@ -3724,6 +3760,21 @@ function gtRefill(){
 
 /* ---------- router ---------- */
 let _lastRoute = null;
+const FAB_EXCLUDE = ['', 'login', 'signup', 'forgot', 'home', 'reco'];
+function syncBackFab(route){
+  let fab = document.getElementById('back-fab');
+  const want = !FAB_EXCLUDE.includes(route) && !!$app.querySelector('.appbar .back');
+  if(!want){ if(fab) fab.remove(); return; }
+  if(!fab){
+    fab = document.createElement('button');
+    fab.id = 'back-fab'; fab.className = 'back-fab';
+    fab.setAttribute('aria-label','戻る');
+    fab.innerHTML = I.back.replace('width="20" height="20"','width="22" height="22"');
+    fab.onclick = () => history.back();
+    document.body.appendChild(fab);
+  }
+  fab.classList.toggle('with-tab', !!$app.querySelector('.tabbar'));
+}
 function render(){
   const h = location.hash || '#/login';
   const [_, route, arg] = h.split('/');
@@ -3747,6 +3798,7 @@ function render(){
     'me': V.me, 'gold': V.gold, 'games': V.games, 'gputt': V.gputt, 'gdrive': V.gdrive, 'gwind': V.gwind, 'gtarget': V.gtarget, 'edit-profile': V.editProfile, 'invite-set': V.inviteSet, 'host-compe': V.hostCompe, 'reco': V.reco, 'likes': V.likes, 'footprints': V.footprints,
   };
   $app.innerHTML = (map[route] || V.login)();
+  syncBackFab(route);
   window.scrollTo(0,0);
   window.scrollTo(0, _sy);
   if(route==='reco') setTimeout(bindReco, 0);
