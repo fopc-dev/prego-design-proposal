@@ -1248,7 +1248,7 @@ function sendInvite(){
   const _invMsg = `はじめまして！${inv.date}に${inv.mode&&inv.mode!=='ラウンド'?inv.mode:'ラウンド'}をご一緒できたら嬉しいです。${inv.pay}。`;
   c.msgs.push({who:'me', t:_invMsg, tm:'いま'});
   if(S.role==='m') S.bridge.msgs.push({tid:inv.id, sys:`${inv.date} の${inv.mode||'ラウンド'}にお誘い（${inv.pay}）`+(inv.venue?`\n会場候補：${inv.venue}（${inv.meet||'現地集合'}）`:''), t:_invMsg, tm:'いま'});
-  save(); closeSheet();
+  save(); closeSheet(); rpAdd(10);
   go('#/chat/'+inv.id); render();
   setTimeout(()=>toast(S.role==='f' ? '誘いを送りました' : '誘いを送りました。謝礼は発生しません'),300);
 }
@@ -1350,7 +1350,7 @@ function bonusFinish(success){
   S[bDayKey()] = (S[bDayKey()]||0) + 1;
   S[bLastKey()] = todayKey();
   gp.bonusMode = false; gp.bonusStarted = false;
-  save();
+  save(); rpAdd(5, '毎日ログイン');
   if(success) celebrate();
   sheet(`<h3>ログインボーナス${day}日目達成！</h3>
   <div style="text-align:center;margin-top:10px">
@@ -1443,7 +1443,7 @@ V.photoReg = () => `
     <p class="muted" style="font-size:10px;text-align:center;margin-top:8px">写真は審査後に公開されます（デモでは即時反映）</p>
   </div>${demoPill()}`;
 function lvRegDone(){
-  S.mlv = Math.max(S.mlv||1, 2); S.reco = null; save(); celebrate(); gAdd(300);
+  S.mlv = Math.max(S.mlv||1, 2); S.reco = null; save(); celebrate(); gAdd(300); rpAdd(50);
   const back = lvRegFrom; lvRegFrom = null;
   setTimeout(()=>toast('LV2 メンバーになりました！ +300ゴールド・おすすめが1日10人に'), 300);
   if(back && back !== '#/photo-reg') location.hash = back; else go('#/mypage');
@@ -1490,7 +1490,7 @@ V.verifyReg = () => {
   </div>${demoPill()}`;
 };
 function lvVerifyDone(){
-  S.mlv = 3; S.verified = true; save(); celebrate(); gAdd(1000);
+  S.mlv = 3; S.verified = true; save(); celebrate(); gAdd(1000); rpAdd(100);
   const back = vrFrom; vrFrom = null;
   setTimeout(()=>toast('本人確認が完了しました（LV3）！ +1,000ゴールド'), 300);
   if(back && back !== '#/verify-reg') location.hash = back; else go('#/mypage');
@@ -1505,6 +1505,37 @@ function lvUp3(){
   S.mlv = 3; S.verified = true; save(); closeSheet(); celebrate(); gAdd(1000);
   setTimeout(()=>toast('本人確認が完了しました（LV3）！ +1,000ゴールド'), 300);
   render();
+}
+const RANKS = [
+  {name:'WHITE',  need:0,    bonus:0,    perk:'スタート'},
+  {name:'GREEN',  need:50,   bonus:100,  perk:'アクティブバッジ表示'},
+  {name:'BRONZE', need:200,  bonus:200,  perk:'限定フレーム＋おすすめ表示アップ（小）'},
+  {name:'SILVER', need:500,  bonus:300,  perk:'「あり」1日+3件＋優先表示（中）'},
+  {name:'GOLD',   need:1200, bonus:500,  perk:'検索上位表示＋コンペ先行エントリー'},
+  {name:'BLACK',  need:3000, bonus:1000, perk:'最上位バッジ＋おすすめ最優先（★4.8×10R条件）'},
+];
+function rpGet(){ return S[S.role==='f'?'rpF':'rpM'] || 0; }
+function rpRank(){ const v = rpGet(); let r = RANKS[0]; for(const k of RANKS){ if(v >= k.need) r = k; } return r; }
+function rpNext(){ const v = rpGet(); return RANKS.find(k=>k.need > v) || null; }
+function rpAdd(n, label){
+  if(!isL()) return;
+  const before = rpRank();
+  const k = S.role==='f'?'rpF':'rpM';
+  S[k] = (S[k]||0) + n;
+  const after = rpRank();
+  save();
+  if(after.need > before.need){
+    gAdd(after.bonus); save();
+    celebrate();
+    setTimeout(()=>toast(`ランクアップ！ ${after.name} 達成 +${after.bonus}ゴールド・${after.perk}`), 500);
+  } else if(label){
+    setTimeout(()=>toast(`+${n} RP（${label}）`), 250);
+  }
+}
+function rpHint(){
+  if(mlv()<2) return ['写真を登録する', 50];
+  if(mlv()<3) return ['本人確認をする', 100];
+  return ['今日のゲームで遊ぶ', 5];
 }
 function certToggle(){
   const fid = S.fid || 'w1';
@@ -1763,6 +1794,7 @@ function answerOffer(id, ok, fin){
       S.bridgeM = S.bridgeM || {msgs:[]};
       S.bridgeM.msgs.push({to:o.to, card:{kind:'match', ...fx}});
     }
+    rpAdd(30);
     toast(`マッチ成立！ ${o.reward.toLocaleString()}コインが確定しました`);
     save();
     setTimeout(()=>{ go('#/chat/'+o.from); render(); }, 900);
@@ -2311,6 +2343,7 @@ function submitReview(){
   const {id, stars, tags} = rev;
   S.reviews[id] = { stars, tags };
   S.reviewDue = null;
+  rpAdd(50);
   const _c = S.chats.find(x=>x.id===id);
   if(_c && !_c.msgs.some(m=>m.who==='sys' && m.t.includes('お疲れ様でした'))) _c.msgs.push({who:'sys', t:'ラウンドお疲れ様でした。'});
   if(S.role==='m') S.bridge.msgs.push({tid:id, card:{kind:'review'}, reviewDue:true});
@@ -2595,14 +2628,19 @@ V.mypage = () => {
       </span>
       <span class="chip brass" style="font-size:9px">NEW</span>
     </button>`:''}
-    ${isL() && mlv()<3 ? `
+    ${isL() ? (()=>{
+      const cur = rpRank(), nx = rpNext();
+      const hint = rpHint();
+      const pct = nx ? Math.min(96, Math.max(4, Math.round((rpGet()-cur.need)/(nx.need-cur.need)*100))) : 100;
+      return `
     <div class="next-tier">
       <span class="ic">${I.trophy}</span>
       <div class="t" style="flex:1">
-        はじめてのランク <b>GREEN</b> まで：${mlv()===1?'写真登録 → 本人確認 → 初マッチ':'本人確認 → 初マッチ'} で進みます
-        <div class="bar"><i style="width:${mlv()===1?'10%':'40%'}"></i></div>
+        ランク <b>${cur.name}</b>${nx?`　▸　<b>${nx.name}</b> まであと <b style="font-family:var(--font-num)">${(nx.need-rpGet()).toLocaleString()}</b> RP`:'　最高ランクです'}
+        <div class="bar"><i style="width:${pct}%"></i></div>
+        ${nx?`<span style="display:block;font-size:9.5px;opacity:.75;margin-top:4px">次の一手：${hint[0]}（+${hint[1]} RP）</span>`:''}
       </div>
-    </div>` : isF?`
+    </div>`;})() : isF?`
     <div class="next-tier">
       <span class="ic">${I.trophy}</span>
       <div class="t" style="flex:1">
@@ -3210,6 +3248,7 @@ function recoAct(kind){
   S.reco.left--;
   if(kind==='like'){
     S.reco.likes.push(u.id);
+    rpAdd(2);
     if(RECO_LIKED_YOU.includes(u.id)){
       let c = S.chats.find(x=>x.id===u.id);
       if(!c){ c = {id:u.id, msgs:[]}; S.chats.unshift(c); }
@@ -3840,6 +3879,7 @@ function gdTap(){
   }
 }
 function gdLand(dist){
+  rpAdd(2);
   const el=id=>document.getElementById(id);
   let msg='ナイスショット', g=10;
   if(dist>=300){ msg='モンスター級！300y超え！！'; g=100; celebrate(); }
@@ -3911,6 +3951,7 @@ function gwShot(){
     else if(distM<5){ g=10; rank=Math.floor(Math.random()*200)+120; }
     else { rank=Math.floor(Math.random()*400)+400; }
     gAdd(g); save();
+    rpAdd(2);
     const r=document.getElementById('gw-result');
     r.innerHTML=`ピンまで <b style="font-family:var(--font-num)">${distM}</b>m・全国${rank}位${g?`<small>+${g} G</small>`:''}`;
     r.className='gp-result show '+(g>=100?'in':'');
@@ -4010,6 +4051,7 @@ function gtHit(d, ch){
   setTimeout(()=>{ p.remove(); d.remove(); }, 600);
 }
 function gtEnd(){
+  rpAdd(5);
   gt.playing=false; gtStop();
   document.querySelectorAll('.gt-t').forEach(t=>t.remove());
   const g=Math.max(5, Math.round(gt.score/5));
