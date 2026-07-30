@@ -69,6 +69,7 @@ const store = JSON.parse(localStorage.getItem('prego-demo') || '{}');
 const S = Object.assign({
   role: null,            // 'm' | 'f'
   fid: 'w1',             // female demo persona: 'w1'=MIKA / 'w2'=SAKI
+  mlv: 1,                // 会員レベル（テーマ2のみ有効）
   likes: {}, follows: {},
   points: 30000,         // male points
   coins: 17600,          // female coins
@@ -91,19 +92,22 @@ const S = Object.assign({
 const save = () => localStorage.setItem('prego-demo', JSON.stringify(S));
 
 /* ---------- color themes (A/B/C) ---------- */
-const THEME_NAMES = { b:'B ミント', e:'E エメラルド', g:'G ミント×エメラルド', '1':'1 新機能' };
-const isD = () => S.theme === '1';
+const THEME_NAMES = { b:'B ミント', e:'E エメラルド', g:'G ミント×エメラルド', '1':'1 新機能', '2':'2 会員レベル' };
+const isD = () => S.theme === '1' || S.theme === '2';
+const isL = () => S.theme === '2';
+const LV_NAMES = ['','ゲスト','メンバー','認証済み','プレミアム'];
+function mlv(){ if(!isL()) return 4; return S.subActive ? 4 : Math.min(3, S.mlv||1); }
 const qsTheme = new URLSearchParams(location.search).get('theme');
 if(qsTheme && THEME_NAMES[qsTheme]) S.theme = qsTheme;
 if(!THEME_NAMES[S.theme]) S.theme = 'g';
 function applyTheme(){
   document.body.classList.remove('theme-b','theme-e','theme-g');
-  const cls = S.theme==='1' ? 'g' : S.theme;
+  const cls = (S.theme==='1'||S.theme==='2') ? 'g' : S.theme;
   if(['b','e','g'].includes(cls)) document.body.classList.add('theme-' + cls);
 }
 function setTheme(t){ S.theme = t; save(); applyTheme(); render(); }
 function cycleTheme(){
-  const _tc=['b','e','g','1']; S.theme = _tc[(_tc.indexOf(S.theme)+1) % _tc.length];
+  const _tc=['b','e','g','1','2']; S.theme = _tc[(_tc.indexOf(S.theme)+1) % _tc.length];
   save(); applyTheme(); render();
   toast('配色パターン ' + THEME_NAMES[S.theme]);
 }
@@ -229,6 +233,7 @@ function demoPill(){
   return `<div class="pill-row">
     <button class="demo-pill" onclick="switchRole()">${r}<span class="sw">⇄ 切替</span></button>
     ${S.role==='f'?`<button class="demo-pill" onclick="switchFemale()"><span class="sw">⇄</span> ${other}</button>`:''}
+    ${isL()?`<button class="demo-pill" onclick="lvCycle()">LV <span class="tletter">${mlv()}</span></button>`:''}
     <button class="demo-pill theme" onclick="cycleTheme()">配色 <span class="tletter">${S.theme.toUpperCase()}</span></button>
     <button class="demo-pill" style="padding:10px 14px" onclick="resetDemo()">↺</button>
   </div>`;
@@ -344,7 +349,7 @@ V.loginE = () => `
     <p class="ie-login">アカウントをお持ちの方は<a onclick="demoLogin()">ログイン</a></p>
     <div class="ie-theme">
       <span class="lbl2">配色パターン</span>
-      ${['b','e','g','1'].map(t=>`<button class="tbtn ${S.theme===t?'on':''}" onclick="setTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
+      ${['b','e','g','1','2'].map(t=>`<button class="tbtn ${S.theme===t?'on':''}" onclick="setTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
     </div>
     <p class="ie-note">DEMO PROTOTYPE — 認証・決済は動作しません</p>
   </div>
@@ -395,7 +400,7 @@ V.login = () => S.theme==='e' ? V.loginE() : `
     </div>
     <div class="theme-row">
       <span class="lbl2">配色パターン</span>
-      ${['b','e','g','1'].map(t=>`<button class="tbtn ${S.theme===t?'on':''}" onclick="setTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
+      ${['b','e','g','1','2'].map(t=>`<button class="tbtn ${S.theme===t?'on':''}" onclick="setTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
     </div>
     <div class="demo-note">DEMO PROTOTYPE — 認証・決済は動作しません</div>
   </div>
@@ -797,8 +802,9 @@ V.profile = id => {
   const dchips = u.dates.map(d => `
     <div class="dchip ${myDates.includes(d)?'hot':''}"><div class="d">${d}</div><div class="w">${TEE_DAYS.find(x=>x.d===d)?.w||''}</div></div>`).join('');
   const overlap = u.dates.some(d=>myDates.includes(d));
+  const lv1p = isL() && mlv()<2;
   return `
-  <div class="page" style="padding-bottom:0">
+  <div class="page ${lv1p?'lv1lock':''}" style="padding-bottom:0">
     <div class="prof-hero">
       <div class="hero-track" onscroll="heroScrolled(this)">
         ${pics.map((p,i)=>`<div class="hero-slide"><img src="${p}" class="${i===0?'kb':''}" alt=""></div>`).join('')}
@@ -855,7 +861,11 @@ V.profile = id => {
           ? `<button class="btn" onclick="inviteSheet('${u.id}')">${I.invite} ラウンドに誘う</button>`
           : `<button class="btn" onclick="openChat('${u.id}')">メッセージを送る</button>`}
     </div>
-  </div>${demoPill()}`;
+  </div>${isL()&&mlv()<2?`
+  <div class="lv1-cta">
+    <span style="flex:1;font-size:11.5px"><b>プロフィールの続きは写真登録後に</b><small style="display:block;font-size:9.5px;color:var(--ink-soft)">登録すると相手からも見つけてもらえます</small></span>
+    <button class="btn sm" style="flex:none" onclick="lvUp2()">写真を登録</button>
+  </div>`:''}${demoPill()}`;
 };
 
 /* ---- offer flow ---- */
@@ -965,6 +975,7 @@ V.offer = id => {
 };
 let inv = {};
 function inviteSheet(id){
+  if(isL() && mlv()<3){ lockSheet(3); return; }
   if(S.role==='m' && !S.subActive && !isD()){ paywall(); return; }
   initInv(id);
   go('#/invite/'+id);
@@ -1293,6 +1304,7 @@ const SPARK_DEF = '<svg width="0" height="0" style="position:absolute" aria-hidd
 function stampSvg(id){ const s = STAMPS.find(x=>x.id===id); return s ? s.svg : ''; }
 const FREE_STAMPS = ['round','range','best'];
 function openStampSheet(id){
+  if(isL() && mlv()<3){ lockSheet(3); return; }
   const CATS = [['inv','お誘い'],['nice','ナイスプレー・報告'],['course','コースあるある']];
   const freeNote = (S.role==='m' && !S.subActive) ? `<p class="muted" style="font-size:10px;margin:2px 0 6px">${I.shield} 先頭3つのスタンプはサブスク未加入でも送信できます</p>` : '';
   sheet(`<h3>スタンプ</h3>${freeNote}
@@ -1305,6 +1317,7 @@ function openStampSheet(id){
   </div>`);
 }
 function sendStamp(id, sid){
+  if(isL() && mlv()<3){ closeSheet(); lockSheet(3); return; }
   if(S.role==='m' && !S.subActive && !FREE_STAMPS.includes(sid) && !(isD() && freeMsgOK(id))){ closeSheet(); toast('このスタンプの送信にはサブスク登録が必要です'); setTimeout(paywall, 700); return; }
   let c = S.chats.find(x=>x.id===id);
   if(!c){ c={id,msgs:[]}; S.chats.unshift(c); }
@@ -1316,6 +1329,44 @@ function sendStamp(id, sid){
     c2.msgs.push({who:'them', t:'（デモ自動返信）スタンプありがとうございます！ぜひ行きましょう', tm:'いま'});
     save(); if(location.hash==='#/chat/'+id) render();
   }, 900);
+}
+function lockSheet(need){
+  const cur = mlv();
+  const steps = [];
+  if(cur < 2) steps.push(['1','写真1枚＋ニックネーム＋ゴルフ3点（約2分）']);
+  if(need >= 3 && cur < 3) steps.push([steps.length+1+'','本人確認＝年齢確認（約1分・無料）']);
+  const cta = cur < 2 ? ['写真を登録する（デモ）','lvUp2()'] : ['本人確認をする（デモ）','lvUp3()'];
+  sheet(`<h3>${need>=3?'この機能は本人確認のあと使えます':'写真を登録すると使えます'}</h3>
+  ${need>=3?`<p class="muted" style="font-size:11px">メッセージ・スタンプ・お誘いなどの連絡機能は、法令により年齢確認済みの方のみご利用いただけます</p>`:''}
+  <div class="sum-box" style="margin-top:10px">
+    ${steps.map(([n,t])=>`<div class="sum-row"><span>STEP ${n}</span><b style="font-size:11.5px">${t}</b></div>`).join('')}
+  </div>
+  <button class="btn" style="margin-top:14px" onclick="${cta[1]}">${cta[0]}</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">あとで</button>`);
+}
+function lvUp2(){
+  S.mlv = Math.max(S.mlv||1, 2); S.reco = null; save(); closeSheet(); celebrate(); gAdd(300);
+  setTimeout(()=>toast('LV2 メンバーになりました！ +300ゴールド・おすすめが1日10人に'), 300);
+  render();
+}
+function lvUp3(){
+  S.mlv = 3; S.verified = true; save(); closeSheet(); celebrate(); gAdd(1000);
+  setTimeout(()=>toast('本人確認が完了しました（LV3）！ +1,000ゴールド'), 300);
+  render();
+}
+function lvCycle(){
+  const cur = mlv();
+  const nx = cur >= 4 ? 1 : cur + 1;
+  if(nx === 4){ S.mlv = 3; S.verified = true; S.subActive = true; }
+  else { S.subActive = false; S.mlv = nx; S.verified = nx >= 3; }
+  S.reco = null;
+  save(); render(); toast('会員レベル LV' + nx + '（' + LV_NAMES[nx] + '）に切替（デモ）');
+}
+function lv1LikePopup(){
+  sheet(`<h3>「あり」を送りました</h3>
+  <p style="font-size:12.5px;line-height:1.8">ただ、いま写真が未登録のため<b>お相手の画面にあなたが表示されず、返事が届きにくい状態です。</b>写真を登録すると反応率が大きく上がります</p>
+  <button class="btn" style="margin-top:14px" onclick="lvUp2()">写真を登録する（デモ）</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">あとで</button>`);
 }
 const MOB_LABELS = { M1:'車あり・送迎できます', M2:'車あり・自分の移動のみ', M3:'車なし・現地集合（電車等）' };
 function wishOf(u){ return u.wish || (u.mob==='f2' ? 'need' : 'no'); }
@@ -1412,7 +1463,9 @@ function pwPlansHtml(){
 }
 
 function subscribe(plan){
-  S.subActive = true; save(); closeSheet(); render();
+  S.subActive = true;
+  if(isL()){ S.mlv = 3; S.verified = true; }
+  save(); closeSheet(); render();
   celebrate();
   setTimeout(()=>toast(`${plan}で登録しました。14日間無料です（デモ）`),200);
 }
@@ -1779,16 +1832,22 @@ V.chat = id => {
   <div class="page nofoot" style="display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
     ${fixbar}
     <div class="chat">${(msgs + matchCard) || `<div class="empty" style="padding-top:60px"><div class="big" style="color:var(--line)">${I.flag.replace('<svg ','<svg width="40" height="40" ')}</div>${esc(u.name)}さんに挨拶してみましょう</div>`}</div>
-    ${isD() && S.role==='m' && !S.subActive && !S.stampTrayOff ? `
+    ${isD() && S.role==='m' && !S.subActive && !S.stampTrayOff && (!isL() || mlv()>=3) ? `
     <div class="stamp-tray">
       <div class="st-head"><span>気軽にスタンプを送ってみよう</span><button class="st-x" onclick="S.stampTrayOff=true;save();render()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
       <div class="st-row">${FREE_STAMPS.map(sid=>`<button class="stamp-pick" onclick="sendStamp('${id}','${sid}')"><span class="stamp-svg">${stampSvg(sid)}</span></button>`).join('')}</div>
     </div>`:''}
+    ${isL()&&mlv()<3?`
+    <div class="chatbar lockbar">
+      <span style="color:var(--brass-ink)">${I.shield.replace('width="14" height="14"','width="18" height="18"')}</span>
+      <span style="flex:1;font-size:11px;line-height:1.5">メッセージは<b>本人確認</b>のあと利用できます（年齢確認・約1分）</span>
+      <button class="btn sm" style="flex:none" onclick="lockSheet(3)">確認する</button>
+    </div>`:`
     <div class="chatbar">
       ${isD()?`<button class="send stamp-btn" onclick="openStampSheet('${id}')"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.6 14.2a4.4 4.4 0 0 0 6.8 0"/><path d="M9.3 10h.01M14.7 10h.01"/></svg></button>`:''}
       <input class="input" id="chat-in" placeholder="メッセージを入力" onkeydown="if(event.key==='Enter')sendMsg('${id}')">
       <button class="send" onclick="sendMsg('${id}')">${I.send}</button>
-    </div>
+    </div>`}
     ${isD()?SPARK_DEF:''}
   </div>`;
 };
@@ -2183,6 +2242,7 @@ function fixRound(){
   setTimeout(()=>toast('ラウンドを確定しました。当日の安全機能がONになります'), 250);
 }
 function sendMsg(id){
+  if(isL() && mlv()<3){ lockSheet(3); return; }
   const inp = document.getElementById('chat-in');
   const t = inp.value.trim(); if(!t) return;
   if(S.role==='m' && !S.subActive && !(isD() && freeMsgOK(id))){ toast(isD()?((S.fixed||{})[id]?'ラウンド日の翌日以降のメッセージにはサブスク登録が必要です':'新しい相手へのメッセージ開始にはサブスク登録が必要です'):'メッセージの送信にはサブスク登録が必要です'); setTimeout(paywall, 700); return; }
@@ -2365,6 +2425,15 @@ V.mypage = () => {
         <div class="bar"><i style="width:55%"></i></div>
       </div>
     </div>`}
+    ${isL()?`
+    <div class="card lv-card">
+      <span class="lv-badge">LV${mlv()}</span>
+      <div style="flex:1;min-width:0">
+        <b style="font-size:13px">${LV_NAMES[mlv()]}</b>
+        <div class="muted" style="font-size:10px;line-height:1.5">${mlv()===1?'写真を登録すると「あり」への反応が届きます':mlv()===2?'本人確認でメッセージ・お誘いが使えます':mlv()===3?'サブスクでメッセージ使い放題':'すべての機能が利用できます'}</div>
+      </div>
+      ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'lvUp2()':mlv()===2?'lvUp3()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
+    </div>`:''}
     <div class="menu">${menu}</div>
   </div>
   ${tabbar('my')}${demoPill()}`;
@@ -2920,7 +2989,7 @@ V.editProfile = () => {
 /* ---- 今日のおすすめ（スワイプデッキ・機能1） ---- */
 const RECO_LIKED_YOU = ['w2','w7','w9','m2','m6'];
 function recoInit(){
-  if(!S.reco) S.reco = { left: 10, done: [], likes: [] };
+  if(!S.reco) S.reco = { left: (isL()&&mlv()<2)?3:10, done: [], likes: [] };
 }
 function recoQueue(){
   recoInit();
@@ -2957,9 +3026,11 @@ function recoAct(kind){
       celebrate();
       save(); render();
       setTimeout(()=>toast(`${u.name}さんと いいねが一致しました！`), 400);
+      if(isL()&&mlv()<2) setTimeout(lv1LikePopup, 1200);
       return;
     }
-    setTimeout(()=>toast('いいねを送りました。お相手に通知されます'), 150);
+    if(isL()&&mlv()<2) setTimeout(lv1LikePopup, 350);
+    else setTimeout(()=>toast('いいねを送りました。お相手に通知されます'), 150);
   }
   save(); render();
 }
@@ -3010,8 +3081,12 @@ V.reco = () => {
   <div class="page nofoot" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70dvh;padding:0 32px;text-align:center">
     <div style="margin-bottom:12px;color:var(--fairway)">${I.flag.replace('<svg ','<svg width="42" height="42" ')}</div>
     <b style="font-size:16px">本日のおすすめは終了です</b>
+    ${isL()&&mlv()<2?`
+    <p class="muted" style="margin-top:8px">写真を登録すると、おすすめが<br><b>1日3人 → 10人</b> に増えます</p>
+    <button class="btn brass" style="margin-top:16px;max-width:280px" onclick="lvUp2()">写真を登録する（デモ）</button>
+    <button class="btn ghost" style="margin-top:10px;max-width:280px" onclick="go('#/tee')">日程マッチを見る</button>`:`
     <p class="muted" style="margin-top:8px">明日また10人ご紹介します。<br>日程マッチで「行ける日が合う相手」も探せます</p>
-    <button class="btn" style="margin-top:20px;max-width:280px" onclick="go('#/tee')">日程マッチを見る</button>
+    <button class="btn" style="margin-top:20px;max-width:280px" onclick="go('#/tee')">日程マッチを見る</button>`}
   </div>`;
   const shared = (u.dates||[]).filter(d=>S.myDates.includes(d));
   const isWoman = WOMEN.includes(u);
@@ -3049,8 +3124,9 @@ V.likes = () => {
   recoInit();
   const likedIds = [...new Set([...(S.reco.likes||[]), ...Object.keys(S.likes||{}).filter(k=>S.likes[k] && find(k))])];
   const likedMe = RECO_LIKED_YOU.filter(id => find(id) && (S.role==='m' ? id.startsWith('w') : id.startsWith('m')));
+  const lv1L = isL() && mlv()<2;
   const row = (u, mutual) => `
-    <button class="card mcard" style="width:100%;text-align:left" onclick="go('#/profile/${u.id}')">
+    <button class="card mcard ${lv1L?'lv-blurrow':''}" style="width:100%;text-align:left" onclick="${lv1L?'lockSheet(2)':`go('#/profile/${u.id}')`}">
       <img class="av" src="${u.img}" style="width:48px;height:48px">
       <div class="info">
         <div class="nm">${esc(u.name)} <span class="ag">${u.age}</span> ${mutual?'<span class="chip brass" style="font-size:8.5px">相互いいね</span>':''}</div>
@@ -3063,6 +3139,7 @@ V.likes = () => {
   return `
   ${appbar({title:'いいね', back:true})}
   <div class="page tee-body">
+    ${lv1L?`<div class="notice warn" style="margin:4px 0 6px"><span class="ic">${I.heart}</span><span><b>${likedMe.length}人があなたに「あり」しています。</b>写真を登録すると誰か見られます</span><span class="go" onclick="lvUp2()">登録 →</span></div>`:''}
     <div class="sec-h" style="padding:4px 2px 0"><span class="t">あなたに「あり」した人</span><span class="s">${likedMe.length}人</span></div>
     ${likedMeRows || '<p class="muted" style="font-size:12px;padding:8px 2px">まだいません。おすすめでスワイプしてみましょう</p>'}
     <div class="sec-h" style="padding:12px 2px 0"><span class="t">あなたが「あり」した人</span><span class="s">${likedIds.length}人</span></div>
