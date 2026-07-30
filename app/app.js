@@ -235,7 +235,7 @@ function demoPill(){
     <button class="demo-pill" onclick="switchRole()">${r}<span class="sw">⇄ 切替</span></button>
     ${S.role==='f'?`<button class="demo-pill" onclick="switchFemale()"><span class="sw">⇄</span> ${other}</button>`:''}
     ${isL()?`<button class="demo-pill" onclick="lvCycle()">LV <span class="tletter">${mlv()}</span></button>`:''}
-    ${S.role==='f'&&isD()?`<button class="demo-pill" onclick="certToggle()">${me().cert!==false?'認定':'一般'}</button>`:''}
+    ${S.role==='f'&&isL()?`<button class="demo-pill" onclick="certToggle()">${me().cert!==false?'認定':'一般'}</button>`:''}
     <button class="demo-pill theme" onclick="cycleTheme()">配色 <span class="tletter">${S.theme.toUpperCase()}</span></button>
     <button class="demo-pill" style="padding:10px 14px" onclick="resetDemo()">↺</button>
   </div>`;
@@ -470,7 +470,73 @@ function suArea(v){
   render();
 }
 function suZip(v){ su.zip = v; su.areas = []; render(); }
+V.signupLegacy = () => {
+  const s = su.step;
+  const opt = (g,v)=>`<button class="opt ${su.opts[g]===v?'on':''}" onclick="suOpt('${g}','${v}')">${v}</button>`;
+  let body = '';
+  if(s===1) body = `
+    <div class="label">性別</div>
+    <div class="opt-grid">${opt('sex','男性')}${opt('sex','女性')}</div>
+    <div class="label">メールアドレス</div>
+    <input class="input" type="email" placeholder="example@email.com" value="demo@prego.golf">
+    <div class="label">電話番号（SMSで認証コードが送られます）</div>
+    <input class="input" type="tel" placeholder="ハイフンなし" value="09000000000">
+    <div class="label">任意のパスワード（英数字6桁以上）</div>
+    <input class="input" type="password" placeholder="パスワードを入力" value="demo123">
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+      <button class="opt ${su.opts.terms?'on':''}" style="border-radius:12px;text-align:left" onclick="su.opts.terms=!su.opts.terms;render()">${su.opts.terms?'☑':'☐'} 利用規約・プライバシーポリシーに同意します</button>
+      <button class="opt ${su.opts.adult?'on':''}" style="border-radius:12px;text-align:left" onclick="su.opts.adult=!su.opts.adult;render()">${su.opts.adult?'☑':'☐'} 18歳以上です</button>
+    </div>`;
+  if(s===2) body = `
+    <p style="text-align:center;margin-top:20px;font-size:13.5px">090-0000-0000 宛に送信された<br><b>4桁の認証コード</b>を入力してください</p>
+    <div class="code-in">
+      ${[0,1,2,3].map(i=>`<input maxlength="1" inputmode="numeric" value="${'1234'[i]}">`).join('')}
+    </div>
+    <p class="muted" style="text-align:center;font-size:11px">コードが届かない場合は <a style="color:var(--turf);font-weight:700" onclick="toast('認証コードを再送しました（デモ）')">再送する</a></p>`;
+  if(s===3) body = `
+    <div class="label">プロフィール写真</div>
+    <button class="photo-pick" onclick="photoTips()">
+      ${su.photo?`<img src="${su.opts.sex==='女性'?'img/w5.jpg':'img/m2.jpg'}">`:`${I.camera}<span>タップして写真を選択</span><span style="font-size:10px">選ばれる写真のポイントを見る</span>`}
+    </button>
+    <div class="label">ニックネーム</div>
+    <input class="input" placeholder="ニックネームを入力" value="${su.opts.sex==='女性'?'もも':'タケ'}">
+    <div class="label">自己紹介（200文字まで）</div>
+    <textarea class="input" rows="3" placeholder="よろしくお願いします！">よろしく</textarea>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <div style="flex:1"><div class="label">ベストスコア</div><input class="input" type="number" value="100"></div>
+      <div style="flex:1"><div class="label">アベレージ</div><input class="input" type="number" value="95"></div>
+    </div>
+    <div class="label">生年月日（非公開・後から変更できません）</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input class="input" style="flex:2" type="number" value="1985"><span>年</span>
+      <input class="input" style="flex:1" type="number" value="12"><span>月</span>
+      <input class="input" style="flex:1" type="number" value="10"><span>日</span>
+    </div>
+    <div class="label">プレー代の負担について *</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${['お相手の分も払います','お互い自分の分を払う','お相手に出してもらいたい','話し合って決めたい'].map(v=>`<button class="opt ${su.opts.pay===v?'on':''}" style="border-radius:12px" onclick="suOpt('pay','${v}')">${v}</button>`).join('')}
+    </div>
+    <div class="label">プレーエリア *</div>
+    <button class="input" style="text-align:left;color:${su.areas.length?'var(--ink)':'var(--ink-soft)'}" onclick="areaSheet()">
+      ${su.areas.length?su.areas.join('・'):'プレーエリアを選択してください'}
+    </button>
+    <div class="label">郵便番号（市区町村レベルで管理されます）</div>
+    <input class="input" placeholder="1234567" value="1510051" style="max-width:180px">
+    <p class="muted" style="margin-top:14px;font-size:11px">プロフィール情報は条件にマッチしたお相手を検索する際に反映されます。生年月日は非公開です（年齢・都道府県・市区郡は公開）。</p>`;
+  return `
+  ${appbar({title:'新規登録', back:true, noBell:true})}
+  <div class="page nofoot wrap">
+    <div class="steps">${[1,2,3].map(i=>`<i class="${i<=s?'on':''}"></i>`).join('')}</div>
+    <p class="muted">STEP ${s} / 3 ${['アカウント作成','SMS認証','プロフィール登録'][s-1]}</p>
+    ${body}
+    <div style="margin-top:26px;display:flex;gap:10px">
+      ${s>1?`<button class="btn ghost" style="flex:1" onclick="su.step--;render()">戻る</button>`:''}
+      <button class="btn" style="flex:2" onclick="suNext()" ${s===1&&(!su.opts.terms||!su.opts.adult)?'disabled':''}>${['認証コード送信','認証する','プロフィール登録'][s-1]}</button>
+    </div>
+  </div>`;
+};
 V.signup = () => {
+  if(!isL()) return V.signupLegacy();
   const s = su.step;
   const opt = (g,v)=>`<button class="opt ${su.opts[g]===v?'on':''}" onclick="suOpt('${g}','${v}')">${v}</button>`;
   let body = '';
@@ -2585,7 +2651,7 @@ V.mypage = () => {
       </div>
       <p class="sc-note">数字は合計・<b>＋◯</b> は今週の新着</p>
     </div>`;})() : ''}
-    ${isF && isD() ? (()=>{ ensureFset(); const r = S.fset.rnd; const cert = me().cert !== false; return `
+    ${isF && isL() ? (()=>{ ensureFset(); const r = S.fset.rnd; const cert = me().cert !== false; return `
     <div class="card" style="margin:16px 18px 0;padding:14px 16px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
         <b style="font-size:13px">ラウンドのお誘い</b>
@@ -2602,7 +2668,7 @@ V.mypage = () => {
       <p class="muted" style="font-size:10px;margin-top:8px">修正は「お誘い設定」でいつでも変えられます</p>
       <button class="btn ghost sm" style="margin-top:8px" onclick="go('#/invite-set')">お誘い設定を開く（インドア・打ちっぱなし）</button>
     </div>`;})() : ''}
-    ${isF && isD() && (!isL() || mlv()>=3) && (me().cert!==false) ? `
+    ${isF && isD() && (isL() ? (mlv()>=3 && me().cert!==false) : true) ? `
     <div class="card" style="margin:16px 18px 0;padding:14px 16px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
         <b style="font-size:13px">認定ゴルファー ステータス</b>
@@ -3418,11 +3484,11 @@ function ensureFset(){
   S.fset = S.fsetF[fid];
   if(S.fcert && (fid in S.fcert) && w) w.cert = S.fcert[fid];
   const cert = w ? w.cert !== false : true;
-  const cap = 10000;
+  const cap = isL() ? 10000 : (cert ? 11000 : 2000);
   ['sim','rng'].forEach(k=>{
-    if(!S.fset[k].fee) S.fset[k].fee = 5000;
+    if(!S.fset[k].fee) S.fset[k].fee = Math.min(5000, cap);
     if(S.fset[k].fee > cap) S.fset[k].fee = cap;
-    if(!cert && S.fset[k].st === 'o') S.fset[k].st = 'n';
+    if(isL() && !cert && S.fset[k].st === 'o') S.fset[k].st = 'n';
   });
   if(w){
     w.rnd = { ok:S.fset.rnd.on, st:S.fset.rnd.st };
@@ -3446,7 +3512,8 @@ V.inviteSet = () => {
   const f = S.fset;
   const cert = me().cert !== false;
   const rp = cert ? 22000 : 5500;
-  const feeOpts = []; for(let v=1000; v<=10000; v+=1000) feeOpts.push(v);
+  const feeCap = isL() ? 10000 : (cert ? 11000 : 2000);
+  const feeOpts = []; for(let v=1000; v<=feeCap; v+=1000) feeOpts.push(v);
   const card = (key, title, sub) => {
     const m = f[key];
     return `
@@ -3461,21 +3528,21 @@ V.inviteSet = () => {
       ${m.on?`
       <div style="display:flex;gap:8px;margin-top:11px">
         ${[['n','仲間探し','謝礼なし・割り勘前提'],['o','おもてなし','謝礼つきオファーで受ける']].map(([k,t,s])=>{
-          const lockO = k==='o' && key!=='rnd' && !cert;
+          const lockO = isL() && k==='o' && key!=='rnd' && !cert;
           return `
         <button class="venue-row ${m.st===k?'on':''}" style="flex:1;${lockO?'opacity:.45':''}" onclick="${lockO?`toast('インドア・打ちっぱなしの謝礼設定は、認定ゴルファーになるとご利用いただけます')`:`S.fset.${key}.st='${k}';save();render()`}">
           <span class="vn">${t}${lockO?' '+I.shield.replace('width="14" height="14"','width="11" height="11"'):''}</span><span class="vt">${lockO?'認定ゴルファー限定':s}</span>
         </button>`;}).join('')}
       </div>
       ${m.st==='o' ? (key==='rnd' ? `
-      <p class="muted" style="font-size:10.5px;margin-top:9px">あなたの受取は <b>¥${Math.round(rp*0.8).toLocaleString()}</b>（固定）／ラウンド費用 ${cert?'認定ゴルファー ¥22,000':'一般ゴルファー ¥5,500'}</p>` : `
+      <p class="muted" style="font-size:10.5px;margin-top:9px">${isL()?`あなたの受取は <b>¥${Math.round(rp*0.8).toLocaleString()}</b>（固定）／ラウンド費用 ${cert?'認定ゴルファー ¥22,000':'一般ゴルファー ¥5,500'}`:`ラウンド費用は<b>${cert?'認定ゴルファー ¥22,000':'一般ゴルファー ¥5,500'}</b>（固定）。あなたの受取は <b>¥${Math.round(rp*0.8).toLocaleString()}</b>（80%）です`}</p>` : `
       <div style="display:flex;align-items:center;gap:10px;margin-top:11px">
         <span style="font-size:11.5px;color:var(--ink-soft);flex:none">費用（税込）</span>
         <select class="input" style="flex:1;padding:9px 12px" onchange="S.fset.${key}.fee=Number(this.value);save();render()">
           ${feeOpts.map(v=>`<option value="${v}" ${m.fee===v?'selected':''}>¥${v.toLocaleString()}</option>`).join('')}
         </select>
       </div>
-      <p class="muted" style="font-size:10px;margin-top:7px">¥1,000〜¥10,000・1,000円単位で設定できます（認定ゴルファー限定）。あなたの受取は <b>¥${Math.round(m.fee*0.8).toLocaleString()}</b>（80%）</p>`) : `
+      <p class="muted" style="font-size:10px;margin-top:7px">${isL()?'¥1,000〜¥10,000・1,000円単位で設定できます（認定ゴルファー限定）':`ラウンド費用（${cert?'認定 ¥22,000':'一般 ¥5,500'}）の50%以下・1,000円単位で設定できます`}。あなたの受取は <b>¥${Math.round(m.fee*0.8).toLocaleString()}</b>（80%）</p>`) : `
       <p class="muted" style="font-size:10px;margin-top:8px">謝礼なし。プレー代宣言つきの誘いを受け取ります</p>`}
       `:`<p class="muted" style="font-size:10px;margin-top:8px">OFFの間、お相手の画面でこの種目は「受付停止中」になります</p>`}
     </div>`;
