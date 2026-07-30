@@ -1457,10 +1457,13 @@ function goVerifyReg(){
   go('#/verify-reg');
 }
 V.verifyReg = () => {
-  const payOpts = S.role==='f'
-    ? ['プレー代はご馳走いただけると嬉しいです','割り勘でお願いします','相談して決めたい']
-    : ['プレー代はこちらで持ちます','割り勘でお願いします','相談して決めたい'];
-  const ready = vr.doc && vr.shot && vr.pay && vr.date;
+  const wd = ['日','月','火','水','木','金','土'];
+  const dateOpts = [];
+  for(let i=2; i<9; i++){
+    const d = new Date(); d.setDate(d.getDate()+i);
+    dateOpts.push((d.getMonth()+1)+'/'+d.getDate()+'（'+wd[d.getDay()]+'）');
+  }
+  const ready = vr.doc && vr.shot && vr.date;
   return `
   ${appbar({title:'本人確認（年齢確認）', back:true, noBell:true})}
   <div class="page nofoot wrap">
@@ -1478,12 +1481,9 @@ V.verifyReg = () => {
       <span style="font-size:10px;color:var(--ink-soft)">生年月日と氏名を確認しました</span>`
       :`${I.camera}<span>タップして撮影</span><span style="font-size:10px">四隅が写るように撮影してください</span>`}
     </button>
-    <div class="label">プレー代の宣言（お相手に表示されます）</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${payOpts.map(p=>`<button class="opt ${vr.pay===p?'on':''}" style="border-radius:12px;text-align:left" onclick="vr.pay='${p}';render()">${p}</button>`).join('')}
-    </div>
-    <div class="label">プレー希望日（まず1日だけ）</div>
-    <div class="osel">${['7/14','7/17','7/21','7/26'].map(d=>`<button class="opt ${vr.date===d?'on':''}" onclick="vr.date='${d}';render()">${d}（${TEE_DAYS.find(x=>x.d===d)?.w||'-'}）</button>`).join('')}</div>
+    <div class="label">プレー希望日（まずは1日だけお試し）</div>
+    <p class="muted" style="font-size:10.5px;margin:0 0 8px">プレー代の考え方は、お誘いを送るときに毎回選べます</p>
+    <div class="osel">${dateOpts.map(d=>`<button class="opt ${vr.date===d?'on':''}" onclick="vr.date='${d}';render()">${d}</button>`).join('')}</div>
     <button class="btn brass" style="margin-top:20px" ${ready?'':'disabled'} onclick="lvVerifyDone()">提出して認証を完了する（+1,000ゴールド）</button>
     <p class="muted" style="font-size:10px;text-align:center;margin-top:8px">審査は通常数分〜24時間以内（デモでは即時認証されます）</p>
   </div>${demoPill()}`;
