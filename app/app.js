@@ -422,6 +422,10 @@ function pickRole(r, fid){
 
 /* ---- signup (demo wizard / 実アプリ準拠) ---- */
 let su = { step:1, opts:{}, photo:false, areas:[], zip:'1510051' };
+const SU_ART = {
+  '男性': `<svg width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="var(--fairway)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 22q0-11 12-11t12 11"/><path d="M44 22l9 2"/><path d="M20 22h24"/><path d="M21 24a11 11 0 0 0 22 0"/><path d="M13 55q6-11 19-11t19 11"/></svg>`,
+  '女性': `<svg width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="var(--fairway)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 42q-4-24 12-27q16 3 12 27"/><path d="M22 24a10 10 0 0 0 20 0"/><path d="M20 42q-2 3-5 4M44 42q2 3 5 4"/><path d="M14 55q6-10 18-10t18 10"/></svg>`,
+};
 function zipPref(z){
   const n = parseInt(String(z||'').slice(0,2)); if(isNaN(n)) return null;
   const T=[[0,0,'北海道'],[1,1,'秋田県'],[2,2,'岩手県'],[3,3,'青森県'],[4,9,'北海道'],[10,20,'東京都'],[21,25,'神奈川県'],[26,29,'千葉県'],[30,31,'茨城県'],[32,32,'栃木県'],[33,36,'埼玉県'],[37,37,'群馬県'],[38,39,'長野県'],[40,40,'山梨県'],[41,43,'静岡県'],[44,49,'愛知県'],[50,51,'岐阜県'],[52,52,'滋賀県'],[53,58,'大阪府'],[59,59,'和歌山県'],[60,62,'京都府'],[63,63,'奈良県'],[64,64,'和歌山県'],[65,67,'兵庫県'],[68,68,'鳥取県'],[69,69,'島根県'],[70,71,'岡山県'],[72,73,'広島県'],[74,75,'山口県'],[76,76,'香川県'],[77,77,'徳島県'],[78,78,'高知県'],[79,79,'愛媛県'],[80,83,'福岡県'],[84,84,'佐賀県'],[85,85,'長崎県'],[86,86,'熊本県'],[87,87,'大分県'],[88,88,'宮崎県'],[89,89,'鹿児島県'],[90,90,'沖縄県'],[91,91,'福井県'],[92,92,'石川県'],[93,93,'富山県'],[94,95,'新潟県'],[96,96,'福島県'],[97,98,'宮城県'],[99,99,'山形県']];
@@ -446,7 +450,10 @@ V.signup = () => {
   let body = '';
   if(s===1) body = `
     <div class="label">性別</div>
-    <div class="opt-grid">${opt('sex','男性')}${opt('sex','女性')}</div>
+    <div class="sex-row">
+      <div class="opt-grid" style="flex:1;margin:0">${opt('sex','男性')}${opt('sex','女性')}</div>
+      <div class="sex-art ${su.opts.sex?'show':''}">${su.opts.sex?SU_ART[su.opts.sex]:''}</div>
+    </div>
     <div class="label">メールアドレス</div>
     <input class="input" type="email" placeholder="example@email.com" value="demo@prego.golf">
     <div class="label">電話番号（SMSで認証コードが送られます）</div>
@@ -902,9 +909,11 @@ V.profile = id => {
           : `<button class="btn" onclick="openChat('${u.id}')">メッセージを送る</button>`}
     </div>
   </div>${isL()&&mlv()<2?`
-  <div class="lv1-cta">
-    <span style="flex:1;font-size:11.5px"><b>プロフィールの続きは写真登録後に</b><small style="display:block;font-size:9.5px;color:var(--ink-soft)">登録すると相手からも見つけてもらえます</small></span>
-    <button class="btn sm" style="flex:none" onclick="lvUp2()">写真を登録</button>
+  <div class="lv1-panel">
+    <span class="ic">${I.camera.replace('width="17" height="17"','width="30" height="30"')}</span>
+    <b>プロフィールの続きは<br>写真を登録するとご覧いただけます</b>
+    <span class="s">登録するとお相手からも見つけてもらえます</span>
+    <button class="btn brass" style="margin-top:10px;width:100%" onclick="goPhotoReg()">写真を登録して続きを見る</button>
   </div>`:''}${demoPill()}`;
 };
 
@@ -1375,7 +1384,7 @@ function lockSheet(need){
   const steps = [];
   if(cur < 2) steps.push(['1','写真1枚＋ニックネーム＋ゴルフ3点（約2分）']);
   if(need >= 3 && cur < 3) steps.push([steps.length+1+'','本人確認＝年齢確認（約1分・無料）']);
-  const cta = cur < 2 ? ['写真を登録する（デモ）','lvUp2()'] : ['本人確認をする（デモ）','lvUp3()'];
+  const cta = cur < 2 ? ['写真を登録する','goPhotoReg()'] : ['本人確認をする（デモ）','lvUp3()'];
   sheet(`<h3>${need>=3?'この機能は本人確認のあと使えます':'写真を登録すると使えます'}</h3>
   ${need>=3?`<p class="muted" style="font-size:11px">メッセージ・スタンプ・お誘いなどの連絡機能は、法令により年齢確認済みの方のみご利用いただけます</p>`:''}
   <div class="sum-box" style="margin-top:10px">
@@ -1383,6 +1392,43 @@ function lockSheet(need){
   </div>
   <button class="btn" style="margin-top:14px" onclick="${cta[1]}">${cta[0]}</button>
   <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">あとで</button>`);
+}
+let lvRegFrom = null;
+let pr = { photo:false, nick:'', best:100, ave:110, hist:'3〜5年' };
+function goPhotoReg(){
+  lvRegFrom = location.hash;
+  closeSheet();
+  pr = { photo:false, nick: S.role==='f'?'もも':'タケ', best:100, ave:110, hist:'3〜5年' };
+  go('#/photo-reg');
+}
+V.photoReg = () => `
+  ${appbar({title:'写真とプロフィール登録', back:true, noBell:true})}
+  <div class="page nofoot wrap">
+    <p class="muted" style="margin-top:10px">この3つだけで「あり」への反応が届くようになります（LV2）</p>
+    <div class="label">プロフィール写真（本人・バストアップ）</div>
+    <button class="photo-pick" onclick="pr.photo=true;render()">
+      ${pr.photo?`<img src="${S.role==='f'?'img/w5.jpg':'img/m2.jpg'}">`:`${I.camera}<span>タップして写真を選択</span><span style="font-size:10px">顔がはっきり写っている写真ほど反応率が上がります</span>`}
+    </button>
+    <div class="label">ニックネーム</div>
+    <input class="input" value="${esc(pr.nick)}" onchange="pr.nick=this.value">
+    <div class="label">ゴルフ情報</div>
+    <div style="display:flex;gap:10px">
+      <div style="flex:1"><div class="muted" style="font-size:10.5px;margin-bottom:4px">ベスト</div>
+        <select class="input" onchange="pr.best=this.value">${[80,90,100,110,120,130].map(v=>`<option ${pr.best==v?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div style="flex:1"><div class="muted" style="font-size:10.5px;margin-bottom:4px">アベレージ</div>
+        <select class="input" onchange="pr.ave=this.value">${[90,100,110,120,130,140].map(v=>`<option ${pr.ave==v?'selected':''}>${v}</option>`).join('')}</select></div>
+    </div>
+    <div class="muted" style="font-size:10.5px;margin:10px 0 4px">ゴルフ歴</div>
+    <div class="osel">${['1年未満','1〜3年','3〜5年','5〜10年','10年以上'].map(h=>`<button class="opt ${pr.hist===h?'on':''}" onclick="pr.hist='${h}';render()">${h}</button>`).join('')}</div>
+    <button class="btn brass" style="margin-top:20px" ${pr.photo?'':'disabled'} onclick="lvRegDone()">登録してLV2へ（+300ゴールド）</button>
+    <p class="muted" style="font-size:10px;text-align:center;margin-top:8px">写真は審査後に公開されます（デモでは即時反映）</p>
+  </div>${demoPill()}`;
+function lvRegDone(){
+  S.mlv = Math.max(S.mlv||1, 2); S.reco = null; save(); celebrate(); gAdd(300);
+  const back = lvRegFrom; lvRegFrom = null;
+  setTimeout(()=>toast('LV2 メンバーになりました！ +300ゴールド・おすすめが1日10人に'), 300);
+  if(back && back !== '#/photo-reg') location.hash = back; else go('#/mypage');
+  render();
 }
 function lvUp2(){
   S.mlv = Math.max(S.mlv||1, 2); S.reco = null; save(); closeSheet(); celebrate(); gAdd(300);
@@ -1405,7 +1451,7 @@ function lvCycle(){
 function lv1LikePopup(){
   sheet(`<h3>「あり」を送りました</h3>
   <p style="font-size:12.5px;line-height:1.8">ただ、いま写真が未登録のため<b>お相手の画面にあなたが表示されず、返事が届きにくい状態です。</b>写真を登録すると反応率が大きく上がります</p>
-  <button class="btn" style="margin-top:14px" onclick="lvUp2()">写真を登録する（デモ）</button>
+  <button class="btn" style="margin-top:14px" onclick="goPhotoReg()">写真を登録する（デモ）</button>
   <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">あとで</button>`);
 }
 const MOB_LABELS = { M1:'車あり・送迎できます', M2:'車あり・自分の移動のみ', M3:'車なし・現地集合（電車等）' };
@@ -2472,7 +2518,7 @@ V.mypage = () => {
         <b style="font-size:13px">${LV_NAMES[mlv()]}</b>
         <div class="muted" style="font-size:10px;line-height:1.5">${mlv()===1?'写真を登録すると「あり」への反応が届きます':mlv()===2?'本人確認でメッセージ・お誘いが使えます':mlv()===3?'サブスクでメッセージ使い放題':'すべての機能が利用できます'}</div>
       </div>
-      ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'lvUp2()':mlv()===2?'lvUp3()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
+      ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'goPhotoReg()':mlv()===2?'lvUp3()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
     </div>`:''}
     <div class="menu">${menu}</div>
   </div>
@@ -3123,7 +3169,7 @@ V.reco = () => {
     <b style="font-size:16px">本日のおすすめは終了です</b>
     ${isL()&&mlv()<2?`
     <p class="muted" style="margin-top:8px">写真を登録すると、おすすめが<br><b>1日3人 → 10人</b> に増えます</p>
-    <button class="btn brass" style="margin-top:16px;max-width:280px" onclick="lvUp2()">写真を登録する（デモ）</button>
+    <button class="btn brass" style="margin-top:16px;max-width:280px" onclick="goPhotoReg()">写真を登録する（デモ）</button>
     <button class="btn ghost" style="margin-top:10px;max-width:280px" onclick="go('#/tee')">日程マッチを見る</button>`:`
     <p class="muted" style="margin-top:8px">明日また10人ご紹介します。<br>日程マッチで「行ける日が合う相手」も探せます</p>
     <button class="btn" style="margin-top:20px;max-width:280px" onclick="go('#/tee')">日程マッチを見る</button>`}
@@ -3179,7 +3225,7 @@ V.likes = () => {
   return `
   ${appbar({title:'いいね', back:true})}
   <div class="page tee-body">
-    ${lv1L?`<div class="notice warn" style="margin:4px 0 6px"><span class="ic">${I.heart}</span><span><b>${likedMe.length}人があなたに「あり」しています。</b>写真を登録すると誰か見られます</span><span class="go" onclick="lvUp2()">登録 →</span></div>`:''}
+    ${lv1L?`<div class="notice warn" style="margin:4px 0 6px"><span class="ic">${I.heart}</span><span><b>${likedMe.length}人があなたに「あり」しています。</b>写真を登録すると誰か見られます</span><span class="go" onclick="goPhotoReg()">登録 →</span></div>`:''}
     <div class="sec-h" style="padding:4px 2px 0"><span class="t">あなたに「あり」した人</span><span class="s">${likedMe.length}人</span></div>
     ${likedMeRows || '<p class="muted" style="font-size:12px;padding:8px 2px">まだいません。おすすめでスワイプしてみましょう</p>'}
     <div class="sec-h" style="padding:12px 2px 0"><span class="t">あなたが「あり」した人</span><span class="s">${likedIds.length}人</span></div>
@@ -3912,7 +3958,7 @@ function render(){
     'notif-settings': V.notifSettings, 'blocked': V.blocked, 'card': V.card,
     'password': V.password, 'verify': V.verify,
     'articles': V.articles, 'article': ()=>V.article(arg),
-    'me': V.me, 'gold': V.gold, 'games': V.games, 'gputt': V.gputt, 'gdrive': V.gdrive, 'gwind': V.gwind, 'gtarget': V.gtarget, 'edit-profile': V.editProfile, 'invite-set': V.inviteSet, 'host-compe': V.hostCompe, 'reco': V.reco, 'likes': V.likes, 'footprints': V.footprints,
+    'me': V.me, 'gold': V.gold, 'photo-reg': V.photoReg, 'games': V.games, 'gputt': V.gputt, 'gdrive': V.gdrive, 'gwind': V.gwind, 'gtarget': V.gtarget, 'edit-profile': V.editProfile, 'invite-set': V.inviteSet, 'host-compe': V.hostCompe, 'reco': V.reco, 'likes': V.likes, 'footprints': V.footprints,
   };
   $app.innerHTML = (map[route] || V.login)();
   syncBackFab(route);
