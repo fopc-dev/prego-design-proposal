@@ -353,6 +353,9 @@ V.loginE = () => `
       <span class="lbl2">配色パターン</span>
       ${['b','e','g','1','2'].map(t=>`<button class="tbtn ${S.theme===t?'on':''}" onclick="setTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
     </div>
+    <div class="ie-theme" style="margin-top:2px">
+      <a class="tbtn" style="width:auto;padding:0 16px;display:inline-flex;align-items:center;text-decoration:none" href="promo3.html">プロトタイプ3：特別オファー訴求 ▸</a>
+    </div>
     <p class="ie-note">DEMO PROTOTYPE — 認証・決済は動作しません</p>
   </div>
 </div>`;
@@ -403,6 +406,9 @@ V.login = () => S.theme==='e' ? V.loginE() : `
     <div class="theme-row">
       <span class="lbl2">配色パターン</span>
       ${['b','e','g','1','2'].map(t=>`<button class="tbtn ${S.theme===t?'on':''}" onclick="setTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
+    </div>
+    <div class="theme-row" style="margin-top:8px">
+      <a class="tbtn" style="width:auto;padding:0 16px;display:inline-flex;align-items:center;gap:6px;text-decoration:none" href="promo3.html">プロトタイプ3：特別オファー訴求 ▸</a>
     </div>
     <div class="demo-note">DEMO PROTOTYPE — 認証・決済は動作しません</div>
   </div>
