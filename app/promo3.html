@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>PreGo — プロトタイプ3（特別オファー訴求）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Outfit:wght@300;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --fairway:#1CA57F; --fairway-deep:#0E6B54; --ink:#1E3A31;
+  --brass:#D9B96A; --brass-deep:#B08A3C; --brass-soft:rgba(217,185,106,.16);
+  --ease:cubic-bezier(.2,.8,.3,1);
+}
+body{font-family:'Zen Kaku Gothic New',sans-serif;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:
+    radial-gradient(120% 80% at 80% -10%, rgba(28,165,127,.35) 0%, rgba(28,165,127,0) 55%),
+    linear-gradient(180deg,#0A241A 0%,#07281D 60%,#04160F 100%)}
+.modal{position:relative;width:min(92vw,400px);border-radius:20px;padding:52px 24px 24px;text-align:center;color:#fff;
+  background:linear-gradient(165deg,#10382A 0%,#0B2C20 100%);
+  border:1px solid rgba(217,185,106,.35);
+  box-shadow:0 24px 64px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  animation:in .5s var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(26px) scale(.96)}to{opacity:1;transform:none}}
+.x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s var(--ease)}
+.x:active{transform:scale(.9)}
+.gift{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0B2C20;
+  background:linear-gradient(135deg,#EACF8E,#D9B96A 45%,#B08A3C);box-shadow:0 10px 26px rgba(217,185,106,.4);animation:pop .6s .15s var(--ease) both}
+@keyframes pop{0%{transform:translateX(-50%) scale(.3);opacity:0}60%{transform:translateX(-50%) scale(1.15)}100%{transform:translateX(-50%) scale(1);opacity:1}}
+h1{font-size:22px;font-weight:900;line-height:1.65;letter-spacing:.02em;margin-top:6px}
+h1 .off{color:var(--brass);text-shadow:0 0 24px rgba(217,185,106,.45)}
+.sub{font-size:11.5px;color:rgba(255,255,255,.62);margin-top:10px;line-height:1.8}
+.code{display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:18px;padding:12px 14px;border-radius:12px;font-size:10.5px;color:rgba(255,255,255,.65);
+  background:rgba(255,255,255,.06);border:1px dashed rgba(217,185,106,.45)}
+.code b{font-family:'Outfit';letter-spacing:.06em;color:var(--brass)}
+.code .ck{width:16px;height:16px;border-radius:50%;background:var(--fairway);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.grid{display:flex;gap:10px;margin-top:14px}
+.cell{flex:1;border-radius:16px;padding:14px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.cell .big{font-family:'Outfit';font-weight:700;font-size:26px;color:var(--brass)}
+.cell .lbl{font-size:9.5px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.08em}
+.timer{font-family:'Outfit';font-weight:300;font-size:30px;letter-spacing:.04em;display:flex;justify-content:center;gap:2px}
+.timer small{font-size:30px;opacity:.5;font-weight:300}
+.tl{display:flex;justify-content:center;gap:26px;font-size:9.5px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.08em}
+.cta{display:block;width:100%;margin-top:18px;border:none;border-radius:99px;padding:17px;font-family:inherit;font-size:15px;font-weight:900;letter-spacing:.08em;color:#0B2C20;cursor:pointer;
+  background:linear-gradient(120deg,#EACF8E,#D9B96A 40%,#35C495);box-shadow:0 10px 28px rgba(28,165,127,.35);transition:transform .15s var(--ease)}
+.cta:active{transform:scale(.97)}
+.note{font-size:9.5px;color:rgba(255,255,255,.4);margin-top:12px}
+.cf{position:fixed;top:-16px;pointer-events:none;border-radius:2px;animation:fall linear both}
+@keyframes fall{
+  0%{transform:translateY(-20px) rotate(0) rotateY(0);opacity:1}
+  85%{opacity:1}
+  100%{transform:translateY(105dvh) rotate(var(--r)) rotateY(720deg);opacity:0}}
+.replay{position:fixed;bottom:18px;right:18px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+</style></head>
+<body>
+<div class="modal" id="modal">
+  <button class="x" onclick="document.getElementById('modal').style.display='none'" aria-label="閉じる"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <span class="gift"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4"/><path d="M5 12.5V20h14v-7.5"/><path d="M12 8.5V20"/><path d="M12 8.5s-1-4.5-4-4.5a2 2 0 0 0 0 4.5zM12 8.5s1-4.5 4-4.5a2 2 0 0 1 0 4.5z"/></svg></span>
+  <h1>おめでとうございます！<br><span class="off">61%オフ</span>の特別オファーを<br>受け取りました</h1>
+  <p class="sub">このオファーは期間限定です。<br>プレミアムプラン（3ヶ月）が61%オフ！</p>
+  <div class="code"><span style="display:inline-flex;align-items:center;gap:7px;font-size:12px"><span class="ck"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg></span><b>SHU_PERSONAL_PROMO</b></span><span>プロモーションコードが適用されました</span></div>
+  <div class="grid">
+    <div class="cell"><div class="big">61%オフ</div><div class="lbl">特別オファープロモーション付き</div></div>
+    <div class="cell"><div class="timer"><span id="hh">02</span><small>:</small><span id="mm">57</span><small>:</small><span id="ss">42</span></div><div class="tl"><span>時間</span><span>分</span><span>秒</span></div></div>
+  </div>
+  <button class="cta" onclick="alert('サブスク画面へ遷移（デモ）')">割引を受ける</button>
+  <p class="note">通常 ¥1,980/月 → ¥772/月（3時間限定・自動更新はいつでも解約可）</p>
+</div>
+<button class="replay" onclick="confetti()" aria-label="紙吹雪をもう一度"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 8.5A8 8 0 1 1 4 13"/><path d="M4.5 3.5v5h5"/></svg></button>
+<script>
+// カウントダウン
+let t = 2*3600 + 57*60 + 42;
+setInterval(()=>{
+  t = Math.max(0, t-1);
+  const h = String(Math.floor(t/3600)).padStart(2,'0');
+  const m = String(Math.floor(t%3600/60)).padStart(2,'0');
+  const s = String(t%60).padStart(2,'0');
+  hh.textContent=h; mm.textContent=m; ss.textContent=s;
+}, 1000);
+// 紙吹雪（ミント×ゴールド×白）
+const COLORS = ['#D9B96A','#EACF8E','#7AE0BD','#35C495','#FFFFFF','#B08A3C'];
+function confetti(){
+  for(let i=0;i<90;i++){
+    const p = document.createElement('i');
+    p.className='cf';
+    const w = 6+Math.random()*7;
+    p.style.width=w+'px'; p.style.height=(w*0.45+2)+'px';
+    p.style.left=(Math.random()*100)+'vw';
+    p.style.background=COLORS[i%COLORS.length];
+    p.style.setProperty('--r',(Math.random()>.5?1:-1)*(360+Math.random()*540)+'deg');
+    p.style.animationDuration=(1.9+Math.random()*2.2)+'s';
+    p.style.animationDelay=(Math.random()*0.7)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 5200);
+  }
+}
+setTimeout(confetti, 350);
+</script>
+</body></html>
