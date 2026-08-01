@@ -49,11 +49,16 @@ h1 .off{color:var(--brass);text-shadow:0 0 24px rgba(217,185,106,.45)}
   0%{transform:translateY(-20px) rotate(0) rotateY(0);opacity:1}
   85%{opacity:1}
   100%{transform:translateY(105dvh) rotate(var(--r)) rotateY(720deg);opacity:0}}
-.replay{position:fixed;bottom:18px;right:18px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.replay{position:fixed;bottom:18px;left:18px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.page-x{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);right:16px;z-index:50;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s var(--ease)}
+.page-x:active{transform:scale(.9)}
+.back-fab{position:fixed;bottom:18px;right:18px;z-index:50;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(0,0,0,.35);transition:transform .15s var(--ease)}
+.back-fab:active{transform:scale(.92)}
 </style></head>
 <body>
+<button class="page-x" onclick="goBack()" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+<button class="back-fab" onclick="goBack()" aria-label="戻る"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4.5L7.5 12l7.5 7.5"/></svg></button>
 <div class="modal" id="modal">
-  <button class="x" onclick="document.getElementById('modal').style.display='none'" aria-label="閉じる"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
   <span class="gift"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4"/><path d="M5 12.5V20h14v-7.5"/><path d="M12 8.5V20"/><path d="M12 8.5s-1-4.5-4-4.5a2 2 0 0 0 0 4.5zM12 8.5s1-4.5 4-4.5a2 2 0 0 1 0 4.5z"/></svg></span>
   <h1>おめでとうございます！<br><span class="off">61%オフ</span>の特別オファーを<br>受け取りました</h1>
   <p class="sub">このオファーは期間限定です。<br>プレミアムプラン（3ヶ月）が61%オフ！</p>
@@ -67,6 +72,7 @@ h1 .off{color:var(--brass);text-shadow:0 0 24px rgba(217,185,106,.45)}
 </div>
 <button class="replay" onclick="confetti()" aria-label="紙吹雪をもう一度"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 8.5A8 8 0 1 1 4 13"/><path d="M4.5 3.5v5h5"/></svg></button>
 <script>
+function goBack(){ if(history.length > 1) history.back(); else location.href = 'index.html'; }
 // カウントダウン
 let t = 2*3600 + 57*60 + 42;
 setInterval(()=>{
