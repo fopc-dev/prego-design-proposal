@@ -1422,3 +1422,4 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 
 /* ---- embed mode (提案ページ埋め込み用) ---- */
 body.embed .pill-row,body.embed .back-fab{display:none!important}
+body.embed .theme-row,body.embed .demo-note,body.embed .ie-theme,body.embed .ie-note{display:none!important}
