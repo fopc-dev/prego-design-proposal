@@ -856,7 +856,6 @@ V.tee = () => {
         <div class="miss-badges">
           <span class="chip ${avail?'ok':'ng'}">日程 ${avail?`◎ ${teeSel} 空き`:'△ 合わず'}</span>
           <span class="chip ${dst.ok?'ok':'ng'}">距離 ${dst.ok?'◎':'△'} ${dst.t}</span>
-          ${flag && !open ? `<span class="chip brass" style="font-size:9px">提案あり</span>` : ''}
         </div>` : '';
     let bridge = '';
     if(open && avail && !dst.ok){
@@ -880,7 +879,7 @@ V.tee = () => {
           <img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff">
         </span>
         <div class="info">
-          <div class="nm">${esc(u.name)} <span class="ag">${u.age}</span> ${S.role==='m'?tierBadge(u.tier,true):''}</div>
+          <div class="nm">${esc(u.name)} <span class="ag">${u.age}</span> ${S.role==='m'?tierBadge(u.tier,true):''}${flag && !open ? `<span class="chip brass" style="font-size:8.5px;padding:2px 8px">提案あり</span>` : ''}</div>
           <div class="st"><span>Best <b>${u.best}</b></span><span>Ave <b>${u.ave}</b></span><span>${u.area.slice(0,2).join('・')}</span></div>
           ${badges}
         </div>
