@@ -831,6 +831,7 @@ const TEE_DIST = {
 };
 const teeDist = u => TEE_DIST[u.id] || {t:'車50分',ok:true};
 let teeOpen = {};
+let coinExOpen = false;
 function teeToggle(id){ teeOpen[id] = !teeOpen[id]; render(); }
 function teePropose(id){
   inviteSheet(id);
@@ -934,25 +935,6 @@ V.tee = () => {
       <div class="strip">${dayBtns}</div>
     </div>
     <div class="tee-body">
-      ${S.role==='f' && isD() ? `
-      <div class="notice warn" style="margin:0;align-items:flex-start">
-        <span class="ic" style="margin-top:1px">${I.bell}</span>
-        <span style="flex:1;font-weight:700">おもてなしゴルファーは、オファーをもらわないとコインが獲得できません。お気をつけください</span>
-      </div>
-      <div class="card" style="padding:14px 16px;border:1.5px dashed var(--brass);position:relative;margin-top:6px">
-        <span class="chip brass" style="font-size:9px;position:absolute;top:-10px;left:14px">オファーの例（サンプル）</span>
-        <div style="display:flex;gap:12px;align-items:center">
-          <img class="av" src="img/m1.jpg" style="width:44px;height:44px">
-          <div style="flex:1">
-            <div style="font-weight:900;font-size:13px">SHUさんからオファー</div>
-            <div class="muted" style="font-size:11px">7/14・ラウンド・現地集合</div>
-          </div>
-        </div>
-        <div class="price-box" style="margin-top:10px;padding:10px 13px">
-          <div class="row"><span>受け取れる謝礼</span><span class="money" style="color:var(--brass)">17,600 コイン</span></div>
-        </div>
-        <p class="muted" style="font-size:10.5px;margin:8px 0 0">このカードが届いたら内容を確認して承諾するとコインを受け取れます。メッセージだけのやり取りでは謝礼は発生しません</p>
-      </div>` : ''}
       <div class="mywish card" style="padding:13px 15px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:${S.calOpen?'8px':'0'}">
           <b style="font-size:12.5px">あなたのプレー希望日</b>
@@ -1991,6 +1973,27 @@ function answerOffer(id, ok, fin){
 V.messages = () => {
   ensureOfferCards();
   initUnread();
+  const coinNotice = (S.role==='f' && isD()) ? `
+    <div class="notice warn" style="margin:12px 18px 0;align-items:flex-start;cursor:pointer" onclick="coinExOpen=!coinExOpen;render()">
+      <span class="ic" style="margin-top:1px">${I.bell}</span>
+      <span style="flex:1;font-weight:700">おもてなしゴルファーは、オファーをもらわないとコインが獲得できません。お気をつけください</span>
+      <span class="go" style="font-size:10.5px">${coinExOpen?'閉じる':'例を見る'}</span>
+    </div>
+    ${coinExOpen ? `
+    <div class="card" style="padding:14px 16px;border:1.5px dashed var(--brass);position:relative;margin:12px 18px 0">
+      <span class="chip brass" style="font-size:9px;position:absolute;top:-10px;left:14px">オファーの例（サンプル）</span>
+      <div style="display:flex;gap:12px;align-items:center">
+        <img class="av" src="img/m1.jpg" style="width:44px;height:44px">
+        <div style="flex:1">
+          <div style="font-weight:900;font-size:13px">SHUさんからオファー</div>
+          <div class="muted" style="font-size:11px">7/14・ラウンド・現地集合</div>
+        </div>
+      </div>
+      <div class="price-box" style="margin-top:10px;padding:10px 13px">
+        <div class="row"><span>受け取れる謝礼</span><span class="money" style="color:var(--brass)">17,600 コイン</span></div>
+      </div>
+      <p class="muted" style="font-size:10.5px;margin:8px 0 0">このカードが届いたら内容を確認して承諾するとコインを受け取れます。メッセージだけのやり取りでは謝礼は発生しません</p>
+    </div>` : ''}` : '';
   const rows = (S.chats||[]).map((c,i)=>{
     const u = find(c.id); const last = c.msgs[c.msgs.length-1] || {};
     const CARD_PV = {match:'マッチが成立しました', invite:'お誘いが届いています', offer:'オファーのやり取り', plan:'当日の段取り', venue:'会場変更の希望', review:'評価のお願い'};
@@ -2007,7 +2010,7 @@ V.messages = () => {
   }).join('');
   return `
   ${appbar({title:'メッセージ'})}
-  <div class="page">${rows || '<div class="empty"><div class="big">—</div>メッセージはまだありません</div>'}</div>
+  <div class="page">${coinNotice}${rows || '<div class="empty"><div class="big">—</div>メッセージはまだありません</div>'}</div>
   ${tabbar('msg')}${demoPill()}`;
 };
 function offerVisible(o){
@@ -2081,6 +2084,10 @@ V.chat = id => {
   const cardFrom = (m) => m.mine
     ? `<div class="cc-from mine">あなたから</div>`
     : `<div class="cc-from">${esc(u.name)}さんから</div>`;
+  const invWordRe = /(ラウンド|ゴルフ.{0,6}(行こ|いこ|行きま|行かな|しよう)|打ちっ?ぱなし|インドア|一緒に(回|まわ)|コース.{0,2}(行|いき))/;
+  const isInviteMsg = m => (m.t && (m.who==='me'||m.who==='them') && invWordRe.test(m.t)) || (m.stamp && (m.stamp==='round'||m.stamp==='range'));
+  const coinWarnIdx = (S.role==='f' && isD() && me().st!=='n') ? c.msgs.reduce((a,m,i)=> isInviteMsg(m) ? i : a, -1) : -1;
+  const coinWarn = `<p style="font-size:10.5px;color:var(--ink-soft);margin:2px 10px 4px;text-align:center">オファーをして合意しないとコイン獲得はできません。ご注意ください。</p>`;
   const msgs = c.msgs.map((m,i)=>{
     if(m.who==='card' && m.kind==='match') return matchCardHtml(m);
     if(m.who==='card' && m.kind==='invite'){
@@ -2181,18 +2188,19 @@ V.chat = id => {
       </div>`;
     if(m.who==='sys') return `<div class="msg sys">${m.t}</div>`;
     if(m.stamp){
-      return m.who==='me'
+      return (m.who==='me'
         ? `<div class="mrow me"><span class="mmeta">${c.msgs.slice(i+1).some(x=>x.who==='them')?'既読<br>':''}${m.tm}</span><span class="stamp-msg stamp-svg">${stampSvg(m.stamp)}</span></div>`
-        : `<div class="mrow"><span class="stamp-msg stamp-svg">${stampSvg(m.stamp)}</span><span class="mmeta" style="align-self:flex-end">${m.tm||''}</span></div>`;
+        : `<div class="mrow"><span class="stamp-msg stamp-svg">${stampSvg(m.stamp)}</span><span class="mmeta" style="align-self:flex-end">${m.tm||''}</span></div>`)
+        + (i===coinWarnIdx?coinWarn:'');
     }
     if(m.who==='me'){
       const read = c.msgs.slice(i+1).some(x=>x.who==='them');
       return `<div class="mrow me">
         <span class="mmeta">${read?'既読<br>':''}${m.tm}</span>
         <div class="msg me">${esc(m.t)}</div>
-      </div>`;
+      </div>` + (i===coinWarnIdx?coinWarn:'');
     }
-    return `<div class="mrow"><div class="msg them">${esc(m.t)}<span class="tm">${m.tm}</span></div></div>`;
+    return `<div class="mrow"><div class="msg them">${esc(m.t)}<span class="tm">${m.tm}</span></div></div>` + (i===coinWarnIdx?coinWarn:'');
   }).join('');
   const fixbar = fx ? '' : (()=>{
     const isWomanPartner = WOMEN.includes(u);
