@@ -1405,3 +1405,17 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 .lv-veil .veil-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(10,40,28,.28);color:#fff;text-align:center}
 .lv-veil .v-ic{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center}
 .lv-veil .veil-ov b{font-size:11px;letter-spacing:.05em;text-shadow:0 1px 8px rgba(0,30,18,.5)}
+
+/* ---- mypage stats inside green header (v124) ---- */
+.my-head .stats-card{margin:18px 0 0;background:rgba(250,248,242,.10);border:1px solid rgba(250,248,242,.18);box-shadow:none;text-align:left}
+.my-head .sc-rv{color:var(--on-brand)}
+.my-head .sc-rc{color:var(--on-brand-soft)}
+.my-head .sc-hr{background:rgba(250,248,242,.16)}
+.my-head .sc-ic{color:rgba(250,248,242,.92)}
+.my-head .sc-note b{color:var(--brass-bright)}
+.my-head .sc-n{color:var(--on-brand)}
+.my-head .sc-n sup{color:var(--brass-bright)}
+.my-head .sc-l{color:var(--on-brand-soft)}
+.my-head .sc-note{color:var(--on-brand-soft)}
+.my-head .sc-cell:active{background:rgba(250,248,242,.12)}
+.my-head .sc-rating .arw{color:var(--on-brand-soft)}

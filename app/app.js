@@ -2726,7 +2726,7 @@ V.mypage = () => {
   const tier = TIERS[m.tier||'GOLD'];
   const foot = (isF?MEN:WOMEN).slice(0,4);
   const menu = [
-    ['プロフィール', I.user, ()=>`go('#/me')`],
+    ...(isD() ? [] : [['プロフィール', I.user, ()=>`go('#/me')`]]),
     [isF?'コイン':'ポイント', I.coin, ()=>`go('#/points')`],
     ['ゴールド', I.gold, ()=>`go('#/gold')`],
     ...(isD() ? [['ゲーム', '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>', ()=>`go('#/games')`]] : []),
@@ -2735,7 +2735,7 @@ V.mypage = () => {
     ...(isF && isD() ? [['お誘い設定', I.sliders, ()=>`go('#/invite-set')`]] : []),
     ['ヘルプ', I.bell, ()=>`go('#/help')`],
     ['ラウンド録', I.camera, ()=>`go('#/roundlog')`],
-    ['フレーム', I.trophy, ()=>`go('#/frames')`],
+    ...(isD() ? [] : [['フレーム', I.trophy, ()=>`go('#/frames')`]]),
     ...(isD() ? [] : [['ゴルフ場', I.pin, ()=>`coursePick=null;go('#/courses')`]]),
     ['記事', I.flag.replace('viewBox','width="23" height="23" viewBox'), ()=>`go('#/articles')`],
   ].map(x=>`<button class="mi" onclick="${x[2]()}">${x[1]}${x[0]}${x[3]?`<span class="bd">${x[3]}</span>`:''}</button>`).join('');
@@ -2744,12 +2744,13 @@ V.mypage = () => {
   <div class="page">
     <div class="my-head">
       <button class="my-bell" onclick="${isD()&&S.reviewDue?`openReview('${S.reviewDue&&S.reviewDue.id}')`:`go('#/notifications')`}">${I.bell}${myBellDot?`<span class="dot${isD()&&S.reviewDue?' urgent':''}"></span>`:''}</button>
+      ${isD()?`<div onclick="go('#/me')" style="cursor:pointer">`:''}
       <span class="avatar-ring" style="${isF?ringStyle(m.tier):'background:rgba(250,248,242,.3)'};display:block">
         <img src="${m.img}">
       </span>
       <div class="nm">${esc(m.name)} ${isF?tierBadge(m.tier):(S.subActive?'<span class="chip brass" style="font-size:9px">サブスク会員</span>':'')}</div>
-
-    </div>
+      ${isD()?`<div style="margin-top:9px"><span class="chip" style="font-size:10px;padding:5px 13px;background:rgba(250,248,242,.16);color:var(--on-brand);border:1px solid rgba(250,248,242,.28)">プロフィールを見る</span></div></div>`:`
+    </div>`}
     ${isD() ? (()=>{
       recoInit();
       const likedMe = RECO_LIKED_YOU.filter(id => find(id) && (S.role==='m' ? id.startsWith('w') : id.startsWith('m')));
@@ -2775,7 +2776,7 @@ V.mypage = () => {
         <span class="sc-star">${I.star.replace('width="14" height="14"','width="19" height="19"')}</span>
         <span class="sc-rv">${D.rating}</span>
         <span class="sc-rc">レビュー ${D.rc}件</span>
-        <span class="arw" style="margin-left:auto;color:var(--ink-soft)">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7').replace('width="20" height="20"','width="14" height="14"')}</span>
+        <span class="arw" style="margin-left:auto;opacity:.65">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7').replace('width="20" height="20"','width="14" height="14"')}</span>
       </button>
       <div class="sc-hr"></div>
       <div class="sc-grid">
@@ -2785,6 +2786,7 @@ V.mypage = () => {
         ${cell(mutualIc, D.mut, 0, '相互いいね', `go('#/likes')`)}
       </div>
       <p class="sc-note">数字は合計・<b>＋◯</b> は今週の新着</p>
+    </div>
     </div>`;})() : ''}
     ${isF && isL() ? (()=>{ ensureFset(); const r = S.fset.rnd; const cert = me().cert !== false; return `
     <div class="card" style="margin:16px 18px 0;padding:14px 16px">
@@ -2829,19 +2831,7 @@ V.mypage = () => {
       </span>
       <span class="chip brass" style="font-size:9px">SOON</span>
     </button>`:''}
-    ${isL() ? (()=>{
-      const cur = rpRank(), nx = rpNext();
-      const hint = rpHint();
-      const pct = nx ? Math.min(96, Math.max(4, Math.round((rpGet()-cur.need)/(nx.need-cur.need)*100))) : 100;
-      return `
-    <div class="next-tier">
-      <span class="ic">${I.trophy}</span>
-      <div class="t" style="flex:1">
-        ランク <b>${cur.name}</b>${nx?`　▸　<b>${nx.name}</b> まであと <b style="font-family:var(--font-num)">${(nx.need-rpGet()).toLocaleString()}</b> RP`:'　最高ランクです'}
-        <div class="bar"><i style="width:${pct}%"></i></div>
-        ${nx?`<span style="display:block;font-size:9.5px;opacity:.75;margin-top:4px">次の一手：${hint[0]}（+${hint[1]} RP）</span>`:''}
-      </div>
-    </div>`;})() : isF?`
+    ${isD() ? '' : isF?`
     <div class="next-tier">
       <span class="ic">${I.trophy}</span>
       <div class="t" style="flex:1">
