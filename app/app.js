@@ -2733,7 +2733,7 @@ V.mypage = () => {
     ['設定', I.gear, ()=>`go('#/settings')`],
     ...(isF && isD() ? [['お誘い設定', I.sliders, ()=>`go('#/invite-set')`]] : []),
     ['ヘルプ', I.bell, ()=>`go('#/help')`],
-    ['ラウンド録', I.camera, ()=>`go('#/roundlog')`],
+    ...(isD() ? [] : [['ラウンド録', I.camera, ()=>`go('#/roundlog')`]]),
     ...(isD() ? [] : [['フレーム', I.trophy, ()=>`go('#/frames')`]]),
     ...(isD() ? [] : [['ゴルフ場', I.pin, ()=>`coursePick=null;go('#/courses')`]]),
     ['記事', I.flag.replace('viewBox','width="23" height="23" viewBox'), ()=>`go('#/articles')`],
@@ -2771,7 +2771,7 @@ V.mypage = () => {
         : {rating:m.rating.toFixed(1), rc:m.rc, rounds:m.rounds, rp:2, foot:foot, fp:3, mut:mutual.length};
       return `
     <div class="stats-card">
-      <button class="sc-rating" onclick="toast('レビュー一覧（デモでは省略）')">
+      <button class="sc-rating" onclick="go('#/reviews')">
         <span class="sc-star">${I.star.replace('width="14" height="14"','width="19" height="19"')}</span>
         <span class="sc-rv">${D.rating}</span>
         <span class="sc-rc">レビュー ${D.rc}件</span>
@@ -2855,6 +2855,36 @@ V.mypage = () => {
       ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'goPhotoReg()':mlv()===2?'goVerifyReg()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
     </div>`:''}
     <div class="menu">${menu}</div>
+  </div>
+  ${tabbar('my')}${demoPill()}`;
+};
+
+/* ---- reviews (received) ---- */
+V.reviews = () => {
+  const isF = S.role==='f';
+  const revs = isF
+    ? [{from:'SHU', av:'img/m1.jpg', date:'7/14 ラウンド', stars:5, tags:['時間どおり','マナーが良い'], txt:'とても楽しいラウンドでした。ぜひまたご一緒させてください！'}]
+    : [{from:'MIKA', av:'img/w1.jpg', date:'7/14 ラウンド', stars:5, tags:['時間どおり','会話が楽しい'], txt:'紳士的でとても楽しいラウンドでした。ありがとうございました！'}];
+  return `
+  ${appbar({title:'レビュー', back:true, noBell:true})}
+  <div class="page">
+    <div class="wrap" style="margin-top:14px">
+      <div class="rev-line" style="margin:0 0 12px"><span class="stars">★★★★★</span><b>5.0</b><span>（${revs.length}件のレビュー）</span></div>
+      ${revs.map(r=>`
+      <div class="card" style="padding:14px 16px;margin-bottom:12px">
+        <div style="display:flex;gap:11px;align-items:center">
+          <img class="av" src="${r.av}" style="width:42px;height:42px">
+          <div style="flex:1">
+            <b style="font-size:13px">${r.from}さん</b>
+            <span class="muted" style="display:block;font-size:10.5px">${r.date}</span>
+          </div>
+          <span class="stars">${'★'.repeat(r.stars)}</span>
+        </div>
+        <div class="chips" style="margin-top:9px">${r.tags.map(t=>`<span class="chip" style="font-size:10px">${t}</span>`).join('')}</div>
+        <p style="font-size:12.5px;line-height:1.7;margin:9px 0 0">${r.txt}</p>
+      </div>`).join('')}
+      <p class="muted" style="font-size:10.5px">レビューはラウンド後の相互評価で追加されます。双方が記入すると公開されます</p>
+    </div>
   </div>
   ${tabbar('my')}${demoPill()}`;
 };
@@ -4360,7 +4390,7 @@ function render(){
     'home': V.home, 'tee': V.tee, 'miss': V.miss, 'feed': V.feed,
     'messages': V.messages, 'chat': ()=>V.chat(arg),
     'profile': ()=>V.profile(arg), 'offer': ()=>V.invite(arg), 'offers': V.offers, 'invite': ()=>V.invite(arg),
-    'compe': ()=>V.compe(arg), 'mypage': V.mypage, 'points': V.points,
+    'compe': ()=>V.compe(arg), 'mypage': V.mypage, 'points': V.points, 'reviews': V.reviews,
     'roundlog': V.roundlog, 'frames': V.frames,
     'settings': V.settings, 'subscription': V.subscription, 'notifications': ()=>{ S.seenNtf=true; save(); return V.notifications(); },
     'contact': V.contact, 'help': V.help, 'courses': V.courses, 'base': V.base,
