@@ -2736,7 +2736,7 @@ V.mypage = () => {
     ['ヘルプ', I.bell, ()=>`go('#/help')`],
     ['ラウンド録', I.camera, ()=>`go('#/roundlog')`],
     ['フレーム', I.trophy, ()=>`go('#/frames')`],
-    ['ゴルフ場', I.pin, ()=>`coursePick=null;go('#/courses')`],
+    ...(isD() ? [] : [['ゴルフ場', I.pin, ()=>`coursePick=null;go('#/courses')`]]),
     ['記事', I.flag.replace('viewBox','width="23" height="23" viewBox'), ()=>`go('#/articles')`],
   ].map(x=>`<button class="mi" onclick="${x[2]()}">${x[1]}${x[0]}${x[3]?`<span class="bd">${x[3]}</span>`:''}</button>`).join('');
   const myBellDot = (isD()&&S.reviewDue) || !S.seenNtf;
@@ -3344,7 +3344,7 @@ V.article = id => {
 
 V.me = () => {
   const m = me();
-  const inner = V.profile(S.role==='f'?'w1':'m1');
+  const inner = V.profile(S.role==='f'?(S.fid||'w1'):'m1');
   const banner = `
     <div class="notice warn" style="position:relative;z-index:5;cursor:pointer" onclick="go('#/edit-profile')">
       <span class="ic">${I.user.replace('<svg ','<svg width="17" height="17" ')}</span>
@@ -3358,6 +3358,10 @@ V.me = () => {
     </div></div>`);
 };
 
+function pxKey(){ return S.role==='f' ? (S.fid||'w1') : 'm1'; }
+function px(){ S.profEx = S.profEx || {}; return S.profEx[pxKey()] = S.profEx[pxKey()] || {}; }
+function pxSet(k,v){ px()[k] = v; save(); render(); }
+function pxTog(group,k){ const g = px()[group] = px()[group] || {}; g[k] = !g[k]; save(); render(); }
 V.editProfile = () => {
   const m = me();
   return `
@@ -3380,6 +3384,48 @@ V.editProfile = () => {
     <select class="input"><option>お相手の分も払います</option><option selected>話し合って決めたい</option><option>お互い自分の分を払う</option><option>お相手に出してもらいたい</option></select>
     <div class="label">プレーエリア</div>
     <div class="psec"><div class="chips">${m.area.map(a=>`<span class="chip">${a}</span>`).join('')}<button class="chip line" onclick="toast('エリア編集（デモ）')">＋ 編集</button></div></div>
+    ${isD()?`
+    <div class="label" style="margin-top:26px;display:flex;align-items:center;gap:8px">任意項目 <span class="chip line" style="font-size:9px">未入力の項目はプロフィールに表示されません</span></div>
+    <div class="card" style="padding:15px;display:flex;flex-direction:column;gap:14px">
+      <div>
+        <div class="label" style="margin-top:0">お酒</div>
+        <div class="opt-grid" style="grid-template-columns:repeat(3,1fr)">${['飲む','飲まない','どちらでも'].map(v=>`<button class="opt ${px().drink===v?'on':''}" onclick="pxSet('drink','${v}')">${v}</button>`).join('')}</div>
+      </div>
+      <div>
+        <div class="label" style="margin-top:0">タバコ</div>
+        <div class="opt-grid" style="grid-template-columns:repeat(3,1fr)">${['吸わない','吸う','電子タバコ'].map(v=>`<button class="opt ${px().smoke===v?'on':''}" onclick="pxSet('smoke','${v}')">${v}</button>`).join('')}</div>
+      </div>
+      <div>
+        <div class="label" style="margin-top:0">ラウンドする季節（複数可）</div>
+        <div class="chips">${['春','夏','秋','冬'].map(v=>`<button class="chip ${px().seasons&&px().seasons[v]?'':'line'}" onclick="pxTog('seasons','${v}')">${v}</button>`).join('')}</div>
+      </div>
+      <div>
+        <div class="label" style="margin-top:0">好きなゴルフ場</div>
+        <div class="chips">${Object.keys(S.favs||{}).filter(k=>S.favs[k]).map(n=>`<span class="chip">★ ${esc(n)}</span>`).join('')}<button class="chip line" onclick="coursePick=null;go('#/courses')">＋ 一覧から選ぶ</button></div>
+        <p class="muted" style="font-size:10px;margin-top:5px">ゴルフ場一覧で★を付けると、こことプロフィールに表示されます</p>
+      </div>
+      <div>
+        <div class="label" style="margin-top:0">趣味（複数可）</div>
+        <div class="chips">${['旅行','キャンプ','読書','漫画','映画','音楽','グルメ','スポーツ観戦'].map(v=>`<button class="chip ${px().hobbies&&px().hobbies[v]?'':'line'}" onclick="pxTog('hobbies','${v}')">${v}</button>`).join('')}</div>
+        <input class="input" style="margin-top:8px" placeholder="好きな本・作家・その他（自由入力）" value="${esc(px().hobbyFree||'')}" onchange="pxSet('hobbyFree',this.value)">
+      </div>
+      <div>
+        <div class="label" style="margin-top:0">仕事・会社名</div>
+        <input class="input" value="${esc(px().company||'')}" placeholder="例：IT関連／株式会社◯◯" onchange="pxSet('company',this.value)">
+      </div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1"><div class="label" style="margin-top:0">肩書・役職</div><input class="input" value="${esc(px().title||'')}" placeholder="例：代表取締役" onchange="pxSet('title',this.value)"></div>
+        <div style="flex:1"><div class="label" style="margin-top:0">年収</div><select class="input" onchange="pxSet('income',this.value)">${['非公開','400万未満','400〜600万','600〜800万','800〜1,000万','1,000〜1,500万','1,500万以上'].map(v=>`<option ${(px().income||'非公開')===v?'selected':''}>${v}</option>`).join('')}</select></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1"><div class="label" style="margin-top:0">身長</div><select class="input" onchange="pxSet('height',this.value)">${['未設定','150cm','155cm','160cm','165cm','170cm','175cm','180cm','185cm','190cm'].map(v=>`<option ${(px().height||'未設定')===v?'selected':''}>${v}</option>`).join('')}</select></div>
+        <div style="flex:1"><div class="label" style="margin-top:0">ゴルフ会員権</div><select class="input" onchange="pxSet('membership',this.value)">${['未設定','あり','なし'].map(v=>`<option ${(px().membership||'未設定')===v?'selected':''}>${v}</option>`).join('')}</select></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1"><div class="label" style="margin-top:0">車</div><select class="input" onchange="pxSet('car',this.value)">${['未設定','あり','なし'].map(v=>`<option ${(px().car||'未設定')===v?'selected':''}>${v}</option>`).join('')}</select></div>
+        <div style="flex:1.4"><div class="label" style="margin-top:0">車種</div><input class="input" ${px().car==='あり'?'':'disabled'} value="${esc(px().carModel||'')}" placeholder="例：アルファード" onchange="pxSet('carModel',this.value)"></div>
+      </div>
+    </div>`:''}
     ${isD()&&S.role==='f'?`
     <button class="notice warn" style="margin:16px 0 0;width:100%;cursor:pointer" onclick="go('#/invite-set')">
       <span class="ic">${I.sliders.replace('width="21" height="21"','width="17" height="17"')}</span>
