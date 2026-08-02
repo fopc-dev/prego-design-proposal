@@ -104,7 +104,7 @@ else if(qsBoot === 'm' || qsBoot === 'f'){
 if(EMBED) document.body.classList.add('embed');
 
 /* ---------- color themes (A/B/C) ---------- */
-const THEME_NAMES = { b:'B ミント', e:'E エメラルド', g:'G ミント×エメラルド', '1':'1 新機能', '2':'2 会員レベル' };
+const THEME_NAMES = { b:'B ミント', e:'E エメラルド', g:'G ミント×エメラルド', '1':'1 最新版', '2':'2 最新版（1と同一）' };
 const isD = () => S.theme === '1' || S.theme === '2';
 const isL = () => S.theme === '1' || S.theme === '2';
 const LV_NAMES = ['','ゲスト','メンバー','認証済み','プレミアム'];

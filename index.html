@@ -649,12 +649,12 @@ footer{
     <h1>「出会い系の顔」を卒業し、<br><em>クラブハウスの品格</em>をアプリに。</h1>
     <p class="thesis">
       現状のUIは機能が揃っているのに、色が4系統（緑・ピンク・青・黄）に割れ、世界観が定まっていません。
-      本提案はブランドを「フェアウェイグリーン × アイボリー × 真鍮」の1系統に統一し、
-      マッチングを増やす3つのUX原則とともに再設計したものです。
+      本書はブランドをプロトタイプ<b style="color:#7AE0BD">「G」（エメラルドグリーン × ミント）</b>の1系統に統一し、
+      会員レベル制（LV1〜4）・日程マッチ刷新・おすすめを核に再設計した<b>実装指示書のサマリー</b>です。
     </p>
     <div class="meta">
       <span>初回提案<b>2026.07.04</b></span>
-      <span>最終更新<b>2026.08.02（デモv129準拠）</b></span>
+      <span>最終更新<b>2026.08.02（デモ v130 準拠）</b></span>
       <span>対象<b>prego-app.golf（Vite + React PWA）</b></span>
       <span>作成<b>森（株式会社エフオーピーシー）</b></span>
     </div>
@@ -667,12 +667,12 @@ footer{
       <div class="p-card">
         <div class="flag">1</div>
         <h3>色は1系統に絞る</h3>
-        <p>主役は<strong>フェアウェイグリーン</strong>、格を出す差し色は<strong>真鍮ゴールド</strong>のみ。ピンク・青・黄のCTA混在を廃止し、「押すべきボタンは常に緑」を全画面で徹底します。</p>
+        <p>主役は<strong>エメラルドグリーン（#1CA57F）</strong>、面は<strong>淡いミント</strong>で統一（配色G）。ピンク・青・黄のCTA混在を廃止し、「押すべきボタンは常に緑」を全画面で徹底します。</p>
       </div>
       <div class="p-card">
         <div class="flag">2</div>
         <h3>過疎を見せない</h3>
-        <p>「7/14（火）2人」という<strong>供給の少なさを数字で晒す表示</strong>を廃止。日付起点のティーシート形式と公式コンペ枠で、常に画面が埋まっている状態を設計でつくります。</p>
+        <p>「7/14（火）2人」という<strong>供給の少なさを数字で晒す表示</strong>を廃止。日付起点の「日程マッチ」に加え、日程や距離が合わない相手も<strong>「あと一歩のお相手」として提案に変える</strong>ことで、0件の画面を見せません。</p>
       </div>
       <div class="p-card">
         <div class="flag">3</div>
@@ -682,7 +682,7 @@ footer{
       <div class="p-card">
         <div class="flag">4</div>
         <h3>マッチの成果を資産に</h3>
-        <p>ラウンド後に<strong>シェアしたくなるスコアカード画像</strong>を自動生成。UGC・紹介が「お願いして書いてもらうもの」ではなく「自慢したくて勝手に出るもの」になる導線です。</p>
+        <p>ラウンド後の<strong>相互評価でレビュー★とタグが蓄積</strong>し、プロフィールの信頼資産になります（受信レビューはマイページの★行から閲覧）。シェア画像の自動生成（フォトフレーム・ラウンド録）は<strong>保留中の将来案</strong>です。</p>
       </div>
     </div>
   </section>
@@ -726,7 +726,7 @@ footer{
   <!-- ================= SCREENS ================= -->
   <section class="screens">
     <div class="sec-label"><span class="no">03</span><h2>画面 — 実物のデモをそのまま埋め込み</h2></div>
-    <p style="max-width:780px;font-size:13px;color:rgba(250,248,242,.7);margin-bottom:30px">以下はモックではなく、<b style="color:#7AE0BD">動作中の最新デモ（v129）をそのまま埋め込んだもの</b>です。実際に触れます。全画面で試す場合は <code>app/?theme=2</code> へ。</p>
+    <p style="max-width:780px;font-size:13px;color:rgba(250,248,242,.7);margin-bottom:30px">以下はモックではなく、<b style="color:#7AE0BD">動作中の最新デモをそのまま埋め込んだもの（常に最新版）</b>です。実際に触れます。全画面で試す場合は <code>app/?theme=2</code> へ。</p>
 
     <div class="screen-row">
       <div class="note-col">
@@ -872,7 +872,7 @@ footer{
 
   <!-- ================= SCOPE v129 ================= -->
   <section class="impl">
-    <div class="sec-label"><span class="no">06</span><h2>開発スコープと現在地 — 2026.08（デモ v129）</h2></div>
+    <div class="sec-label"><span class="no">06</span><h2>開発スコープと現在地 — 2026.08</h2></div>
     <p style="max-width:820px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:26px">
       動作デモ：<b style="color:#D9B96A">https://fopc-dev.github.io/prego-design-proposal/app/</b>（実装の正はこのデモ。<code>?theme=1</code> と <code>?theme=2</code> は同一の最新統合版・配色はG）。
       実装対象は次の5点：<b style="color:#D9B96A">①デザイン・配色G ②お誘いの種目別対応 ③おすすめ（スワイプ） ④会員レベル制 LV1〜4 ⑤日程マッチ刷新</b>。
