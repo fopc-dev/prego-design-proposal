@@ -1160,6 +1160,13 @@ footer{
   <!-- ================= RANK SYSTEM ================= -->
   <section class="ranks">
     <div class="sec-label"><span class="no">05</span><h2>ランク制度 — 女性ランクと単価の設計</h2></div>
+    <div style="max-width:760px;margin-bottom:22px;padding:14px 18px;border:1.5px solid #B08A3C;border-radius:14px;background:rgba(176,138,60,.12)">
+      <b style="color:#D9B96A">【2026-08-02 更新】ランク制度は一旦保留（未定）です。</b>
+      <span style="font-size:13px;color:rgba(250,248,242,.85);display:block;margin-top:4px">
+      現在実装が確定しているのは <b style="color:#D9B96A">WHITE（一般おもてなし・¥5,500／受取¥4,400）</b> と
+      <b style="color:#D9B96A">GOLD（認定おもてなし・¥22,000／受取17,600コイン）</b> の2ランクのみ。本番はまずこの2つで運用します。
+      下表の5段階案・自己設定価格は将来の検討用アーカイブです。</span>
+    </div>
     <p style="max-width:760px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:28px">
       設計原則は3つ。<b style="color:#D9B96A">①入口は審査制</b>（写真審査→ビデオ面談→初回は公式コンペで実地確認）、
       <b style="color:#D9B96A">②昇格は実績で自動判定</b>（運営の主観を挟まない）、
@@ -1219,6 +1226,7 @@ footer{
   <!-- ================= IMPL ================= -->
   <section class="impl">
     <div class="sec-label"><span class="no">06</span><h2>実装メモ — エンジニア向け</h2></div>
+    <p style="max-width:760px;font-size:12.5px;color:rgba(250,248,242,.65);margin-bottom:22px">※本セクションは初期提案時のメモです。<b style="color:#D9B96A">確定仕様の正はリポジトリの <code>docs/開発仕様書.md</code>（追補B）と動作デモ</b>。食い違う場合はそちらを優先してください。</p>
     <div class="impl-grid">
       <div class="impl-card">
         <h3>導入はCSS変数の差し替えから</h3>
@@ -1256,9 +1264,51 @@ footer{
     </div>
   </section>
 
+  <!-- ================= SCOPE v129 ================= -->
+  <section class="impl">
+    <div class="sec-label"><span class="no">07</span><h2>開発スコープと現在地 — 2026.08（デモ v129）</h2></div>
+    <p style="max-width:820px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:26px">
+      動作デモ：<b style="color:#D9B96A">https://fopc-dev.github.io/prego-design-proposal/app/</b>（実装の正はこのデモ。<code>?theme=1</code> と <code>?theme=2</code> は同一の最新統合版・配色はG）。
+      実装対象は次の5点：<b style="color:#D9B96A">①デザイン・配色G ②お誘いの種目別対応 ③おすすめ（スワイプ） ④会員レベル制 LV1〜4 ⑤日程マッチ刷新</b>。
+      コンペ機能は<b>SOON表示のみ（保留）</b>、ランク制度は<b>未定（上記2ランクのみ確定）</b>。
+    </p>
+    <div class="rank-scroll" style="margin-bottom:26px">
+      <table class="rank-tbl">
+        <tr><th>レベル</th><th>昇格条件</th><th>できること</th><th>特典</th></tr>
+        <tr><td><span class="rk">LV1 ゲスト</span></td><td class="cond">SMS電話認証込みの60秒登録（性別→ニックネーム→生年月日ドラム→郵便番号→近辺エリアチップ）</td><td class="cond">閲覧のみ・おすすめ1日3人・ホームは上位4名のみクリア表示（5人目以降ぼかし＋写真登録訴求）・いいねは写真登録ポップアップ</td><td class="cond">—</td></tr>
+        <tr><td><span class="rk">LV2 メンバー</span></td><td class="cond">写真＋ニックネーム＋ゴルフ3点</td><td class="cond">全員クリア表示・おすすめ1日10人・あり／足あと</td><td class="money">+300G</td></tr>
+        <tr><td><span class="rk">LV3 認証済み</span></td><td class="cond">本人確認＋プレー希望日1件</td><td class="cond"><b>メッセージ・誘い・オファー解禁</b>（法令：年齢確認前の相互連絡禁止）。<b>女性はここでコンプリート</b></td><td class="money">+1,000G</td></tr>
+        <tr><td><span class="rk">LV4 サブスク</span></td><td class="cond">サブスク加入（男性のみ）</td><td class="cond">無制限メッセージ等＝男性のコンプリート</td><td class="cond">—</td></tr>
+      </table>
+    </div>
+    <div class="impl-grid">
+      <div class="impl-card">
+        <h3>日程マッチ刷新（最重要UX）</h3>
+        <ol>
+          <li>候補全員に<b>「日程 ◎/△」「距離 ◎/△」チップ</b>（◎=淡緑・△=淡赤）</li>
+          <li>並び順＝<b>◎◎ → 日程◎距離△ → 日程△</b>（距離◎優先）</li>
+          <li>旧「惜しいマッチ」を統合——合わない相手も「あと一歩のお相手」として同一リストに直接表示</li>
+          <li>全行折りたたみ式。開くと：◎◎＝<b>オファーする／メッセージ</b>、距離△＝<b>インドア・打ちっぱなし提案→「提案する」</b>（オファー画面でインドア初期選択）、日程△＝<b>「7/17でオファーする」</b>（該当日を初期選択）</li>
+          <li>顔写真タップ＝プロフィール／メッセージ＝チャット直行／全アクションにLVゲート</li>
+          <li>オファー画面上部カード＝全体タップ＋「プロフィールを見る」でプロフィールへ</li>
+          <li>コンペカードはSOONバッジ・タップ不可</li>
+        </ol>
+      </div>
+      <div class="impl-card">
+        <h3>おすすめ・保護導線・マイページ</h3>
+        <ol>
+          <li><b>おすすめ</b>：LV連動 1日3人（LV1）→10人。左＝なし／右＝あり／上＝そのまま誘う。両想い→チャット自動スレッド＋誘い直行</li>
+          <li><b>女性のコイン保護</b>：メッセージ一覧上部に注意バナー＋タップで開く「オファーの例」サンプル。チャット内の誘いワード（ラウンド・ゴルフ行こう等・スタンプ含む）を自動検知し「オファーをして合意しないとコイン獲得はできません」を該当メッセージ直後に表示（女性画面のみ）</li>
+          <li><b>マイページ</b>：統計を緑ヘッダー内パネルに統合・★行→受信レビュー一覧・「プロフィールを見る」導線・RPメーター非表示・メニューはポイント（コイン）/オファー/設定/ヘルプ/記事に整理（ゴールドはポイント内・ゲームは設定内へ）・LVカードは女性LV3／男性LV4で「コンプリート」</li>
+          <li><b>プロフィール編集</b>：任意項目を拡充（お酒・タバコ・季節・好きなゴルフ場・趣味・会社名・肩書・年収・身長・会員権・車／車種。未入力は非表示）</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
 </div>
 
-<footer>PREGO UI RENEWAL PROPOSAL — 2026.07 / FOPC Inc.</footer>
+<footer>PREGO UI RENEWAL PROPOSAL — 2026.08 UPDATED / FOPC Inc.</footer>
 </main>
 </body>
 </html>
