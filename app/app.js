@@ -669,6 +669,18 @@ V.home = () => {
   if(isM && S.hf==='o') list = list.filter(u=>u.st==='o');
   const cards = list.map((u, ci) => {
     const liked = S.likes[u.id];
+    const veiled = isL() && mlv()<2 && ci >= 4;
+    if(veiled) return `
+    <div class="pcard lv-veil" style="--i:${ci}" onclick="lockSheet(2)">
+      <div class="ph">
+        <img src="${u.img}" alt="">
+        <div class="veil-ov">
+          <span class="v-ic">${I.camera.replace('width="17" height="17"','width="22" height="22"')}</span>
+          <b>写真登録で表示</b>
+        </div>
+      </div>
+      <div class="stats"><span class="st" style="filter:blur(4px)">BEST<b>${u.best}</b></span><span class="st" style="filter:blur(4px)">AVE<b>${u.ave}</b></span></div>
+    </div>`;
     return `
     <div class="pcard" style="--i:${ci}">
       <div class="ph" onclick="go('#/profile/${u.id}')">
