@@ -2728,8 +2728,7 @@ V.mypage = () => {
   const menu = [
     ...(isD() ? [] : [['プロフィール', I.user, ()=>`go('#/me')`]]),
     [isF?'コイン':'ポイント', I.coin, ()=>`go('#/points')`],
-    ['ゴールド', I.gold, ()=>`go('#/gold')`],
-    ...(isD() ? [['ゲーム', '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>', ()=>`go('#/games')`]] : []),
+    ...(isD() ? [] : [['ゴールド', I.gold, ()=>`go('#/gold')`]]),
     ['オファー', I.invite, ()=>`go('#/offers')`, offerBadgeCount()||''],
     ['設定', I.gear, ()=>`go('#/settings')`],
     ...(isF && isD() ? [['お誘い設定', I.sliders, ()=>`go('#/invite-set')`]] : []),
@@ -2863,6 +2862,13 @@ V.mypage = () => {
 /* ---- points / coins ---- */
 V.points = () => {
   const isF = S.role==='f';
+  const goldSec = !isD() ? '' : `
+    <div class="sec wrap"><div class="sec-h"><span class="t">ゴールド</span><span class="s">ログインボーナスやゲームで貯まります</span></div></div>
+    <div class="card" style="margin:0 18px;padding:14px 15px;display:flex;align-items:center;gap:11px">
+      <span style="flex:none;width:36px;height:36px;border-radius:12px;background:var(--brass-soft);color:var(--brass-ink);display:flex;align-items:center;justify-content:center">${I.gold}</span>
+      <span style="flex:1"><b style="font-family:var(--font-num);font-size:18px">${gGold().toLocaleString()}</b> <small class="muted">G</small><span class="muted" style="display:block;font-size:10px">レッスン割引・ギア抽選などに交換できます</span></span>
+      <button class="btn sm" style="flex:none" onclick="go('#/gold')">交換所を開く</button>
+    </div>`;
   if(isF){
     const rows = Object.values(TIERS).map(t=>`
       <div class="tier-row ${me().tier===t.name?'on':''}">
@@ -2891,6 +2897,7 @@ V.points = () => {
       <div class="sec wrap"><div class="sec-h"><span class="t">ランクと謝礼</span><span class="s">レビューと実績で昇格します</span></div></div>
       <div class="tier-table">${rows}</div>
       <p class="muted wrap" style="font-size:11px;margin-top:4px">昇格条件：プロフィール100%・本人確認・直近レビュー平均・ラウンド実績。ランクはフォトフレームの色にも反映されます。</p>
+      ${goldSec}
     </div>
     ${tabbar('my')}${demoPill()}`;
   }
@@ -2913,6 +2920,7 @@ V.points = () => {
       </div>
       <p class="muted" style="font-size:11px;margin-top:12px">※デモのため決済は発生しません</p>
     </div>
+    ${goldSec}
   </div>
   ${tabbar('my')}${demoPill()}`;
 };
@@ -3049,6 +3057,7 @@ V.settings = () => `
       <button class="srow" onclick="go('#/password')"><span class="ic">${I.gear}</span>パスワード更新<span class="arw">›</span></button>
       <button class="srow" onclick="go('#/verify')"><span class="ic">${I.shield}</span>本人確認<span class="tag2">${S.verified?'認証済':'要登録'}</span></button>
       <button class="srow" onclick="toast('ドライバー認証：免許証・任意保険を確認します（デモ）')"><span class="ic">${I.car}</span>ドライバー認証<span class="tag2">${S.role==='m'?'認証済':'—'}</span></button>
+      ${isD()?`<button class="srow" onclick="go('#/games')"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>ゲーム<span class="arw">›</span></button>`:''}
       ${isD()?`<button class="srow" onclick="togglePause()"><span class="ic">${I.bell.replace('width="21" height="21"','width="18" height="18"')}</span>${S.paused?'休止中（タップで再開）':'休止する'}<span class="tag2">${S.paused?'停止中':''}</span></button>`:''}
       <button class="srow" onclick="taikai()" style="color:var(--danger)"><span class="ic" style="color:var(--danger)">${I.back}</span>退会<span class="arw">›</span></button>
       <button class="srow" onclick="logout()"><span class="ic">${I.back}</span>ログアウト<span class="arw">›</span></button>
