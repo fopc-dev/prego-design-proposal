@@ -832,6 +832,14 @@ const TEE_DIST = {
 const teeDist = u => TEE_DIST[u.id] || {t:'車50分',ok:true};
 let teeOpen = {};
 function teeToggle(id){ teeOpen[id] = !teeOpen[id]; render(); }
+function teePropose(id){
+  inviteSheet(id);
+  if(location.hash === '#/invite/'+id){
+    const u = find(id);
+    if(u && u.sim?.ok !== false){ inv.mode = 'インドアゴルフ'; inv.pay = (inv.pay||'').replace(/^プレー代/,'費用'); inv.venue = null; inv.customV = false; }
+    render();
+  }
+}
 
 V.tee = () => {
   const cand = pool().filter(u => u.dates.includes(teeSel));
@@ -861,10 +869,7 @@ V.tee = () => {
     if(open && avail && !dst.ok){
       bridge = `
       <div class="bridge" style="margin-top:10px"><span class="lb">距離があるときの提案</span>ラウンドは少し遠め。まずは中間エリアの<b>インドア</b>や<b>打ちっぱなし</b>で会ってみませんか？</div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn sm" style="flex:1" onclick="if(!lvNeed())toast('インドアで打診しました（デモ）')">インドアで打診する</button>
-        <button class="btn sm ghost" style="flex:1" onclick="if(!lvNeed())toast('打ちっぱなしで打診しました（デモ）')">打ちっぱなしで打診する</button>
-      </div>`;
+      <button class="btn sm" style="margin-top:10px" onclick="teePropose('${u.id}')">提案する</button>`;
     }
     if(open && !avail){
       const nx = u.dates.find(d => dnum(d) > dnum(teeSel)) || u.dates[u.dates.length-1];
@@ -874,8 +879,8 @@ V.tee = () => {
     }
     return `
     <div class="card" style="padding:13px 15px">
-      <div class="mcard" style="padding:0" onclick="${flag?`teeToggle('${u.id}')`:`go('#/profile/${u.id}')`}">
-        <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px" ${flag?`onclick="event.stopPropagation();go('#/profile/${u.id}')"`:''}>
+      <div class="mcard" style="padding:0" onclick="${flag?`teeToggle('${u.id}')`:(isD()?`inviteSheet('${u.id}')`:`go('#/profile/${u.id}')`)}">
+        <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px" ${isD()?`onclick="event.stopPropagation();go('#/profile/${u.id}')"`:''}>
           <img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff">
         </span>
         <div class="info">
@@ -1284,6 +1289,7 @@ V.invite = id => {
         <div style="font-weight:900">${esc(u.name)} <span class="muted">${u.age}</span> ${hasTier?tierBadge(u.tier,true):''}</div>
         <div class="muted" style="font-size:11px">Best ${u.best}・${u.area.slice(0,2).join('・')}</div>
       </div>
+      ${isD()?`<button class="chip line" style="font-size:10px;flex:none" onclick="go('#/profile/${u.id}')">プロフィールを見る</button>`:''}
     </div>
     ${S.role==='m'?`<p class="muted" style="font-size:11px;margin:0">謝礼の有無は種目ごとのお相手の設定で決まります。「おもてなし」の種目を選ぶとオファー（謝礼つき）になります</p>`:`<p class="muted" style="font-size:11px;margin:0">お相手のプレー代の考え方はプロフィールで確認できます</p>`}
     ${isD()?`
