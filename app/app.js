@@ -830,6 +830,8 @@ const TEE_DIST = {
   m1:{t:'車40分',ok:true}, m2:{t:'車95分',ok:false}, m3:{t:'拠点12km',ok:true}, m4:{t:'車70分',ok:false}, m5:{t:'車50分',ok:true}
 };
 const teeDist = u => TEE_DIST[u.id] || {t:'車50分',ok:true};
+let teeOpen = {};
+function teeToggle(id){ teeOpen[id] = !teeOpen[id]; render(); }
 
 V.tee = () => {
   const cand = pool().filter(u => u.dates.includes(teeSel));
@@ -848,18 +850,24 @@ V.tee = () => {
   const dnum = s => { const p = s.split('/').map(Number); return p[0]*100 + p[1]; };
   const personRow = (u, avail) => {
     const dst = teeDist(u);
+    const flag = isD() && (!avail || !dst.ok);
+    const open = flag && !!teeOpen[u.id];
     const badges = isD() ? `
         <div class="miss-badges">
           <span class="chip ${avail?'ok':'ng'}">日程 ${avail?`◎ ${teeSel} 空き`:'△ 合わず'}</span>
           <span class="chip ${dst.ok?'ok':'ng'}">距離 ${dst.ok?'◎':'△'} ${dst.t}</span>
+          ${flag && !open ? `<span class="chip brass" style="font-size:9px">提案あり</span>` : ''}
         </div>` : '';
     let bridge = '';
-    if(isD() && avail && !dst.ok){
+    if(open && avail && !dst.ok){
       bridge = `
-      <div class="bridge" style="margin-top:10px"><span class="lb">中間地点の提案</span><b>市原京急カントリークラブ</b>（あなた48分・${esc(u.name)}さん51分）・五井駅からクラブバスあり</div>
-      <button class="btn sm" style="margin-top:10px" onclick="if(!lvNeed())toast('中間地点の提案を送りました（デモ）')">この案を送ってみる</button>`;
+      <div class="bridge" style="margin-top:10px"><span class="lb">距離があるときの提案</span>ラウンドは少し遠め。まずは中間エリアの<b>インドア</b>や<b>打ちっぱなし</b>で会ってみませんか？</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn sm" style="flex:1" onclick="if(!lvNeed())toast('インドアで打診しました（デモ）')">インドアで打診する</button>
+        <button class="btn sm ghost" style="flex:1" onclick="if(!lvNeed())toast('打ちっぱなしで打診しました（デモ）')">打ちっぱなしで打診する</button>
+      </div>`;
     }
-    if(isD() && !avail){
+    if(open && !avail){
       const nx = u.dates.find(d => dnum(d) > dnum(teeSel)) || u.dates[u.dates.length-1];
       bridge = `
       <div class="bridge" style="margin-top:10px"><span class="lb">日程リクエスト</span>${esc(u.name)}さんは <b>${nx}</b> が空いています。合わせられますか？</div>
@@ -867,8 +875,8 @@ V.tee = () => {
     }
     return `
     <div class="card" style="padding:13px 15px">
-      <div class="mcard" style="padding:0" onclick="go('#/profile/${u.id}')">
-        <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px">
+      <div class="mcard" style="padding:0" onclick="${flag?`teeToggle('${u.id}')`:`go('#/profile/${u.id}')`}">
+        <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px" ${flag?`onclick="event.stopPropagation();go('#/profile/${u.id}')"`:''}>
           <img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff">
         </span>
         <div class="info">
@@ -876,13 +884,14 @@ V.tee = () => {
           <div class="st"><span>Best <b>${u.best}</b></span><span>Ave <b>${u.ave}</b></span><span>${u.area.slice(0,2).join('・')}</span></div>
           ${badges}
         </div>
-        <span class="arw">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
+        <span class="arw" ${flag?`style="transform:rotate(${open?'90deg':'-90deg'});transition:transform .2s"`:''}>${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
       </div>
       ${bridge}
     </div>`;
   };
-  const rows = cand.map(u => personRow(u, true)).join('');
-  const missPeople = isD() ? pool().filter(u => !u.dates.includes(teeSel)).slice(0,2) : [];
+  const byDist = arr => [...arr].sort((a,b) => (teeDist(a).ok?0:1) - (teeDist(b).ok?0:1));
+  const rows = byDist(cand).map(u => personRow(u, true)).join('');
+  const missPeople = isD() ? byDist(pool().filter(u => !u.dates.includes(teeSel)).slice(0,2)) : [];
   const missRows = missPeople.map(u => personRow(u, false)).join('');
   const compeCards = compe.map(c => `
     <a class="compe" href="#/compe/${c.id}" ${c.host?`onclick="event.preventDefault();toast('ホスト開催コンペの詳細（デモでは省略）')"`:''}>
