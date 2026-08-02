@@ -2845,15 +2845,24 @@ V.mypage = () => {
         <div class="bar"><i style="width:55%"></i></div>
       </div>
     </div>`}
-    ${isL()?`
+    ${isL()?(()=>{
+      const lv = mlv();
+      const complete = S.role==='f' ? lv>=3 : lv>=4;
+      return `
     <div class="card lv-card">
-      <span class="lv-badge ${mlv()===4?'max':''}">LV${mlv()}</span>
+      <span class="lv-badge ${complete?'max':''}">LV${lv}</span>
       <div style="flex:1;min-width:0">
-        <b style="font-size:13px">${LV_NAMES[mlv()]}</b>
-        <div class="muted" style="font-size:10px;line-height:1.5">${mlv()===1?'写真を登録すると「あり」への反応が届きます':mlv()===2?'本人確認でメッセージ・お誘いが使えます':mlv()===3?'サブスクでメッセージ使い放題':'すべての機能が利用できます'}</div>
+        <b style="font-size:13px">${complete?'コンプリート':LV_NAMES[lv]}</b>
+        <div class="muted" style="font-size:10px;line-height:1.5">${
+          complete ? 'すべての機能が利用できます' :
+          lv===1 ? '写真を登録すると「あり」への反応が届きます' :
+          lv===2 ? '本人確認でメッセージ・お誘いが使えます' :
+          'サブスクでメッセージ使い放題'}</div>
       </div>
-      ${mlv()<4?`<button class="btn sm" style="flex:none" onclick="${mlv()===1?'goPhotoReg()':mlv()===2?'goVerifyReg()':'paywall()'}">${mlv()===1?'写真登録':mlv()===2?'本人確認':'加入する'}</button>`:''}
-    </div>`:''}
+      ${complete
+        ? `<span class="chip brass" style="font-size:9px;flex:none;letter-spacing:.08em">COMPLETE</span>`
+        : `<button class="btn sm" style="flex:none" onclick="${lv===1?'goPhotoReg()':lv===2?'goVerifyReg()':'paywall()'}">${lv===1?'写真登録':lv===2?'本人確認':'加入する'}</button>`}
+    </div>`;})():''}
     <div class="menu">${menu}</div>
   </div>
   ${tabbar('my')}${demoPill()}`;
