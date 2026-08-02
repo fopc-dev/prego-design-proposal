@@ -840,6 +840,10 @@ function teePropose(id){
     render();
   }
 }
+function teeOffer(id, d){
+  inviteSheet(id);
+  if(location.hash === '#/invite/'+id){ inv.date = d; render(); }
+}
 
 V.tee = () => {
   const cand = pool().filter(u => u.dates.includes(teeSel));
@@ -875,7 +879,7 @@ V.tee = () => {
       const nx = u.dates.find(d => dnum(d) > dnum(teeSel)) || u.dates[u.dates.length-1];
       bridge = `
       <div class="bridge" style="margin-top:10px"><span class="lb">日程リクエスト</span>${esc(u.name)}さんは <b>${nx}</b> が空いています。合わせられますか？</div>
-      <button class="btn sm" style="margin-top:10px" onclick="if(!lvNeed())toast('${nx}で日程リクエストを送りました（デモ）')">${nx}で打診する</button>`;
+      <button class="btn sm" style="margin-top:10px" onclick="teeOffer('${u.id}','${nx}')">${nx}でオファーする</button>`;
     }
     return `
     <div class="card" style="padding:13px 15px">
