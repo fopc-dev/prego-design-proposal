@@ -603,7 +603,7 @@ V.signup = () => {
     ${body}
     <div style="margin-top:26px;display:flex;gap:10px">
       ${s>1?`<button class="btn ghost" style="flex:1" onclick="su.step--;render()">戻る</button>`:''}
-      <button class="btn" style="flex:2" onclick="suNext()" ${s===1&&(!su.opts.terms||!su.opts.adult)?'disabled':''}>${['認証コード送信','認証する','プロフィール登録'][s-1]}</button>
+      <button class="btn" style="flex:2" onclick="suNext()" ${s===1&&(!su.opts.terms||!su.opts.adult)?'disabled':''}>${['認証コード送信','認証する','登録を完了する'][s-1]}</button>
     </div>
   </div>`;
 };
