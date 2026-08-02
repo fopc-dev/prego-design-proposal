@@ -824,6 +824,13 @@ function toggleMyDate(d){
   S.myDates.push(d);
   save(); render();
 }
+const TEE_DIST = {
+  w1:{t:'車40分',ok:true}, w2:{t:'車95分',ok:false}, w3:{t:'車55分',ok:true}, w4:{t:'車70分',ok:false}, w5:{t:'拠点12km',ok:true},
+  w6:{t:'車35分',ok:true}, w7:{t:'車80分',ok:false}, w8:{t:'車50分',ok:true}, w9:{t:'車65分',ok:false}, w10:{t:'車45分',ok:true},
+  m1:{t:'車40分',ok:true}, m2:{t:'車95分',ok:false}, m3:{t:'拠点12km',ok:true}, m4:{t:'車70分',ok:false}, m5:{t:'車50分',ok:true}
+};
+const teeDist = u => TEE_DIST[u.id] || {t:'車50分',ok:true};
+
 V.tee = () => {
   const cand = pool().filter(u => u.dates.includes(teeSel));
   const HOSTED = { id:'ch1', date:'7/21（火）18:30', title:'MIKA & SAKI 主催 インドア練習会', course:'提携インドアA（新橋）', fmt:'2h貸切・4名', note:'初参加歓迎・レッスン強めの会', avs:['img/w1.jpg','img/w2.jpg'], left:2, host:true };
@@ -838,17 +845,45 @@ V.tee = () => {
     return `<button class="day ${x.d===teeSel?'sel':''} ${has?'has':''}" onclick="teeSel='${x.d}';render()">
       <div class="dw">${x.w}</div><div class="dn">${x.d.split('/')[1]}</div><div class="dot"></div></button>`;
   }).join('');
-  const rows = cand.map(u => `
-    <div class="card mcard" onclick="go('#/profile/${u.id}')">
-      <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px">
-        <img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff">
-      </span>
-      <div class="info">
-        <div class="nm">${esc(u.name)} <span class="ag">${u.age}</span> ${S.role==='m'?tierBadge(u.tier,true):''}</div>
-        <div class="st"><span>Best <b>${u.best}</b></span><span>Ave <b>${u.ave}</b></span><span>${u.area.slice(0,2).join('・')}</span></div>
+  const dnum = s => { const p = s.split('/').map(Number); return p[0]*100 + p[1]; };
+  const personRow = (u, avail) => {
+    const dst = teeDist(u);
+    const badges = isD() ? `
+        <div class="miss-badges">
+          <span class="chip ${avail?'ok':'ng'}">日程 ${avail?`◎ ${teeSel} 空き`:'△ 合わず'}</span>
+          <span class="chip ${dst.ok?'ok':'ng'}">距離 ${dst.ok?'◎':'△'} ${dst.t}</span>
+        </div>` : '';
+    let bridge = '';
+    if(isD() && avail && !dst.ok){
+      bridge = `
+      <div class="bridge" style="margin-top:10px"><span class="lb">中間地点の提案</span><b>市原京急カントリークラブ</b>（あなた48分・${esc(u.name)}さん51分）・五井駅からクラブバスあり</div>
+      <button class="btn sm" style="margin-top:10px" onclick="if(!lvNeed())toast('中間地点の提案を送りました（デモ）')">この案を送ってみる</button>`;
+    }
+    if(isD() && !avail){
+      const nx = u.dates.find(d => dnum(d) > dnum(teeSel)) || u.dates[u.dates.length-1];
+      bridge = `
+      <div class="bridge" style="margin-top:10px"><span class="lb">日程リクエスト</span>${esc(u.name)}さんは <b>${nx}</b> が空いています。合わせられますか？</div>
+      <button class="btn sm" style="margin-top:10px" onclick="if(!lvNeed())toast('${nx}で日程リクエストを送りました（デモ）')">${nx}で打診する</button>`;
+    }
+    return `
+    <div class="card" style="padding:13px 15px">
+      <div class="mcard" style="padding:0" onclick="go('#/profile/${u.id}')">
+        <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px">
+          <img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff">
+        </span>
+        <div class="info">
+          <div class="nm">${esc(u.name)} <span class="ag">${u.age}</span> ${S.role==='m'?tierBadge(u.tier,true):''}</div>
+          <div class="st"><span>Best <b>${u.best}</b></span><span>Ave <b>${u.ave}</b></span><span>${u.area.slice(0,2).join('・')}</span></div>
+          ${badges}
+        </div>
+        <span class="arw">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
       </div>
-      <span class="arw">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
-    </div>`).join('');
+      ${bridge}
+    </div>`;
+  };
+  const rows = cand.map(u => personRow(u, true)).join('');
+  const missPeople = isD() ? pool().filter(u => !u.dates.includes(teeSel)).slice(0,2) : [];
+  const missRows = missPeople.map(u => personRow(u, false)).join('');
   const compeCards = compe.map(c => `
     <a class="compe" href="#/compe/${c.id}" ${c.host?`onclick="event.preventDefault();toast('ホスト開催コンペの詳細（デモでは省略）')"`:''}>
       <div class="lb">${c.host?'HOSTED BY 認定ゴルファー':'PREGO OPEN'}</div>
@@ -862,7 +897,7 @@ V.tee = () => {
   return `
   <div class="page">
     <div class="tee-head">
-      ${appbar({green:true, title:'', noBell:true}).replace('<span class="ttl"></span>','<span class="ttl" style="text-align:left;font-size:18px">日程マッチ</span>')}
+      <header class="appbar green" style="padding-left:0;padding-right:0"><span class="ttl" style="text-align:left;font-size:18px">日程マッチ</span></header>
       <div class="strip">${dayBtns}</div>
     </div>
     <div class="tee-body">
@@ -883,7 +918,9 @@ V.tee = () => {
       <div class="date-lbl"><span class="d">${teeSel}</span><span class="t">${S.myDates.includes(teeSel)?'あなたも空き登録済み':'この日はあなたは未登録'}</span></div>`}
       ${S.myDates.length ? compeCards : ''}
       ${S.myDates.length ? (rows || '') : ''}
-      ${(S.myDates.length && !rows && !compeCards) ? `<div class="empty"><div class="big">—</div>この日はまだ候補がいません</div>` : ''}
+      ${(S.myDates.length && missRows) ? `<div class="date-lbl" style="margin-top:4px"><span class="t">この日は合わないけど、あと一歩のお相手</span></div>${missRows}` : ''}
+      ${(S.myDates.length && !rows && !compeCards && !missRows) ? `<div class="empty"><div class="big">—</div>この日はまだ候補がいません</div>` : ''}
+      ${isD() ? '' : `
       <button class="card miss-cta" onclick="go('#/miss')">
         <span class="mic2">${I.pin.replace('width="13" height="13"','width="17" height="17"')}</span>
         <span style="flex:1;text-align:left">
@@ -891,7 +928,7 @@ V.tee = () => {
           <span class="muted" style="display:block;font-size:11px">日程か距離があと一歩。橋渡しの提案で成立させましょう</span>
         </span>
         <span class="arw" style="color:var(--brass-ink)">${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
-      </button>
+      </button>`}
     </div>
   </div>
   ${tabbar('tee')}${demoPill()}`;
