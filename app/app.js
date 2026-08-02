@@ -1283,7 +1283,7 @@ V.invite = id => {
   return `
   ${appbar({title:`${esc(u.name)}さんをラウンドに誘う`, back:true, noBell:true})}
   <div class="page nofoot oflow">
-    <div class="card" style="padding:13px 15px;display:flex;gap:12px;align-items:center">
+    <div class="card" style="padding:13px 15px;display:flex;gap:12px;align-items:center${isD()?';cursor:pointer':''}" ${isD()?`onclick="go('#/profile/${u.id}')"`:''}>
       <span class="ring" style="${hasTier?ringStyle(u.tier):'background:var(--line)'};width:52px;height:52px"><img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff"></span>
       <div style="flex:1">
         <div style="font-weight:900">${esc(u.name)} <span class="muted">${u.age}</span> ${hasTier?tierBadge(u.tier,true):''}</div>
