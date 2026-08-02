@@ -94,7 +94,7 @@ const save = () => localStorage.setItem('prego-demo', JSON.stringify(S));
 /* ---------- color themes (A/B/C) ---------- */
 const THEME_NAMES = { b:'B ミント', e:'E エメラルド', g:'G ミント×エメラルド', '1':'1 新機能', '2':'2 会員レベル' };
 const isD = () => S.theme === '1' || S.theme === '2';
-const isL = () => S.theme === '2';
+const isL = () => S.theme === '1' || S.theme === '2';
 const LV_NAMES = ['','ゲスト','メンバー','認証済み','プレミアム'];
 function mlv(){ if(!isL()) return 4; return S.subActive ? 4 : Math.min(3, S.mlv||1); }
 const qsTheme = new URLSearchParams(location.search).get('theme');
@@ -918,7 +918,17 @@ V.tee = () => {
   const rows = byDist(cand).map(u => personRow(u, true)).join('');
   const missPeople = isD() ? byDist(pool().filter(u => !u.dates.includes(teeSel)).slice(0,2)) : [];
   const missRows = missPeople.map(u => personRow(u, false)).join('');
-  const compeCards = compe.map(c => `
+  const compeCards = compe.map(c => isD() ? `
+    <div class="compe" style="position:relative;cursor:default">
+      <span class="join" style="position:absolute;top:14px;right:14px;letter-spacing:.14em">SOON</span>
+      <div class="lb">${c.host?'HOSTED BY 認定ゴルファー':'PREGO OPEN'}</div>
+      <h4>${c.title}</h4>
+      <div class="mt">${c.course}・${c.fmt}・${c.note.split('・')[0]}</div>
+      <div class="ft">
+        <div class="avs">${c.avs.map(a=>`<img src="${a}">`).join('')}</div>
+        <span class="join" style="opacity:.75">近日公開</span>
+      </div>
+    </div>` : `
     <a class="compe" href="#/compe/${c.id}" ${c.host?`onclick="event.preventDefault();toast('ホスト開催コンペの詳細（デモでは省略）')"`:''}>
       <div class="lb">${c.host?'HOSTED BY 認定ゴルファー':'PREGO OPEN'}</div>
       <h4>${c.title}</h4>
@@ -2811,13 +2821,13 @@ V.mypage = () => {
       <button class="btn ghost sm" style="margin-top:8px" onclick="go('#/edit-profile')">プロフィールを充実させる（写真あと1枚）</button>
     </div>`:''}
     ${isF && isD() && (!isL() || mlv()>=3) ? `
-    <button class="card" style="margin:12px 18px 0;padding:14px 16px;width:calc(100% - 36px);text-align:left;display:flex;gap:12px;align-items:center;border:1.5px solid var(--brass)" onclick="go('#/host-compe')">
+    <button class="card" style="margin:12px 18px 0;padding:14px 16px;width:calc(100% - 36px);text-align:left;display:flex;gap:12px;align-items:center;border:1.5px solid var(--brass);cursor:default">
       <span style="flex:none;width:40px;height:40px;border-radius:12px;background:var(--brass-soft);color:var(--brass-ink);display:flex;align-items:center;justify-content:center">${I.trophy}</span>
       <span style="flex:1">
         <b style="font-size:13px">コンペを開催して報酬を得る</b>
-        <span class="muted" style="display:block;font-size:10.5px">友人と2人で幹事OK・開催ごとに幹事報酬</span>
+        <span class="muted" style="display:block;font-size:10.5px">友人と2人で幹事OK・開催ごとに幹事報酬・近日公開</span>
       </span>
-      <span class="chip brass" style="font-size:9px">NEW</span>
+      <span class="chip brass" style="font-size:9px">SOON</span>
     </button>`:''}
     ${isL() ? (()=>{
       const cur = rpRank(), nx = rpNext();
