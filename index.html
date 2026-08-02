@@ -653,7 +653,8 @@ footer{
       マッチングを増やす3つのUX原則とともに再設計したものです。
     </p>
     <div class="meta">
-      <span>提案日<b>2026.07.04</b></span>
+      <span>初回提案<b>2026.07.04</b></span>
+      <span>最終更新<b>2026.08.02（デモv129準拠）</b></span>
       <span>対象<b>prego-app.golf（Vite + React PWA）</b></span>
       <span>作成<b>森（株式会社エフオーピーシー）</b></span>
     </div>
@@ -688,15 +689,18 @@ footer{
 
   <!-- ================= TOKENS ================= -->
   <section class="tokens">
-    <div class="sec-label"><span class="no">02</span><h2>デザイントークン — この5色と2書体だけで作る</h2></div>
+    <div class="sec-label"><span class="no">02</span><h2>デザイントークン — 配色は「G」（エメラルド × ミント）で確定</h2></div>
+    <p style="max-width:760px;font-size:13px;color:rgba(250,248,242,.7);margin-bottom:22px">採用配色はプロトタイプ<b style="color:#7AE0BD">「G」</b>。実装時はデモの <code>style.css</code>（<code>body.theme-g</code>）の変数をそのまま移植してください。</p>
     <div class="token-flex">
       <div>
         <div class="swatches">
-          <div class="sw"><div class="chip" style="background:#0C4633"></div><div class="nm"><b>Fairway</b><code>#0C4633</code>主役・CTA</div></div>
-          <div class="sw"><div class="chip" style="background:#1B7A4E"></div><div class="nm"><b>Turf</b><code>#1B7A4E</code>補助グリーン</div></div>
-          <div class="sw"><div class="chip" style="background:#FAF8F2"></div><div class="nm"><b>Ivory</b><code>#FAF8F2</code>背景</div></div>
-          <div class="sw"><div class="chip" style="background:#B08A3C"></div><div class="nm"><b>Brass</b><code>#B08A3C</code>評価・プレミアム</div></div>
-          <div class="sw"><div class="chip" style="background:#20281F"></div><div class="nm"><b>Ink</b><code>#20281F</code>テキスト</div></div>
+          <div class="sw"><div class="chip" style="background:#1CA57F"></div><div class="nm"><b>Emerald</b><code>#1CA57F</code>主役・CTA</div></div>
+          <div class="sw"><div class="chip" style="background:#2FBD97"></div><div class="nm"><b>Turf</b><code>#2FBD97</code>補助グリーン</div></div>
+          <div class="sw"><div class="chip" style="background:#DFF6EC"></div><div class="nm"><b>Mint</b><code>#DFF6EC</code>淡面・チップ</div></div>
+          <div class="sw"><div class="chip" style="background:#F1FBF6"></div><div class="nm"><b>Mint White</b><code>#F1FBF6</code>アプリ背景</div></div>
+          <div class="sw"><div class="chip" style="background:#BEE7DD"></div><div class="nm"><b>Canvas</b><code>#BEE7DD</code>外周キャンバス</div></div>
+          <div class="sw"><div class="chip" style="background:#0E7A60"></div><div class="nm"><b>Deep</b><code>#0E7A60</code>濃アクセント</div></div>
+          <div class="sw"><div class="chip" style="background:#1E3A31"></div><div class="nm"><b>Ink</b><code>#1E3A31</code>テキスト</div></div>
         </div>
       </div>
       <div class="type-spec">
@@ -721,7 +725,7 @@ footer{
 
   <!-- ================= SCREENS ================= -->
   <section class="screens">
-    <div class="sec-label"><span class="no">03</span><h2>画面提案 — 4スクリーン</h2></div>
+    <div class="sec-label"><span class="no">03</span><h2>画面提案</h2></div>
 
     <!-- ========== ROW 1 : LOGIN ========== -->
     <div class="screen-row">
@@ -918,75 +922,10 @@ footer{
       </div>
     </div>
 
-    <!-- ========== ROW 4 : ROUND LOG ========== -->
-    <div class="screen-row">
-      <div class="note-col">
-        <span class="tag">SCREEN 4 / ラウンド録（新機能）</span>
-        <h3>UGCは「お願い」ではなく<br>「自慢」から生まれる</h3>
-        <p>マッチしたラウンドの翌日、両者にこの画面を出します。スコアカード画像は自動生成され、そのままInstagram・Xにシェア可能。相手へのレビューも同じ画面で完結させ、プロフィールの信頼情報を積み上げます。</p>
-        <ul>
-          <li>シェア画像に<b>PreGoロゴを焼き込み</b>＝広告費ゼロの認知獲得</li>
-          <li>レビュー投稿で<b>コイン付与</b>（既存コイン制度と接続）</li>
-          <li>ラウンド録の蓄積が<b>「ラウンド回数」の実績値</b>になる</li>
-        </ul>
-      </div>
-      <div class="phones">
-        <div class="phone">
-          <div class="screen">
-            <div class="scr">
-              <div class="rl-head">
-                <div class="lbl">ROUND LOG</div>
-                <h4>昨日はナイスラウンドでした</h4>
-              </div>
-              <div class="share-card">
-                <div class="inner">
-                  <div class="course">大多喜城ゴルフ倶楽部・千葉</div>
-                  <div class="date">2026.07.14 TUE</div>
-                  <div class="score-row">
-                    <span class="score">94</span>
-                    <div>
-                      <div class="score-k">TOTAL SCORE</div>
-                      <div class="halves"><span>OUT<b>46</b></span><span>IN<b>48</b></span></div>
-                    </div>
-                  </div>
-                  <div class="members">
-                    <div class="av m1"></div><div class="av f1"></div>
-                    <div class="t">SHU・manami のラウンド</div>
-                  </div>
-                  <div class="wm">PREGO</div>
-                </div>
-              </div>
-              <div class="rl-body">
-                <div class="rate-box">
-                  <div class="who">
-                    <div class="av f1"></div>
-                    <div>
-                      <div class="nm">manami さんはどうでしたか？</div>
-                      <div class="sub">レビューは匿名で相手のプロフィールに反映されます</div>
-                    </div>
-                  </div>
-                  <div class="stars-big">★★★★★</div>
-                  <div class="hint">タップして評価・レビュー投稿で 500コイン</div>
-                </div>
-              </div>
-              <div class="rl-actions">
-                <div class="btn-share">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>
-                  スコアカードをシェア
-                </div>
-                <div class="btn-ghost">あとで書く</div>
-              </div>
-            </div>
-          </div>
-          <div class="cap">04 — ROUND LOG（新設）</div>
-        </div>
-      </div>
-    </div>
-
     <!-- ========== ROW 5 : NEAR-MISS MATCH ========== -->
     <div class="screen-row">
       <div class="note-col">
-        <span class="tag">SCREEN 5 / 惜しいマッチ（新設）</span>
+        <span class="tag">SCREEN 4 / 惜しいマッチ → 日程マッチに統合済み（v113）</span>
         <h3>「0件です」と言わない。<br>あと一歩を、橋渡しする</h3>
         <p>全国展開×少人数の宿命で、「日程は合うが遠い」「近いが日程が合わない」がマッチ不成立の大半を占めます。現状は「まだマッチ候補のお相手がいません」で終了。ここを「惜しい候補＋解決アクション」に変えます。</p>
         <ul>
@@ -1055,218 +994,81 @@ footer{
 
   </section>
 
-  <!-- ================= PHOTO FRAMES ================= -->
-  <section class="frames">
-    <div class="sec-label"><span class="no">04</span><h2>フォトフレーム — スコアが勲章になる</h2></div>
-    <p style="max-width:720px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:40px">
-      ラウンド翌日に自動生成されるシェア画像。<b style="color:#D9B96A">フレームの色はベストスコア帯で決まる</b>ため、
-      フレーム自体が腕前の勲章になり、「次の色が欲しい」がプレー動機とUGCの両方を生みます。
-      生成画像には PREGO のロゴが入り、Instagram・X・アプリ内フィード（実装済み）へワンタップ投稿できます。
-    </p>
-    <div class="frame-grid">
-      <div class="frame-wrap">
-        <div class="pframe pf-round">
-          <div>
-            <div class="eyebrow2">ROUND LOG</div>
-            <div class="course2">大多喜城ゴルフ倶楽部・千葉</div>
-            <div class="date2">2026.07.14 TUE</div>
-          </div>
-          <div class="big">94<small>TOTAL SCORE・OUT 46 / IN 48</small></div>
-          <div class="foot2">
-            <div class="mem">SHU ・ manami</div>
-            <div class="wm2">PREGO</div>
-          </div>
-          <div class="cap2">① ラウンド記録（基本形）</div>
-        </div>
-      </div>
-      <div class="frame-wrap">
-        <div class="pframe pf-best">
-          <div class="laurel">SELF BEST 更新</div>
-          <div class="big">88</div>
-          <div>
-            <div class="delta">前回ベストから −4</div>
-            <div class="foot2">SHU — 2026.07.14 / PREGO</div>
-          </div>
-          <div class="cap2">② ベスト更新（黒×金の祝福）</div>
-        </div>
-      </div>
-      <div class="frame-wrap">
-        <div class="pframe pf-tier">
-          <div class="photo real"><img src="app/img/m1.jpg" alt=""></div>
-          <div class="panel">
-            <div class="score3">88</div>
-            <div class="k3">BEST SCORE</div>
-            <div class="ave3">AVERAGE<b>100</b></div>
-            <div class="nm3">SHU</div>
-            <div class="tierbar">GOLD</div>
-          </div>
-          <div class="cap2">③ ティアフレーム（森さん案の発展形・実写）</div>
-        </div>
-      </div>
-    </div>
-    <div class="frame-grid" style="margin-top:48px">
-      <div class="frame-wrap">
-        <div class="pframe pf-tier">
-          <div class="photo real"><img src="app/img/m6.jpg" alt=""></div>
-          <div class="panel">
-            <div class="score3">79</div>
-            <div class="k3">BEST SCORE</div>
-            <div class="ave3">AVERAGE<b>94</b></div>
-            <div class="nm3">BUMA</div>
-            <div class="tierbar black">BLACK</div>
-          </div>
-          <div class="cap2">BLACK（ベスト〜79）</div>
-        </div>
-      </div>
-      <div class="frame-wrap">
-        <div class="pframe pf-tier">
-          <div class="photo real"><img src="app/img/w2.jpg" alt=""></div>
-          <div class="panel">
-            <div class="score3">99</div>
-            <div class="k3">BEST SCORE</div>
-            <div class="ave3">AVERAGE<b>110</b></div>
-            <div class="nm3">SAKI</div>
-            <div class="tierbar silver">SILVER</div>
-          </div>
-          <div class="cap2">SILVER（90〜99）</div>
-        </div>
-      </div>
-      <div class="frame-wrap">
-        <div class="pframe pf-tier">
-          <div class="photo real"><img src="app/img/w4.jpg" alt=""></div>
-          <div class="panel">
-            <div class="score3">104</div>
-            <div class="k3">BEST SCORE</div>
-            <div class="ave3">AVERAGE<b>115</b></div>
-            <div class="nm3">Rina</div>
-            <div class="tierbar bronze">BRONZE</div>
-          </div>
-          <div class="cap2">BRONZE（100〜109）</div>
-        </div>
-      </div>
-    </div>
-    <div class="tiers">
-      <div class="tier"><span class="sw2" style="background:#111"></span>BLACK 〜79</div>
-      <div class="tier"><span class="sw2" style="background:linear-gradient(120deg,#F0D48A,#B08A3C)"></span>GOLD 80–89</div>
-      <div class="tier"><span class="sw2" style="background:linear-gradient(120deg,#E8E8E8,#9AA0A6)"></span>SILVER 90–99</div>
-      <div class="tier"><span class="sw2" style="background:#1B7A4E"></span>GREEN 100–109</div>
-      <div class="tier"><span class="sw2" style="background:#3E6DB5"></span>BLUE 110–119</div>
-      <div class="tier"><span class="sw2" style="background:#B4543A"></span>RED 120〜</div>
-      <div class="tier"><span class="sw2" style="background:#FAF8F2"></span>WHITE デビュー</div>
-    </div>
-    <p class="tiers-note">色はベストスコア更新で自動昇格。「あと2打でBLACK」のような次の目標表示が、ラウンド回数＝アプリ利用の動機になります。</p>
-  </section>
-
-  <!-- ================= RANK SYSTEM ================= -->
   <section class="ranks">
-    <div class="sec-label"><span class="no">05</span><h2>ランク制度 — 女性ランクと単価の設計</h2></div>
-    <div style="max-width:760px;margin-bottom:22px;padding:14px 18px;border:1.5px solid #B08A3C;border-radius:14px;background:rgba(176,138,60,.12)">
-      <b style="color:#D9B96A">【2026-08-02 更新】ランク制度は一旦保留（未定）です。</b>
-      <span style="font-size:13px;color:rgba(250,248,242,.85);display:block;margin-top:4px">
-      現在実装が確定しているのは <b style="color:#D9B96A">WHITE（一般おもてなし・¥5,500／受取¥4,400）</b> と
-      <b style="color:#D9B96A">GOLD（認定おもてなし・¥22,000／受取17,600コイン）</b> の2ランクのみ。本番はまずこの2つで運用します。
-      下表の5段階案・自己設定価格は将来の検討用アーカイブです。</span>
-    </div>
-    <p style="max-width:760px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:28px">
-      設計原則は3つ。<b style="color:#D9B96A">①入口は審査制</b>（写真審査→ビデオ面談→初回は公式コンペで実地確認）、
-      <b style="color:#D9B96A">②昇格は実績で自動判定</b>（運営の主観を挟まない）、
-      <b style="color:#D9B96A">③単価は女性自身が範囲内で設定</b>（運営は基準額と範囲だけを定義。人気は指名数が証明し、価格は市場が調整する）。
-      現行制度との対応：一般ゴルファー＝WHITE〜SILVER、認定ゴルファー＝GOLD相当。既存データのまま移行できます。
+    <div class="sec-label"><span class="no">04</span><h2>ランク — 現行アプリに合わせ WHITE / GOLD の2ランクで運用</h2></div>
+    <p style="max-width:780px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:26px">
+      女性（おもてなしゴルファー）のランクは、現行アプリと同じ<b style="color:#7AE0BD">ホワイトとゴールドの2つだけで一旦走ります</b>。
+      中間ランクの追加・BLACK・価格の自己設定などの拡張案は<b>すべて未定（保留）</b>。ゲーミフィケーションのRPランク（マイページのメーター）も保留のため非表示にしています。
     </p>
     <div class="rank-scroll">
       <table class="rank-tbl">
         <tr>
-          <th>ランク</th><th>昇格条件（自動判定）</th><th>基準額（男性支払い）</th><th>女性受取（80%）</th><th>自己設定範囲</th>
+          <th>ランク</th><th>対象</th><th>ラウンドオファー（男性支払い）</th><th>女性受取（80%）</th>
         </tr>
         <tr>
           <td><span class="rk"><span class="dot" style="background:#FAF8F2"></span>WHITE</span></td>
-          <td class="cond">入口審査の通過（写真・面談・初回コンペ）</td>
+          <td class="cond">一般おもてなしゴルファー</td>
           <td class="money">¥5,500</td>
           <td class="money">¥4,400</td>
-          <td class="cond">固定（お試し価格）</td>
-        </tr>
-        <tr>
-          <td><span class="rk"><span class="dot" style="background:#A46B39"></span>BRONZE</span></td>
-          <td class="cond">実績3ラウンド＋レビュー平均 ★4.0以上</td>
-          <td class="money">¥8,800</td>
-          <td class="money">¥7,040</td>
-          <td class="cond">基準額の ±20%</td>
-        </tr>
-        <tr>
-          <td><span class="rk"><span class="dot" style="background:linear-gradient(120deg,#E8E8E8,#9AA0A6)"></span>SILVER</span></td>
-          <td class="cond">実績10ラウンド＋★4.3以上＋返信率70%</td>
-          <td class="money">¥14,300</td>
-          <td class="money">¥11,440</td>
-          <td class="cond">基準額の ±20%</td>
         </tr>
         <tr>
           <td><span class="rk"><span class="dot" style="background:linear-gradient(120deg,#F0D48A,#B08A3C)"></span>GOLD</span></td>
-          <td class="cond">実績20ラウンド＋★4.6以上＋返信率80%<br>（＝現行の認定ゴルファー）</td>
+          <td class="cond">認定おもてなしゴルファー</td>
           <td class="money">¥22,000</td>
-          <td class="money">¥17,600</td>
-          <td class="cond">基準額の ±20%</td>
-        </tr>
-        <tr>
-          <td><span class="rk"><span class="dot" style="background:#16130E;border:1px solid rgba(217,185,106,.6)"></span>BLACK</span></td>
-          <td class="cond">実績40ラウンド＋★4.8以上＋リピート指名率30%</td>
-          <td class="money">¥27,500<span class="sub-money">〜</span></td>
-          <td class="money">¥22,000<span class="sub-money">〜</span></td>
-          <td class="cond">自由設定（上限 ¥55,000）</td>
+          <td class="money">17,600コイン</td>
         </tr>
       </table>
     </div>
     <div class="rank-notes">
-      <div class="rank-note"><b>なぜ女性が自分で決めるのか</b>運営が顔で値付けする制度は炎上リスクそのもの。本人が設定し、高すぎれば指名が減り、安すぎれば埋まる——価格の正しさは市場が決める。運営は範囲だけ守る。</div>
-      <div class="rank-note"><b>「可愛くない問題」への答え</b>入口の審査（写真・ビデオ面談・初回コンペでの実地確認）で品質の下限を担保。その後は指名数とリピート率で自然淘汰。見た目の基準を明文化せずに品質が揃う構造。</div>
-      <div class="rank-note"><b>降格ルール</b>直近90日のレビュー平均が基準を下回る、またはドタキャン2回で1ランク降格。「ランクは資産、雑に扱うと減る」が女性側の品質維持インセンティブになる。</div>
-      <div class="rank-note"><b>フレーム色との連動</b>ランク色＝フォトフレーム色＝プロフィールのリング色。ランクが上がるとアプリ内の見た目が変わる。「BLACKまであと◯ラウンド」の進捗表示が継続の動機になる。</div>
+      <div class="rank-note"><b>サブ種目の料金</b>インドアゴルフ・打ちっぱなしのおもてなし料金は認定ゴルファーのみ本人設定（¥1,000〜10,000・受取80%）。一般は謝礼なし種目のみ。</div>
+      <div class="rank-note"><b>コンペ機能はSOON</b>公式コンペ・認定ゴルファーのホスト開催はUI上「SOON」表示のみで操作不可（実装保留）。</div>
+      <div class="rank-note"><b>フォトフレーム／ラウンド録</b>いずれも一旦実装しない（メニューから削除済み）。ラウンド後の相互評価は維持し、受け取ったレビューはマイページの★行から閲覧。</div>
     </div>
   </section>
 
   <!-- ================= IMPL ================= -->
   <section class="impl">
-    <div class="sec-label"><span class="no">06</span><h2>実装メモ — エンジニア向け</h2></div>
-    <p style="max-width:760px;font-size:12.5px;color:rgba(250,248,242,.65);margin-bottom:22px">※本セクションは初期提案時のメモです。<b style="color:#D9B96A">確定仕様の正はリポジトリの <code>docs/開発仕様書.md</code>（追補B）と動作デモ</b>。食い違う場合はそちらを優先してください。</p>
+    <div class="sec-label"><span class="no">05</span><h2>実装メモ — エンジニア向け</h2></div>
     <div class="impl-grid">
       <div class="impl-card">
         <h3>導入はCSS変数の差し替えから</h3>
-        <p>全面改修は不要です。まず既存コンポーネントの配色をこのトークンに寄せるだけで統一感の8割は回収できます。優先順位：</p>
+        <p>配色は「G」テーマが正。デモの <code>style.css</code>（<code>body.theme-g</code>）の変数をそのまま移植してください。優先順位：</p>
         <ol>
-          <li>CSSトークン導入＋既存ボタン/バッジの色統一（ピンク・青の廃止）</li>
-          <li>日程マッチ画面のティーシート化（人数表示の廃止）</li>
-          <li>プロフィールのスコアカード先頭化・CTA一本化</li>
-          <li>ラウンド録（新機能・シェア画像は<code>canvas</code>か<code>satori</code>で生成）</li>
+          <li>Gトークン導入＋既存ボタン/バッジの色統一（ピンク・青の廃止）</li>
+          <li>会員レベル制 LV1〜4（登録60秒化・段階ゲート・ロックシート）</li>
+          <li>日程マッチ刷新（チップ・並び順・折りたたみ提案・オファー直行動線）</li>
+          <li>おすすめ（スワイプデッキ・LV連動 3人/10人）</li>
         </ol>
         <pre>:root {
-  --fairway: #0C4633;   /* primary / CTA */
-  --turf:    #1B7A4E;   /* secondary */
-  --ivory:   #FAF8F2;   /* background */
-  --brass:   #B08A3C;   /* rating / premium */
-  --ink:     #20281F;   /* text */
-  --radius:  14px;
+  --fairway: #1CA57F;   /* primary / CTA */
+  --turf:    #2FBD97;   /* secondary */
+  --turf-soft:#DFF6EC;  /* mint surface */
+  --ivory:   #F1FBF6;   /* app background */
+  --canvas:  #BEE7DD;   /* outer canvas (mint) */
+  --accent:  #0E7A60;   /* deep accent */
+  --ink:     #1E3A31;   /* text */
+  --radius:  16px;
   --font-brand: 'Marcellus', serif;
   --font-ui: 'Zen Kaku Gothic New', sans-serif;
 }</pre>
       </div>
       <div class="impl-card">
-        <h3>デザインと同時に直したい仕様</h3>
+        <h3>実装の正はデモと仕様書</h3>
         <ol>
-          <li><b>オファー課金の内包化</b> — 都度5,500円/22,000円をやめ、サブスク上位プラン（例：プレミアム月9,800円＝オファー月3回込み）へ。都度課金は「送らない理由」を作っている</li>
-          <li><b>公式コンペ機能</b> — 当面は運営が手動でイベント作成できる管理画面だけでよい（マッチング自動化は不要）</li>
-          <li><b>女性→女性の招待コード</b> — 招待成立でコイン付与。ボトルネックは女性登録数</li>
-          <li><b>同性マッチ解禁</b> — 「仲間探し」への看板拡張。女性は同性でも無料のまま</li>
-          <li><b>惜しいマッチ</b> — 中間地点提案は実装済みの拠点設定（市区町村精度）を流用。日程リクエスト通知は実装済みのWebプッシュに載せる</li>
-          <li><b>フォトフレーム生成</b> — <code>canvas</code>か<code>satori</code>でサーバー/クライアント生成。投稿先は実装済みのフィード＋SNS</li>
+          <li><b>動作デモ</b> — <code>fopc-dev.github.io/prego-design-proposal/app/</code>（<code>?theme=1</code> と <code>?theme=2</code> は同一の最新統合版。B/E/Gは旧配色サンプル）</li>
+          <li><b>開発仕様書</b> — リポジトリ <code>docs/開発仕様書.md</code>（v129準拠。v87〜v129の確定仕様は<b>追補B</b>にまとまっています）</li>
+          <li><b>実装保留（今回つくらないもの）</b> — コンペ（SOON表示のみ・操作不可）／ランク拡張・RPランクメーター／<b>フォトフレーム</b>／<b>ラウンド録</b>（メニューから削除済み。ラウンド後の相互評価は維持し、レビューはマイページ★行から閲覧）</li>
+          <li><b>法令要件</b> — メッセージ・スタンプ・誘い・オファー等の相互連絡は<b>本人確認済み（LV3）から</b>（インターネット異性紹介事業・年齢確認前の相互連絡禁止）</li>
+          <li><b>サブスク</b> — 男性のみ（女性にLV4・サブスクはない。女性はLV3でコンプリート）</li>
         </ol>
-        <p style="margin-top:14px">公開バンドルの調査で確認済みの既存資産：Supabase・Stripe・Webプッシュ・拠点設定（GPS/郵便番号）・AIマッチング提案・フィード投稿・記事・コイン/出金。<b>上記の新機能はいずれも既存部品の組み合わせで実装可能</b>です。</p>
-        <p style="margin-top:10px">この提案書自体がHTML/CSSのみで書かれているため、各画面のマークアップはそのまま実装の参考にできます。</p>
+        <p style="margin-top:14px">確認済みの既存資産：Supabase・Stripe・Webプッシュ・拠点設定（GPS/郵便番号）・フィード投稿・記事・コイン/出金。<b>新機能はいずれも既存部品の組み合わせで実装可能</b>です。</p>
       </div>
     </div>
   </section>
 
   <!-- ================= SCOPE v129 ================= -->
   <section class="impl">
-    <div class="sec-label"><span class="no">07</span><h2>開発スコープと現在地 — 2026.08（デモ v129）</h2></div>
+    <div class="sec-label"><span class="no">06</span><h2>開発スコープと現在地 — 2026.08（デモ v129）</h2></div>
     <p style="max-width:820px;font-size:14px;color:rgba(250,248,242,.72);margin-bottom:26px">
       動作デモ：<b style="color:#D9B96A">https://fopc-dev.github.io/prego-design-proposal/app/</b>（実装の正はこのデモ。<code>?theme=1</code> と <code>?theme=2</code> は同一の最新統合版・配色はG）。
       実装対象は次の5点：<b style="color:#D9B96A">①デザイン・配色G ②お誘いの種目別対応 ③おすすめ（スワイプ） ④会員レベル制 LV1〜4 ⑤日程マッチ刷新</b>。
