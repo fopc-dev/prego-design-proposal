@@ -89,7 +89,19 @@ const S = Object.assign({
   subActive: false, favs: {}, verified: true,
   ntf: { email:true, line:false, news:true, foot:true, like:true, msg:true },
 }, store);
-const save = () => localStorage.setItem('prego-demo', JSON.stringify(S));
+const qsp = new URLSearchParams(location.search);
+const EMBED = qsp.get('embed') === '1';
+const save = () => { if(EMBED) return; localStorage.setItem('prego-demo', JSON.stringify(S)); };
+const qsBoot = qsp.get('boot');
+if(qsBoot === 'guest'){ S.role = null; }
+else if(qsBoot === 'm' || qsBoot === 'f'){
+  S.role = qsBoot;
+  if(qsBoot === 'f' && !['w1','w2'].includes(S.fid)) S.fid = 'w1';
+  const bl = parseInt(qsp.get('lv')||'3',10);
+  S.mlv = Math.min(3, Math.max(1, bl||3));
+  S.subActive = (qsBoot === 'm' && bl >= 4);
+}
+if(EMBED) document.body.classList.add('embed');
 
 /* ---------- color themes (A/B/C) ---------- */
 const THEME_NAMES = { b:'B ミント', e:'E エメラルド', g:'G ミント×エメラルド', '1':'1 新機能', '2':'2 会員レベル' };

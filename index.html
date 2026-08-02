@@ -725,271 +725,75 @@ footer{
 
   <!-- ================= SCREENS ================= -->
   <section class="screens">
-    <div class="sec-label"><span class="no">03</span><h2>画面提案</h2></div>
+    <div class="sec-label"><span class="no">03</span><h2>画面 — 実物のデモをそのまま埋め込み</h2></div>
+    <p style="max-width:780px;font-size:13px;color:rgba(250,248,242,.7);margin-bottom:30px">以下はモックではなく、<b style="color:#7AE0BD">動作中の最新デモ（v129）をそのまま埋め込んだもの</b>です。実際に触れます。全画面で試す場合は <code>app/?theme=2</code> へ。</p>
 
-    <!-- ========== ROW 1 : LOGIN ========== -->
     <div class="screen-row">
       <div class="note-col">
-        <span class="tag">SCREEN 1 / ログイン</span>
-        <h3>世界観は入口の3秒で決まる</h3>
-        <p>現状は白背景にグレーのボタンで、サービスの「格」が伝わる要素がゼロ。夕暮れのフェアウェイを思わせる深緑のグラデーションに、ロゴと約束をひとつだけ置きます。</p>
+        <span class="tag">SCREEN 1 / ログイン・登録（LV1）</span>
+        <h3>入口は60秒。重い入力はあとから</h3>
+        <p>SMS電話認証込みの60秒登録（LV1）。写真はLV2、本人確認はLV3で段階的に。法令（年齢確認前の相互連絡禁止）に適合しつつ、登録直後の離脱を防ぎます。</p>
         <ul>
-          <li><b>LINEログインを最上位</b>に固定（現状の主要導線を尊重）</li>
-          <li>信頼チップ（本人確認制・実名非公開）を<b>入口で先に見せる</b></li>
-          <li>フォーム露出をやめ、タップ後に表示（画面の圧を下げる）</li>
+          <li>性別→ニックネーム→<b>生年月日ドラム</b>→郵便番号→<b>近辺エリアチップ</b></li>
+          <li>LV1はホーム上位4名のみクリア表示・5人目以降は<b>写真登録で解放</b></li>
+          <li>メッセージ・誘い・オファーは<b>本人確認済み（LV3）から</b></li>
         </ul>
       </div>
-      <div class="phones">
-        <div class="phone">
-          <div class="screen">
-            <div class="scr login">
-              <svg class="fairway-lines" viewBox="0 0 340 660" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-                <g fill="none" stroke="#D9B96A" stroke-width="1">
-                  <path d="M-20,530 C80,490 160,560 260,520 S380,470 420,500"/>
-                  <path d="M-20,570 C80,530 170,600 270,560 S390,510 420,540" opacity=".6"/>
-                  <circle cx="285" cy="120" r="60" opacity=".5"/>
-                  <circle cx="285" cy="120" r="42" opacity=".35"/>
-                </g>
-              </svg>
-              <div class="brandmark">
-                <div class="logo">PreGo</div>
-                <div class="under"></div>
-                <div class="copy">都合の合うゴルフ仲間が、見つかる。</div>
-              </div>
-              <div class="proof">
-                <span class="chip">✓ 本人確認制</span>
-                <span class="chip">✓ 実名非公開</span>
-              </div>
-              <div class="actions">
-                <div class="btn-line">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.4 7.2 8 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6s6-3.6 8.2-6.1C21.4 14 22 12.6 22 11c0-4.4-4.5-8-10-8z"/></svg>
-                  LINEではじめる
-                </div>
-                <div class="btn-mail">メールアドレスではじめる</div>
-                <div class="sub-links"><span>ログイン</span><span>引き継ぎの方はこちら</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="cap">01 — LOGIN</div>
-        </div>
-      </div>
+      <div class="phones"><div class="phone"><div class="screen"><iframe src="app/?theme=2&boot=guest&embed=1" loading="lazy" style="width:100%;height:100%;border:0;display:block"></iframe></div><div class="cap">01 — LOGIN / SIGNUP</div></div></div>
     </div>
 
-    <!-- ========== ROW 2 : TEE SHEET ========== -->
     <div class="screen-row">
       <div class="note-col">
-        <span class="tag">SCREEN 2 / 日程マッチ → ティーシート</span>
-        <h3>「2人」と表示しない。<br>予定から誘う</h3>
-        <p>日程マッチはPreGo最大の独自機能なのに、現状は人数の少なさを正直に数字で見せてしまっています。クラブの予約表（ティーシート）のメタファーに置き換え、公式コンペ枠を常設して画面を埋めます。</p>
+        <span class="tag">SCREEN 2 / 日程マッチ（v113〜121で刷新）</span>
+        <h3>「会える人」を、1画面で完結操作</h3>
         <ul>
-          <li>日付は<b>横スクロールのカレンダーストリップ</b>で選ぶ</li>
-          <li>人数表示を廃止し、<b>候補カード＋コンペ枠</b>で構成</li>
-          <li><b>公式コンペ（2:2・3:3）</b>が過疎の日の受け皿になる</li>
-          <li>カードにはベスト/平均/エリアの<b>ゴルフ情報を先に</b></li>
+          <li>全員に<b>「日程 ◎/△」「距離 ◎/△」チップ</b>。並びは ◎◎ → 日程◎距離△ → 日程△</li>
+          <li>旧「惜しいマッチ」を統合——合わない相手も「<b>あと一歩のお相手</b>」として同じリストに</li>
+          <li>行タップで展開：<b>オファーする／提案する（インドア・打ちっぱなし）／◯/◯でオファーする＋メッセージ</b></li>
+          <li>顔写真＝プロフィール／コンペカードは<b>SOON</b>表示のみ・タップ不可</li>
         </ul>
       </div>
-      <div class="phones">
-        <div class="phone">
-          <div class="screen">
-            <div class="scr">
-              <div class="tee-head">
-                <div class="row1">
-                  <span class="ttl">ティーシート</span>
-                  <span class="month">JULY 2026</span>
-                </div>
-                <div class="strip">
-                  <div class="day"><div class="dw">SUN</div><div class="dn">12</div></div>
-                  <div class="day"><div class="dw">MON</div><div class="dn">13</div></div>
-                  <div class="day sel"><div class="dw">TUE</div><div class="dn">14</div><div class="dot"></div></div>
-                  <div class="day"><div class="dw">WED</div><div class="dn">15</div></div>
-                  <div class="day"><div class="dw">FRI</div><div class="dn">17</div><div class="dot"></div></div>
-                  <div class="day"><div class="dw">THU</div><div class="dn">30</div><div class="dot"></div></div>
-                </div>
-              </div>
-              <div class="tee-body">
-                <div class="tee-date-lbl"><span class="d">7/14</span><span class="t">火曜日・あなたのプレー希望日</span></div>
-                <div class="compe">
-                  <div class="lbl">PREGO OPEN</div>
-                  <h4>平日コンペ＠大多喜城GC</h4>
-                  <div class="meta">2:2ペアラウンド・昼食付き・初参加歓迎</div>
-                  <div class="foot">
-                    <div class="avs">
-                      <div class="av f1"></div><div class="av m1"></div><div class="av f2"></div>
-                      <div class="more">+5</div>
-                    </div>
-                    <div class="join">残り1枠</div>
-                  </div>
-                </div>
-                <div class="tee-card">
-                  <div class="top">
-                    <div class="av f1"></div>
-                    <div class="info">
-                      <div class="nm">manami <span class="age">31</span><span class="chip">✓ 本人確認済</span></div>
-                      <div class="stats"><span>Best <b>132</b></span><span>Ave <b>132</b></span><span>千葉・埼玉 ほか</span></div>
-                    </div>
-                    <div class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
-                  </div>
-                </div>
-                <div class="tee-card">
-                  <div class="top">
-                    <div class="av f2"></div>
-                    <div class="info">
-                      <div class="nm">an <span class="age">46</span><span class="chip brass">マッチ中</span></div>
-                      <div class="stats"><span>Best <b>121</b></span><span>歴 <b>10年+</b></span><span>関東 6エリア</span></div>
-                    </div>
-                    <div class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
-                  </div>
-                </div>
-              </div>
-              <div class="tabbar">
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 21V4l10 3-10 3"/><path d="M5 21h14"/></svg>投稿</div>
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>ホーム</div>
-                <div class="tb on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>ティーシート</div>
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>メッセージ</div>
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>マイページ</div>
-              </div>
-            </div>
-          </div>
-          <div class="cap">02 — TEE SHEET</div>
-        </div>
-      </div>
+      <div class="phones"><div class="phone"><div class="screen"><iframe src="app/?theme=2&boot=m&lv=3&embed=1#/tee" loading="lazy" style="width:100%;height:100%;border:0;display:block"></iframe></div><div class="cap">02 — SCHEDULE MATCH</div></div></div>
     </div>
 
-    <!-- ========== ROW 3 : PROFILE ========== -->
     <div class="screen-row">
       <div class="note-col">
         <span class="tag">SCREEN 3 / プロフィール</span>
         <h3>スコアカードが名刺になる</h3>
-        <p>現状は大判のグラビア的写真が最初に目に入り、ゴルフ情報は下に沈んでいます。写真は残しつつ高さを抑え、直下に「ベスト・平均・ラウンド回数」のスコアカードを置いて、ゴルファーとしての信頼を先に伝えます。</p>
         <ul>
-          <li>CTAは<b>「ラウンドに誘う」1本</b>。メッセージはアイコンに格下げ</li>
-          <li>プレー希望日は<b>日付チップ</b>で一覧（希望日が近い順）</li>
-          <li>評価とラウンド実績を<b>写真より上のレイヤー</b>で扱う</li>
+          <li>BEST / AVERAGE / ラウンド回数を先頭に。レビュー★とタグで信頼を可視化</li>
+          <li>プレー希望日チップ（<b>あなたと重なる日</b>をハイライト）</li>
+          <li>編集の任意項目：お酒・タバコ・季節・好きなゴルフ場・趣味・会社名・肩書・年収・身長・会員権・車/車種（未入力は非表示）</li>
         </ul>
       </div>
-      <div class="phones">
-        <div class="phone">
-          <div class="screen">
-            <div class="scr">
-              <div class="prof-photo">
-                <div class="back"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></div>
-                <div class="silhouette"></div>
-                <div class="id">
-                  <div class="nm">an <span class="age">46</span></div>
-                  <span class="vf">✓ 本人確認済</span>
-                </div>
-              </div>
-              <div class="prof-body">
-                <div class="scorecard">
-                  <div class="cell"><div class="v">121</div><div class="k">BEST</div></div>
-                  <div class="cell"><div class="v">—</div><div class="k">AVERAGE</div></div>
-                  <div class="cell"><div class="v">10年+</div><div class="k">ゴルフ歴</div></div>
-                </div>
-                <div class="review-line">
-                  <span class="stars">★★★★★</span><b>5.0</b><span>（1件のレビュー）・ラウンド 0回</span>
-                </div>
-                <div class="prof-sec">
-                  <div class="h">プレー希望日</div>
-                  <div class="date-chips">
-                    <div class="dchip hot"><div class="d">7/14</div><div class="w">TUE</div></div>
-                    <div class="dchip hot"><div class="d">7/17</div><div class="w">FRI</div></div>
-                    <div class="dchip"><div class="d">7/30</div><div class="w">THU</div></div>
-                    <div class="dchip"><div class="d">+18</div><div class="w">日程</div></div>
-                  </div>
-                </div>
-                <div class="prof-sec">
-                  <div class="h">プレーエリア</div>
-                  <div class="chips">
-                    <span class="chip">東京</span><span class="chip">千葉</span><span class="chip">埼玉</span><span class="chip">神奈川</span><span class="chip">+3</span>
-                  </div>
-                </div>
-                <div class="prof-sec">
-                  <div class="h">自己紹介</div>
-                  <div class="txt">港区在住。レッスンに通い始めて2〜3年、美味しいビールのために頑張っています。日程・場所次第で自力参加も可。</div>
-                </div>
-              </div>
-              <div class="prof-cta">
-                <div class="btn-primary">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 21V4l12 4-12 4"/></svg>
-                  ラウンドに誘う
-                </div>
-                <div class="msg"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg></div>
-              </div>
-            </div>
-          </div>
-          <div class="cap">03 — PROFILE</div>
-        </div>
-      </div>
+      <div class="phones"><div class="phone"><div class="screen"><iframe src="app/?theme=2&boot=m&lv=3&embed=1#/profile/w1" loading="lazy" style="width:100%;height:100%;border:0;display:block"></iframe></div><div class="cap">03 — PROFILE</div></div></div>
     </div>
 
-    <!-- ========== ROW 5 : NEAR-MISS MATCH ========== -->
     <div class="screen-row">
       <div class="note-col">
-        <span class="tag">SCREEN 4 / 惜しいマッチ → 日程マッチに統合済み（v113）</span>
-        <h3>「0件です」と言わない。<br>あと一歩を、橋渡しする</h3>
-        <p>全国展開×少人数の宿命で、「日程は合うが遠い」「近いが日程が合わない」がマッチ不成立の大半を占めます。現状は「まだマッチ候補のお相手がいません」で終了。ここを「惜しい候補＋解決アクション」に変えます。</p>
+        <span class="tag">SCREEN 4 / 今日のおすすめ（スワイプ）</span>
+        <h3>1日3人→10人。写真登録が鍵</h3>
         <ul>
-          <li><b>日程◎×距離△</b> → 双方の拠点から等距離の<b>中間地点コースを自動提案</b>（拠点設定・市区町村精度は実装済みなので流用可能）</li>
-          <li><b>距離◎×日程△</b> → 相手の空き日に合わせる<b>日程リクエスト</b>を1タップ送信（Webプッシュ実装済み＝通知もすぐ届く）</li>
-          <li>プロフィールに<b>移動許容度</b>（〜60分/〜90分/遠征OK）を追加し、二値ではなくスコアでマッチ</li>
-          <li>それでも埋まらない日は<b>公式コンペ枠が受け皿</b>になる</li>
+          <li>LV連動：LV1は1日3人・LV2以上で10人</li>
+          <li>左＝なし／右＝あり／<b>上＝そのまま誘う</b>。両想いはチャット自動スレッド＋誘い直行</li>
+          <li>距離は段階表示のみ（居住地特定の防止）・日程相性チップつき</li>
         </ul>
       </div>
-      <div class="phones">
-        <div class="phone">
-          <div class="screen">
-            <div class="scr">
-              <div class="miss-head">
-                <div class="ttl">惜しいマッチ</div>
-                <div class="sub">あと一歩で成立する3件があります</div>
-              </div>
-              <div class="tee-body">
-                <div class="tee-card">
-                  <div class="top">
-                    <div class="av f1"></div>
-                    <div class="info">
-                      <div class="nm">SAKI <span class="age">28</span></div>
-                      <div class="miss-badges"><span class="mb ok">日程 ◎ 7/14 空き</span><span class="mb ng">距離 △ 車95分</span></div>
-                    </div>
-                  </div>
-                  <div class="bridge">
-                    <span class="lbl">中間地点の提案</span>
-                    <b>市原京急カントリークラブ</b>（あなた48分・SAKIさん51分）
-                  </div>
-                  <div class="mini-btn">この案を送ってみる</div>
-                </div>
-                <div class="tee-card">
-                  <div class="top">
-                    <div class="av f2"></div>
-                    <div class="info">
-                      <div class="nm">manami <span class="age">31</span></div>
-                      <div class="miss-badges"><span class="mb ok">距離 ◎ 拠点12km</span><span class="mb ng">日程 △ 合わず</span></div>
-                    </div>
-                  </div>
-                  <div class="bridge">
-                    <span class="lbl">日程リクエスト</span>
-                    manamiさんは <b>7/21（火）</b> が空いています。合わせられますか？
-                  </div>
-                  <div class="mini-btn">7/21で打診する</div>
-                </div>
-                <div class="compe">
-                  <div class="lbl">それでも合わない週は</div>
-                  <h4>7/19 公式コンペ＠千葉</h4>
-                  <div class="meta">2:2ペアラウンド・残り2枠</div>
-                </div>
-              </div>
-              <div class="tabbar">
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 21V4l10 3-10 3"/><path d="M5 21h14"/></svg>投稿</div>
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>ホーム</div>
-                <div class="tb on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>ティーシート</div>
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>メッセージ</div>
-                <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>マイページ</div>
-              </div>
-            </div>
-          </div>
-          <div class="cap">05 — NEAR-MISS MATCH（新設）</div>
-        </div>
+      <div class="phones"><div class="phone"><div class="screen"><iframe src="app/?theme=2&boot=m&lv=3&embed=1#/reco" loading="lazy" style="width:100%;height:100%;border:0;display:block"></iframe></div><div class="cap">04 — RECOMMEND</div></div></div>
+    </div>
+
+    <div class="screen-row">
+      <div class="note-col">
+        <span class="tag">SCREEN 5 / マイページ（v124〜129で刷新）</span>
+        <h3>統計はヘッダーに。メニューは整理</h3>
+        <ul>
+          <li>レビュー★〜相互いいねを緑ヘッダー内に統合。★行タップで<b>受信レビュー一覧</b></li>
+          <li>「プロフィールを見る」導線・RPランクメーターは<b>保留のため非表示</b></li>
+          <li>ゴールドはポイント/コイン内・ゲームは設定内へ。フレーム/ラウンド録/ゴルフ場メニューは削除</li>
+          <li>LVカード：女性はLV3・男性はLV4で<b>コンプリート</b></li>
+        </ul>
       </div>
+      <div class="phones"><div class="phone"><div class="screen"><iframe src="app/?theme=2&boot=m&lv=3&embed=1#/mypage" loading="lazy" style="width:100%;height:100%;border:0;display:block"></iframe></div><div class="cap">05 — MY PAGE</div></div></div>
     </div>
 
   </section>

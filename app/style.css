@@ -1419,3 +1419,6 @@ body.no-page-anim .stamp-svg .spk>*{animation-duration:2.6s!important}
 .my-head .sc-note{color:var(--on-brand-soft)}
 .my-head .sc-cell:active{background:rgba(250,248,242,.12)}
 .my-head .sc-rating .arw{color:var(--on-brand-soft)}
+
+/* ---- embed mode (提案ページ埋め込み用) ---- */
+body.embed .pill-row,body.embed .back-fab{display:none!important}
