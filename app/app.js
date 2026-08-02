@@ -863,27 +863,43 @@ V.tee = () => {
   const personRow = (u, avail) => {
     const dst = teeDist(u);
     const flag = isD() && (!avail || !dst.ok);
-    const open = flag && !!teeOpen[u.id];
+    const expandable = isD();
+    const open = expandable && !!teeOpen[u.id];
+    const offerLbl = S.role==='m' ? 'オファーする' : '誘う';
+    const msgBtn = `<button class="btn ghost sm" style="flex:1" onclick="openChat('${u.id}')">メッセージ</button>`;
     const badges = isD() ? `
         <div class="miss-badges">
           <span class="chip ${avail?'ok':'ng'}">日程 ${avail?`◎ ${teeSel} 空き`:'△ 合わず'}</span>
           <span class="chip ${dst.ok?'ok':'ng'}">距離 ${dst.ok?'◎':'△'} ${dst.t}</span>
         </div>` : '';
     let bridge = '';
+    if(open && avail && dst.ok){
+      bridge = `
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn sm" style="flex:1.4" onclick="inviteSheet('${u.id}')">${offerLbl}</button>
+        ${msgBtn}
+      </div>`;
+    }
     if(open && avail && !dst.ok){
       bridge = `
       <div class="bridge" style="margin-top:10px"><span class="lb">距離があるときの提案</span>ラウンドは少し遠め。まずは中間エリアの<b>インドア</b>や<b>打ちっぱなし</b>で会ってみませんか？</div>
-      <button class="btn sm" style="margin-top:10px" onclick="teePropose('${u.id}')">提案する</button>`;
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn sm" style="flex:1.4" onclick="teePropose('${u.id}')">提案する</button>
+        ${msgBtn}
+      </div>`;
     }
     if(open && !avail){
       const nx = u.dates.find(d => dnum(d) > dnum(teeSel)) || u.dates[u.dates.length-1];
       bridge = `
       <div class="bridge" style="margin-top:10px"><span class="lb">日程リクエスト</span>${esc(u.name)}さんは <b>${nx}</b> が空いています。合わせられますか？</div>
-      <button class="btn sm" style="margin-top:10px" onclick="teeOffer('${u.id}','${nx}')">${nx}でオファーする</button>`;
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn sm" style="flex:1.4" onclick="teeOffer('${u.id}','${nx}')">${nx}でオファーする</button>
+        ${msgBtn}
+      </div>`;
     }
     return `
     <div class="card" style="padding:13px 15px">
-      <div class="mcard" style="padding:0" onclick="${flag?`teeToggle('${u.id}')`:(isD()?`inviteSheet('${u.id}')`:`go('#/profile/${u.id}')`)}">
+      <div class="mcard" style="padding:0" onclick="${expandable?`teeToggle('${u.id}')`:`go('#/profile/${u.id}')`}">
         <span class="ring" style="${ringStyle(u.tier||'BRONZE')};width:50px;height:50px" ${isD()?`onclick="event.stopPropagation();go('#/profile/${u.id}')"`:''}>
           <img class="av" src="${u.img}" style="width:100%;height:100%;border:2px solid #fff">
         </span>
@@ -892,7 +908,7 @@ V.tee = () => {
           <div class="st"><span>Best <b>${u.best}</b></span><span>Ave <b>${u.ave}</b></span><span>${u.area.slice(0,2).join('・')}</span></div>
           ${badges}
         </div>
-        <span class="arw" ${flag?`style="transform:rotate(${open?'90deg':'-90deg'});transition:transform .2s"`:''}>${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
+        <span class="arw" ${expandable?`style="transform:rotate(${open?'90deg':'-90deg'});transition:transform .2s"`:''}>${I.back.replace('M15 5l-7 7 7 7','M9 5l7 7-7 7')}</span>
       </div>
       ${bridge}
     </div>`;
@@ -918,6 +934,25 @@ V.tee = () => {
       <div class="strip">${dayBtns}</div>
     </div>
     <div class="tee-body">
+      ${S.role==='f' && isD() ? `
+      <div class="notice warn" style="margin:0;align-items:flex-start">
+        <span class="ic" style="margin-top:1px">${I.bell}</span>
+        <span style="flex:1;font-weight:700">おもてなしゴルファーは、オファーをもらわないとコインが獲得できません。お気をつけください</span>
+      </div>
+      <div class="card" style="padding:14px 16px;border:1.5px dashed var(--brass);position:relative;margin-top:6px">
+        <span class="chip brass" style="font-size:9px;position:absolute;top:-10px;left:14px">オファーの例（サンプル）</span>
+        <div style="display:flex;gap:12px;align-items:center">
+          <img class="av" src="img/m1.jpg" style="width:44px;height:44px">
+          <div style="flex:1">
+            <div style="font-weight:900;font-size:13px">SHUさんからオファー</div>
+            <div class="muted" style="font-size:11px">7/14・ラウンド・現地集合</div>
+          </div>
+        </div>
+        <div class="price-box" style="margin-top:10px;padding:10px 13px">
+          <div class="row"><span>受け取れる謝礼</span><span class="money" style="color:var(--brass)">17,600 コイン</span></div>
+        </div>
+        <p class="muted" style="font-size:10.5px;margin:8px 0 0">このカードが届いたら内容を確認して承諾するとコインを受け取れます。メッセージだけのやり取りでは謝礼は発生しません</p>
+      </div>` : ''}
       <div class="mywish card" style="padding:13px 15px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:${S.calOpen?'8px':'0'}">
           <b style="font-size:12.5px">あなたのプレー希望日</b>
